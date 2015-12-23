@@ -6,7 +6,7 @@
             'capvalue.config',
             'capvalue.routes',
             'capvalue.authentication',
-            //'capvalue.layout',
+            'capvalue.layout',
             //'capvalue.posts',
             //'capvalue.utils',
         ]).run(run);

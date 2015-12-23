@@ -3,8 +3,8 @@ from rest_framework.response import Response
 from authentication.models import Account
 from authentication.permissions import IsAccountOwner
 from authentication.serializers import AccountSerializer
+from django.contrib.auth import authenticate, login, logout
 import json
-from django.contrib.auth import authenticate, login
 
 
 class AccountViewSet(viewsets.ModelViewSet):
@@ -61,3 +61,12 @@ class LoginView(views.APIView):
                 'status': 'Unauthorized',
                 'message': 'Username/password combination invalid.'
             }, status=status.HTTP_401_UNAUTHORIZED)
+
+
+class LogoutView(views.APIView):
+    permission_classes = (permissions.IsAuthenticated,)
+
+    def post(self, request, format=None):
+        logout(request)
+
+        return Response({}, status=status.HTTP_204_NO_CONTENT)

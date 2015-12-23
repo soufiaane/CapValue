@@ -14,6 +14,7 @@
             getAuthenticatedAccount: getAuthenticatedAccount,
             isAuthenticated: isAuthenticated,
             login: login,
+            logout: logout,
             register: register,
             setAuthenticatedAccount: setAuthenticatedAccount,
             unauthenticate: unauthenticate
