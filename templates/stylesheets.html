@@ -1,6 +1,7 @@
+{% load compress %}
 {% load staticfiles %}
 
-
+{% compress css %}
 <link rel="stylesheet" type="text/css" href="{% static 'libs/bootstrap/dist/css/bootstrap.css' %}" />
 <link rel="stylesheet" type="text/css" href="{% static 'libs/bootstrap-material-design/dist/css/material.css' %}" />
 <link rel="stylesheet" type="text/css" href="{% static 'libs/bootstrap-material-design/dist/css/ripples.min.css' %}" />
@@ -10,4 +11,4 @@
 <link rel="stylesheet" type="text/css" href="{% static 'lib/snackbarjs/snackbar.min.css' %}" />
 
 <link rel="stylesheet" type="text/css" href="{% static 'stylesheets/styles.css' %}" />
-
+{% endcompress %}
