@@ -1,0 +1,23 @@
+# Python compiled byte code
+*.pyc
+
+# SQLite3 database
+*.sqlite3
+
+# Node modules
+node_modules/
+
+#Pycharm Config
+.idea
+
+# Bower components
+static/bower_components/
+
+# Uglified JavaScript
+dist/
+
+# Staticfiles
+staticfiles/
+/.buildpacks
+/Procfile
+/npm-debug.log
