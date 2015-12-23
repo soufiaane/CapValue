@@ -10,7 +10,7 @@
 
     function Authentication($cookies, $http) {
 
-        return Authentication = {
+        var Authentication = {
             getAuthenticatedAccount: getAuthenticatedAccount,
             isAuthenticated: isAuthenticated,
             login: login,
@@ -18,6 +18,8 @@
             setAuthenticatedAccount: setAuthenticatedAccount,
             unauthenticate: unauthenticate
         };
+
+        return Authentication;
 
         function register(email, password, username) {
             return $http.post('/api/v1/accounts/', {
