@@ -6,8 +6,7 @@
             'capvalue.config',
             'capvalue.routes',
             'capvalue.authentication',
-            'capvalue.layout',
-            'ncy-angular-breadcrumb',
+            'capvalue.layout'
         ]).run(run);
 
     run.$inject = ['$http'];

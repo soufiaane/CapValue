@@ -1,6 +1,16 @@
+/static/libs/bootstrap
+/static/libs/ngDialog
+/static/libs/angular
+/static/libs/angular-ui-router
+/static/libs/jquery
+/static/libs/angular-cookies
+/static/libs/font-awesome
+/static/libs/jquery-migrate
+/static/libs/angular-breadcrumb
 # Python compiled byte code
 *.pyc
 
+/static/libs
 # SQLite3 database
 *.sqlite3
 

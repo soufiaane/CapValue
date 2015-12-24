@@ -1,5 +1,5 @@
 /**
- * @license AngularJS v1.3.20
+ * @license AngularJS v1.3.1
  * (c) 2010-2014 Google, Inc. http://angularjs.org
  * License: MIT
  */
@@ -91,7 +91,6 @@ angular.module('ngCookies', ['ng']).
         for (name in lastCookies) {
           if (isUndefined(cookies[name])) {
             $browser.cookies(name, undefined);
-            delete lastCookies[name];
           }
         }
 
@@ -104,13 +103,13 @@ angular.module('ngCookies', ['ng']).
           }
           if (value !== lastCookies[name]) {
             $browser.cookies(name, value);
-            lastCookies[name] = value;
             updated = true;
           }
         }
 
         //verify what was actually stored
         if (updated) {
+          updated = false;
           browserCookies = $browser.cookies();
 
           for (name in cookies) {
@@ -118,10 +117,10 @@ angular.module('ngCookies', ['ng']).
               //delete or reset all cookies that the browser dropped from $cookies
               if (isUndefined(browserCookies[name])) {
                 delete cookies[name];
-                delete lastCookies[name];
               } else {
-                cookies[name] = lastCookies[name] = browserCookies[name];
+                cookies[name] = browserCookies[name];
               }
+              updated = true;
             }
           }
         }
