@@ -7,8 +7,8 @@
             'capvalue.routes',
             'capvalue.authentication',
             'capvalue.layout',
-            //'capvalue.posts',
-            //'capvalue.utils',
+            'capvalue.posts',
+            'capvalue.utils',
         ]).run(run);
 
     run.$inject = ['$http'];
