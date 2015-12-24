@@ -7,8 +7,7 @@
             'capvalue.routes',
             'capvalue.authentication',
             'capvalue.layout',
-            'capvalue.posts',
-            'capvalue.utils',
+            'ncy-angular-breadcrumb',
         ]).run(run);
 
     run.$inject = ['$http'];
@@ -19,7 +18,7 @@
     }
 
     angular
-        .module('capvalue.routes', ['ngRoute']);
+        .module('capvalue.routes', ['ui.router']);
     angular
         .module('capvalue.config', []);
 })();

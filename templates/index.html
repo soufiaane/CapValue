@@ -1,22 +1,28 @@
 <!DOCTYPE html>
 <html ng-app="capvalue">
 <head>
-  <title>thinkster-django-angular-boilerplate</title>
-
-  <base href="/" />
-
-  {% include 'stylesheets.html' %}
+    <title>Capvalue Consulting Tools</title>
+    <base href="/"/>
+    {% include 'stylesheets.html' %}
 </head>
 
-<body>
-  {% include 'navbar.html' %}
-
-  <div class="container-fluid">
-    <div class="row">
-      <div class="col-xs-12 ng-view"></div>
-    </div>
-  </div>
-
-  {% include 'javascripts.html' %}
+<body class="skin-blue">
+<header class="header">
+    {% include 'navbar.html' %}
+</header>
+<div class="wrapper row-offcanvas row-offcanvas-left" style="min-height: 711px;">
+    <aside style="min-height: 2056px;" class="left-side sidebar-offcanvas">
+        {% include 'menu.html' %}
+    </aside>
+    <aside class="right-side">
+        <section class="content-header">
+            {% include 'breadcrumb.html' %}
+        </section>
+        <section class="content-header">
+            <div class=" ui-view"></div>
+        </section>
+    </aside>
+</div>
+{% include 'javascripts.html' %}
 </body>
 </html>

@@ -1,7 +1,7 @@
 {
-  "name": "thinkster_django_angular_boilerplate",
+  "name": "Capvalue Consulting",
   "version": "0.0.0",
-  "homepage": "https://github.com/brwr/thinkster-django-angular-boilerplate",
+  "homepage": "https://github.com/soufiaane/capvalue",
   "license": "MIT",
   "ignore": [
     "**/.*",
@@ -18,6 +18,13 @@
     "bootstrap-material-design": "~0.1.5",
     "jquery": "~2.1.1",
     "ngDialog": "~0.3.3",
-    "underscore": "~1.7.0"
+    "underscore": "~1.7.0",
+    "rdash-ui": "1.0.*",
+    "angular-bootstrap": "~0.11.0",
+    "angular-ui-router": "~0.2.15",
+    "font-awesome": "~4.1.0",
+    "font-awesome-min": "~4.3.0",
+    "Ionicons": "ionicons#~2.0.1",
+    "angular-utils-ui-breadcrumbs": "~0.2.2"
   }
 }
