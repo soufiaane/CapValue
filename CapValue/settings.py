@@ -5,6 +5,7 @@ BASE_DIR = os.path.dirname(os.path.dirname(__file__))
 ROOT_URLCONF = 'CapValue.urls'
 WSGI_APPLICATION = 'CapValue.wsgi.application'
 SECRET_KEY = 'u@nup3l^ofar)mja-h6khvar^%))*$9^j%9q-9hg0#(3xyel=k'
+ROLEPERMISSIONS_MODULE = 'CapValue.roles'
 TEMPLATE_DEBUG = True
 ALLOWED_HOSTS = ['*']
 LANGUAGE_CODE = 'en-us'
