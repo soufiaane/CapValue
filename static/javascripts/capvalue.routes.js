@@ -24,6 +24,6 @@
             controllerAs: 'vm',
             templateUrl: '/static/templates/layout/index.html'
         });
-        $urlRouterProvider.otherwise('/');
+        $urlRouterProvider.otherwise('/')
     }
 })();
