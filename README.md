@@ -1,6 +1,6 @@
 # CapValue
 
-python version =3.4.4 X64
+python version =3.4.4 x64
 
 ------------------------------------------
 Requirements
