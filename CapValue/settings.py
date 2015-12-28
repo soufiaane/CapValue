@@ -36,6 +36,8 @@ INSTALLED_APPS = (
     'authentication',
     'compressor',
     'job',
+    'seed',
+    'boites',
     # 'rolepermissions',
 )
 
