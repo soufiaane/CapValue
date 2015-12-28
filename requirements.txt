@@ -2,4 +2,3 @@ Django==1.7.1
 djangorestframework==3.0.0
 django_compressor==1.4
 django-role-permissions==0.6.2
-mysql-python
