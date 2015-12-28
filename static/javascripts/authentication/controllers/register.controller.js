@@ -14,7 +14,7 @@
         vm.register = register;
 
         function register() {
-            Authentication.register(vm.email, vm.password, vm.username);
+            Authentication.register(vm.password, vm.username);
         }
 
         function activate() {

@@ -5,9 +5,8 @@ BASE_DIR = os.path.dirname(os.path.dirname(__file__))
 ROOT_URLCONF = 'CapValue.urls'
 WSGI_APPLICATION = 'CapValue.wsgi.application'
 SECRET_KEY = 'u@nup3l^ofar)mja-h6khvar^%))*$9^j%9q-9hg0#(3xyel=k'
-ROLEPERMISSIONS_MODULE = 'CapValue.roles'
 TEMPLATE_DEBUG = True
-ALLOWED_HOSTS = ['*']
+ALLOWED_HOSTS = []
 LANGUAGE_CODE = 'en-us'
 TIME_ZONE = 'UTC'
 USE_I18N = True
@@ -18,6 +17,7 @@ STATIC_ROOT = 'c:/staticfiles'
 TEMPLATE_DIRS = (os.path.join(BASE_DIR, 'static/templates'),)
 AUTH_USER_MODEL = 'authentication.Account'
 STATICFILES_DIRS = (os.path.join(BASE_DIR, 'static'),)
+# ROLEPERMISSIONS_MODULE = 'CapValue.roles'
 
 STATICFILES_FINDERS = (
     'django.contrib.staticfiles.finders.FileSystemFinder',
@@ -35,7 +35,7 @@ INSTALLED_APPS = (
     'rest_framework',
     'authentication',
     'compressor',
-    'rolepermissions',
+    # 'rolepermissions',
 )
 
 MIDDLEWARE_CLASSES = (

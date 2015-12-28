@@ -25,7 +25,7 @@
 
 
         function login() {
-            Authentication.login(vm.email, vm.password);
+            Authentication.login(vm.username, vm.password);
         }
     }
 })();

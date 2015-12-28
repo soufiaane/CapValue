@@ -9,8 +9,8 @@ class AccountSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Account
-        fields = ('id', 'email', 'username', 'created_at', 'updated_at',
-                  'first_name', 'last_name', 'tagline', 'password',
+        fields = ('id', 'username', 'created_at', 'updated_at',
+                  'first_name', 'last_name', 'password',
                   'confirm_password',)
         read_only_fields = ('created_at', 'updated_at',)
 
@@ -19,7 +19,6 @@ class AccountSerializer(serializers.ModelSerializer):
 
         def update(self, instance, validated_data):
             instance.username = validated_data.get('username', instance.username)
-            instance.tagline = validated_data.get('tagline', instance.tagline)
 
             instance.save()
 
