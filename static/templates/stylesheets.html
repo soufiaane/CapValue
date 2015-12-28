@@ -1,8 +1,4 @@
-{% load compress %}
-{% load staticfiles %}
-
-{% compress css %}
-    <link rel="stylesheet" href="{% static 'libs/font-awesome/css/font-awesome.min.css' %}" />
+{% load compress %}{% load staticfiles %}{% compress css %}<link rel="stylesheet" href="{% static 'libs/font-awesome/css/font-awesome.min.css' %}" />
     <link rel="stylesheet" type="text/css" href="{% static 'libs/bootstrap/dist/css/bootstrap.min.css' %}"/>
     <link rel="stylesheet" type="text/css" href="{% static 'css/CapValue.css' %}"/>
     <link rel="icon" type="image/x-icon" href="{% static 'templates/img/favicon.ico' %}">
@@ -10,5 +6,4 @@
     <!--[if lt IE 9]>
           <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
           <script src="https://oss.maxcdn.com/libs/respond.js/1.3.0/respond.min.js"></script>
-    <![endif]-->
-{% endcompress %}
+    <![endif]-->{% endcompress %}

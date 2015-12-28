@@ -12,6 +12,7 @@
     "font-awesome": "4.5.0",
     "jquery": "2.1.4",
     "jquery-migrate": "1.2.1",
-    "angular-breadcrumb": "0.4.1"
+    "angular-breadcrumb": "0.4.1",
+    "ng-table": "~0.8.3"
   }
 }

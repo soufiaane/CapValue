@@ -7,6 +7,8 @@
             'capvalue.routes',
             'capvalue.authentication',
             'capvalue.layout',
+            'capvalue.job',
+            'capvalue.seed',
             'ncy-angular-breadcrumb'
         ]).run(run);
 
