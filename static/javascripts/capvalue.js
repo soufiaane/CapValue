@@ -9,7 +9,8 @@
             'capvalue.layout',
             'capvalue.job',
             'capvalue.seed',
-            'ncy-angular-breadcrumb'
+            'ncy-angular-breadcrumb',
+            'ngAnimate'
         ]).run(run);
 
     run.$inject = ['$http'];

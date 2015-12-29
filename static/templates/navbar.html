@@ -107,16 +107,15 @@
                 </li>
             {% else %}
                 <li class="dropdown user user-menu">
-                    <a href="/login" class="dropdown-toggle" data-toggle="dropdown">
+                    <a href="/login" class="dropdown-toggle">
                         <span class="hidden-xs">Login</span>
                     </a>
-                    <ul class="dropdown-menu">
-                        <li class="user user-menu">
-                            <a href="/register" class="dropdown-toggle" data-toggle="dropdown">
-                                <i class="fa fa-sign-in"></i><span class="hidden-xs">Register</span>
-                            </a>
-                        </li>
-                    </ul>
+                </li>
+
+                <li class="dropdown user user-menu">
+                    <a href="/register" class="dropdown-toggle">
+                        <span class="hidden-xs">Register</span>
+                    </a>
                 </li>
             {% endif %}
         </ul>

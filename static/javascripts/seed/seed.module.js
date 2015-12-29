@@ -4,7 +4,8 @@
     angular
         .module('capvalue.seed', [
             'capvalue.seed.controllers',
-            'capvalue.seed.services'
+            'capvalue.seed.services',
+            'ngAnimate'
         ]);
 
     angular

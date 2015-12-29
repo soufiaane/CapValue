@@ -1,147 +1,29 @@
-<div class="form-horizontal" id="FnewSEED">
-    <div id="errors" class="alert alert-error hide"></div>
-    <div class="control-group">
-        <!-- Level -->
-        <label class="control-label"><b>Seed Name</b> <span class="etoile">*</span></label>
+<!-- form.html -->
+<div class="row">
+    <div class="col-sm-8 col-sm-offset-2">
 
-        <div class="span5 pull-left">
-            <label class=" inline">seed_ <input type="text" style="height: 30px" name="name_seed" id="name_seed"
-                                                class="input-large">
-                <span style=" font-family: monospace; font-size: small;display: none"
-                      id="manual_star"> Put <code>*</code> for updating multi list</span> </label>
+        <div id="form-container">
 
-        </div>
-    </div>
-    <div class="control-group">
-        <!-- Level -->
-        <label class="control-label"><b>Proxy Type</b></label>
+            <div class="page-header text-center">
+                <h2 style="color: #ffffff;">Seed List Creation</h2>
 
-        <div class="span4 pull-left">
-            <label class="radio inline"><input type="radio" checked="" id="type_a" value="type_a" name="type_"
-                                               class="rg">Automatic </label>
-            <label class="radio inline"><input type="radio" id="type_m" value="type_m" name="type_"
-                                               class="rg">Manual</label>
-        </div>
-    </div>
-
-
-    <div id="automatic_proxy">
-        <div class="control-group">
-            <!-- Page -->
-            <label for="accounts" class="control-label"><b>Seed list</b> <span class="etoile">*</span></label>
-
-            <div class="controls">
-                <span style="font-family: monospace;font-size: 12px;"><b>Ex</b>: email,password</span><br>
-                <textarea style="width: 400px;resize:none;" name="accounts" id="accounts" rows="10"></textarea>
-            </div>
-        </div>
-
-
-        <div class="control-group">
-            <!-- Page -->
-            <label for="accounts" class="control-label"><b>Proxy list</b> <span class="etoile">*</span></label>
-
-            <div class="controls">
-                <label for="proxy_list"></label><select name="proxy_list" id="proxy_list" class="span3">
-                <option value="">Select proxy list</option>
-                <option value="1041">proxy1041 [1003]</option>
-                <option value="1080">proxy1080 [32]</option>
-                <option value="1138">proxy1138 [14]</option>
-                <option value="1769">proxy1769 [32]</option>
-                <option value="2167">proxy2167 [29]</option>
-                <option value="3745">proxy3745 [9]</option>
-                <option value="7463">proxy7463 [34]</option>
-                <option value="10236">proxy10236 [10]</option>
-                <option value="11280">proxy11280 [9]</option>
-                <option value="11284">proxy11284 [6]</option>
-                <option value="12038">proxy12038 [13]</option>
-                <option value="12044">proxy12044 [7]</option>
-                <option value="12229">proxy12229 [7]</option>
-                <option value="12414">proxy12414 [5]</option>
-            </select>
-
-            </div>
-        </div>
-
-        <div class="control-group">
-            <label class="control-label"></label>
-
-            <div class="controls">
-                <div style="margin-left: -3px;" class="span6">
-                    <div class="input-append">
-                        <table class="divcenter">
-                            <tbody>
-                            <tr>
-                                <th style="font-size: 13px;">All Proxy list:</th>
-                                <th></th>
-                                <th style="font-size: 13px;">Proxy To Use :<span class="etoile">*</span></th>
-                            </tr>
-                            <tr>
-                                <td>
-
-                                    <input type="button" value="Select All" name="select_all" id="select_all_in"
-                                           style="width: 100%;" class="btn ">
-
-                                    <div>
-                                        <label for="list_All"></label><select size="10" style="width: 270px;"
-                                                                              id="list_All" class="dev"
-                                                                              multiple=""></select>
-                                    </div>
-                                </td>
-                                <td>
-                                    <div>
-                                        <button type="button" id="add" class="btn btn-mini"><i class="icon-forward"></i>
-                                        </button>
-                                        <br><br>
-                                        <button type="button" id="remove" class="btn btn-mini"><i
-                                                class="icon-backward"></i></button>
-                                    </div>
-                                </td>
-
-                                <td><input type="button" style="width: 100%" value="Select All" name="select_all"
-                                           id="select_to_use" class="btn">
-
-                                    <div>
-                                        <label for="list_use"></label><select size="10" style="width: 270px;"
-                                                                              name="list_use" id="list_use"
-                                                                              multiple=""></select>
-                                    </div>
-                                </td>
-                            </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                    <!-- end contenu -->
+                <div id="status-buttons" class="text-center">
+                    <a ui-sref-active="active" ui-sref="SeedCreate.info" class="disabled"><span>1</span> Infos</a>
+                    <a ui-sref-active="active" ui-sref="SeedCreate.maillist" class="disabled"><span>2</span> Email List</a>
+                    <a ui-sref-active="active" ui-sref="SeedCreate.proxy" class="disabled"><span>3</span> Proxy</a>
                 </div>
             </div>
+
+            <!-- use ng-submit to catch the form submission and use our Angular function -->
+            <form id="signup-form" ng-submit="vm.processForm()">
+
+                <!-- our nested state views will be injected here -->
+                <div id="form-views" ui-view></div>
+            </form>
+
         </div>
-    </div>
-
-    <div style="display: none" id="manual_proxy">
-        <div class="control-group">
-            <!-- Page -->
-            <label for="accounts" class="control-label"><b>Seed list</b> <span class="etoile">*</span></label>
-
-            <div class="controls">
-                <span style="font-family: monospace;font-size: 12px;"><b>Ex</b>: email,password,proxy</span><br>
-                <label for="accounts_man"></label><textarea style="width: 600px;resize:none;" name="accounts_man"
-                                                            id="accounts_man" rows="10"></textarea>
-            </div>
-        </div>
-    </div>
-    <div class="control-group">
-        <div style="text-align: center;"><span id="load_img" style="display: none"><img
-                src="http://38.95.234.51:80/gmDoc_recovery_Multi/assets/img/ldr.gif" alt="loading"></span></div>
-        <!-- Level -->
-        <div style="width: 86%">
-            <button style="float: right" id="btn_create" name="btn_create" class="btn btn-primary">Add seed</button>
-        </div>
-
-
-    </div>
-    <div class="control-group">
-        <!-- Level -->
-
-        <div id="results" class="alert alert-success hide"></div>
+    <pre>
+        {$ vm.formData $}
+    </pre>
     </div>
 </div>

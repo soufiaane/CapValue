@@ -1,0 +1,31 @@
+<!-- form-profile.html -->
+<div class="input-group input-group-lg">
+    <span class="input-group-addon" id="sizing-addon1">Name</span>
+    <input type="text" class="form-control" placeholder="Seed_*****" aria-describedby="sizing-addon1"
+           ng-model="vm.formData.name">
+</div>
+<br>
+<label class="well-lg" style="color: #FFFFFF">
+    Proxy Type
+</label>
+<br>
+<div class="btn-group-lg btn-block" data-toggle="buttons">
+    <label class="btn btn-primary btn active">
+        <input type="radio" value="manual" ng-model="vm.formData.proxyType" checked>
+        Manual
+    </label>
+    <label class="btn btn-primary btn">
+        <input type="radio" value="proxy" ng-model="vm.formData.proxyType"> Proxy
+    </label>
+    <label class="btn btn-primary btn">
+        <input type="radio" value="vpn" ng-model="vm.formData.proxyType"> VPN
+    </label>
+</div>
+<br>
+<div class="form-group row">
+    <div class="col-xs-6 col-xs-offset-3">
+        <a ui-sref="SeedCreate.maillist" class="btn btn-block btn-info">
+            Next Section <span class="glyphicon glyphicon-circle-arrow-right"></span>
+        </a>
+    </div>
+</div>

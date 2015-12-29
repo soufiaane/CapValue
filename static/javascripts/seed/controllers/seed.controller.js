@@ -11,27 +11,13 @@
     function SeedController($location, $scope, Seed, Authentication) {
         var vm = this;
 
-        vm.logg = logg;
+        vm.formData = {};
 
-        function logg() {
-            Seed.logg('Job Controller and Service are working');
-        }
-    }
-})();
-(function () {
-    'use strict';
+        // function to process the form
+        vm.processForm = processForm;
 
-
-    JobController.$inject = ['$location', '$scope', 'Job', 'Authentication'];
-
-
-    function JobController($location, $scope, Job, Authentication) {
-        var vm = this;
-
-        vm.login = logg;
-
-        function logg() {
-            Job.logg('Job Controller and Service are working');
+        function processForm() {
+            alert('awesome!');
         }
     }
 })();
