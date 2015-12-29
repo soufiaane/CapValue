@@ -1,29 +1,50 @@
 <!DOCTYPE html>
 <html ng-app="capvalue">
 <head>
-    <title>Capvalue Consulting Tools</title>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <!-- Tell the browser to be responsive to screen width -->
+    <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
+    <title>CVC Tools</title>
     <base href="/"/>
     {% include 'stylesheets.html' %}
 </head>
 
-<body class="skin-blue">
-<header class="header">
-    {% include 'navbar.html' %}
-</header>
-<div class="wrapper row-offcanvas row-offcanvas-left" style="min-height: 711px;">
-    <aside style="min-height: 2056px;" class="left-side sidebar-offcanvas">
-        {% include 'menu.html' %}
+<body class="hold-transition skin-purple sidebar-mini">
+<div class="wrapper">
+    <header class="main-header">
+        {% include 'navbar.html' %}
+    </header>
+    <!-- Left side column. contains the logo and sidebar -->
+    <aside class="main-sidebar">
+        <!-- sidebar: style can be found in sidebar.less -->
+        <section class="sidebar">
+            {% include 'menu.html' %}
+        </section>
+        <!-- /.sidebar -->
     </aside>
-    <aside class="right-side">
+    <!-- Content Wrapper. Contains page content -->
+    <div class="content-wrapper">
+        <!-- Content Header (Page header) -->
         <section class="content-header">
             {% include 'breadcrumb.html' %}
         </section>
+
+        <!-- ###############################" -->
+        <!-- Main content -->
         <section class="content">
             <div ui-view></div>
         </section>
-    </aside>
+        <!-- /.content -->
+        <!-- ###############################" -->
+
+    </div>
+    <!-- /.content-wrapper -->
+    <footer class="main-footer">
+        {% include 'footer.html' %}
+    </footer>
 </div>
-{% include 'footer.html' %}
+<!-- ./wrapper -->
 {% include 'javascripts.html' %}
 </body>
 </html>

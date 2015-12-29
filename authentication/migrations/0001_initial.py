@@ -14,14 +14,12 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name='Account',
             fields=[
-                ('id', models.AutoField(serialize=False, primary_key=True, verbose_name='ID', auto_created=True)),
-                ('password', models.CharField(verbose_name='password', max_length=128)),
+                ('id', models.AutoField(primary_key=True, auto_created=True, serialize=False, verbose_name='ID')),
+                ('password', models.CharField(max_length=128, verbose_name='password')),
                 ('last_login', models.DateTimeField(verbose_name='last login', default=django.utils.timezone.now)),
-                ('email', models.EmailField(unique=True, max_length=75)),
-                ('username', models.CharField(unique=True, max_length=40)),
+                ('username', models.CharField(max_length=40, unique=True)),
                 ('first_name', models.CharField(max_length=40, blank=True)),
                 ('last_name', models.CharField(max_length=40, blank=True)),
-                ('tagline', models.CharField(max_length=140, blank=True)),
                 ('is_admin', models.BooleanField(default=False)),
                 ('created_at', models.DateTimeField(auto_now_add=True)),
                 ('updated_at', models.DateTimeField(auto_now=True)),

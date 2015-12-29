@@ -13,6 +13,12 @@
     "jquery": "2.1.4",
     "jquery-migrate": "1.2.1",
     "angular-breadcrumb": "0.4.1",
-    "ng-table": "~0.8.3"
+    "ng-table": "~0.8.3",
+    "Ionicons": "ionicons#~2.0.1",
+    "jvectormap": "~2.0.4",
+    "fastclick": "~1.0.6",
+    "sparkline": "~2.1.2",
+    "slimScroll": "~1.3.7",
+    "Chart.js": "chartjs#~1.0.2"
   }
 }
