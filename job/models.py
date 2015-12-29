@@ -21,6 +21,7 @@ class Job(models.Model):
         ('CL', 'Click links INBOX'),
         ('FM', 'Flag Mails INBOX')
     )
+    # TODO-CVC test
     user = models.ForeignKey(Account, on_delete=models.CASCADE)
     seed_list = models.ManyToManyField(Seed)
     actions = models.CharField(max_length=2, choices=Action_CHOICES, default='RS')
