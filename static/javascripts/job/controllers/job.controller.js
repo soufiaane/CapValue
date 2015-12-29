@@ -16,5 +16,7 @@
         function logg() {
             Job.logg(vm.message);
         }
+
+        //TODO babatata
     }
 })();

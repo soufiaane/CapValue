@@ -1,6 +1,6 @@
 /static/AdminLTE-master
 */migrations
-/static/libs
+/static/libs/*
 /db.sqlite3
 # Created by .ignore support plugin (hsz.mobi)
 ### Python template

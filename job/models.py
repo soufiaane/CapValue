@@ -1,8 +1,10 @@
 from django.db import models
+
 from authentication.models import Account
 from seed.models import Seed
 
 
+# TODO tatata
 class Job(models.Model):
     Action_CHOICES = (
         ('RS', 'Mark spam as read'),
