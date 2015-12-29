@@ -1,148 +1,179 @@
-<table class="watable table table-striped table-hover table-bordered table-condensed">
-    <thead>
-    <tr class="sort">
-        <th><a href="#" class="pull-left">ID</a></th>
-        <th><a href="#" class="pull-left">List name</a></th>
-        <th><a href="#" class="pull-left">Total</a></th>
-        <th><a href="#" class="pull-left">Active</a></th>
-        <th><a href="#" class="pull-left">Inactive</a></th>
-    </tr>
-    <tr class="filter">
-        <th><input type="text" class="filter" placeholder="word" data-original-title="" title=""></th>
-        <th><input type="text" class="filter" placeholder="word" data-original-title="" title=""></th>
-        <th><input type="text" class="filter" placeholder="10..20 =50" data-original-title="" title=""></th>
-        <th><input type="text" class="filter" placeholder="10..20 =50" data-original-title="" title=""></th>
-        <th><input type="text" class="filter" placeholder="10..20 =50" data-original-title="" title=""></th>
-    </tr>
-    </thead>
-    <tbody>
-    <tr>
-        <td>611</td>
-        <td><b>seed_hot_rep_1</b></td>
-        <td>49</td>
-        <td>49</td>
-        <td>0</td>
-    </tr>
-    <tr>
-        <td>612</td>
-        <td><b>seed_hot_rep_2</b></td>
-        <td>49</td>
-        <td>0</td>
-        <td>49</td>
-    </tr>
-    <tr>
-        <td>613</td>
-        <td><b>seed_hot_rep_3</b></td>
-        <td>49</td>
-        <td>49</td>
-        <td>0</td>
-    </tr>
-    <tr>
-        <td>614</td>
-        <td><b>seed_hot_rep_4</b></td>
-        <td>50</td>
-        <td>50</td>
-        <td>0</td>
-    </tr>
-    <tr>
-        <td>615</td>
-        <td><b>seed_hot_rep_5</b></td>
-        <td>55</td>
-        <td>55</td>
-        <td>0</td>
-    </tr>
-    <tr>
-        <td>616</td>
-        <td><b>seed_hot_1</b></td>
-        <td>15</td>
-        <td>15</td>
-        <td>0</td>
-    </tr>
-    <tr>
-        <td>617</td>
-        <td><b>seed_hot_2</b></td>
-        <td>15</td>
-        <td>15</td>
-        <td>0</td>
-    </tr>
-    <tr>
-        <td>618</td>
-        <td><b>seed_hot_3</b></td>
-        <td>30</td>
-        <td>30</td>
-        <td>0</td>
-    </tr>
-    <tr>
-        <td>619</td>
-        <td><b>seed_hot_4</b></td>
-        <td>15</td>
-        <td>15</td>
-        <td>0</td>
-    </tr>
-    <tr>
-        <td>620</td>
-        <td><b>seed_hot_5</b></td>
-        <td>15</td>
-        <td>15</td>
-        <td>0</td>
-    </tr>
-    </tbody>
-    <tfoot>
-    <tr>
-        <td colspan="999"><p>Rows 1-10 of 340</p>
+<div class="box">
+    <div class="box-header">
+        <h3 class="box-title">Seed List</h3>
+    </div>
+    <!-- /.box-header -->
+    <div class="box-body">
+        <div class="dataTables_wrapper form-inline dt-bootstrap">
+            <div class="row">
+                <div class="col-sm-6">
+                    <div id="example1_length" class="dataTables_length">
+                        <label>Show <select class="form-control input-sm" aria-controls="example1"
+                                            name="example1_length">
+                            <option value="10">10</option>
+                            <option value="25">25</option>
+                            <option value="50">50</option>
+                            <option value="100">100</option>
+                        </select> entries</label>
+                    </div>
+                </div>
 
-            <div class="btn-toolbar">
-                <div class="btn-group">
-                    <div class="pagination">
-                        <ul>
-                            <li class="disabled"><a href="#">«</a></li>
-                            <li class="active"><a class="pagenumber" href="#">1</a></li>
-                            <li class=""><a class="pagenumber" href="#">2</a></li>
-                            <li class=""><a class="pagenumber" href="#">3</a></li>
-                            <li class=""><a class="pagenumber" href="#">4</a></li>
-                            <li class=""><a class="pagenumber" href="#">5</a></li>
-                            <li class=""><a href="#">»</a></li>
+                <div class="col-sm-6">
+                    <div class="dataTables_filter" id="example1_filter"><label>Search:<input type="search"
+                                                                                             aria-controls="example1"
+                                                                                             placeholder=""
+                                                                                             class="form-control input-sm"></label>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-sm-12">
+                    <table class="table table-bordered table-striped dataTable" aria-describedby="example1_info"
+                           role="grid">
+                        <thead>
+                        <tr class="sort" role="row">
+                            <th class="sorting" aria-label="Rendering engine: activate to sort column ascending"
+                                style="width: 230px;" colspan="1" rowspan="1" aria-controls="example1" tabindex="0">
+                                ID
+                            </th>
+                            <th class="sorting" aria-label="Browser: activate to sort column ascending"
+                                style="width: 282px;" colspan="1" rowspan="1" aria-controls="example1" tabindex="0">
+                                List name
+                            </th>
+                            <th class="sorting" aria-label="Platform(s): activate to sort column ascending"
+                                style="width: 250px;" colspan="1" rowspan="1" aria-controls="example1" tabindex="0">
+                                Total
+                            </th>
+                            <th class="sorting" aria-label="Engine version: activate to sort column ascending"
+                                style="width: 198px;" colspan="1" rowspan="1" aria-controls="example1" tabindex="0">
+                                Active
+                            </th>
+                            <th class="sorting_desc" aria-sort="descending"
+                                aria-label="CSS grade: activate to sort column ascending" style="width: 143px;"
+                                colspan="1" rowspan="1" aria-controls="example1" tabindex="0">Inactive
+                            </th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr>
+                            <td>611</td>
+                            <td><b>seed_hot_rep_1</b></td>
+                            <td>49</td>
+                            <td>49</td>
+                            <td>0</td>
+                        </tr>
+                        <tr>
+                            <td>612</td>
+                            <td><b>seed_hot_rep_2</b></td>
+                            <td>49</td>
+                            <td>0</td>
+                            <td>49</td>
+                        </tr>
+                        <tr>
+                            <td>613</td>
+                            <td><b>seed_hot_rep_3</b></td>
+                            <td>49</td>
+                            <td>49</td>
+                            <td>0</td>
+                        </tr>
+                        <tr>
+                            <td>614</td>
+                            <td><b>seed_hot_rep_4</b></td>
+                            <td>50</td>
+                            <td>50</td>
+                            <td>0</td>
+                        </tr>
+                        <tr>
+                            <td>615</td>
+                            <td><b>seed_hot_rep_5</b></td>
+                            <td>55</td>
+                            <td>55</td>
+                            <td>0</td>
+                        </tr>
+                        <tr>
+                            <td>616</td>
+                            <td><b>seed_hot_1</b></td>
+                            <td>15</td>
+                            <td>15</td>
+                            <td>0</td>
+                        </tr>
+                        <tr>
+                            <td>617</td>
+                            <td><b>seed_hot_2</b></td>
+                            <td>15</td>
+                            <td>15</td>
+                            <td>0</td>
+                        </tr>
+                        <tr>
+                            <td>618</td>
+                            <td><b>seed_hot_3</b></td>
+                            <td>30</td>
+                            <td>30</td>
+                            <td>0</td>
+                        </tr>
+                        <tr>
+                            <td>619</td>
+                            <td><b>seed_hot_4</b></td>
+                            <td>15</td>
+                            <td>15</td>
+                            <td>0</td>
+                        </tr>
+                        <tr>
+                            <td>620</td>
+                            <td><b>seed_hot_5</b></td>
+                            <td>15</td>
+                            <td>15</td>
+                            <td>0</td>
+                        </tr>
+                        </tbody>
+                        <tfoot>
+                        <tr>
+                            <th colspan="1" rowspan="1">ID</th>
+                            <th colspan="1" rowspan="1">List name</th>
+                            <th colspan="1" rowspan="1">Total</th>
+                            <th colspan="1" rowspan="1">Active</th>
+                            <th colspan="1" rowspan="1">Inactive</th>
+                        </tr>
+                        </tfoot>
+                    </table>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-sm-5">
+                    <div aria-live="polite" role="status" id="example1_info" class="dataTables_info">Showing 1 to 10 of
+                        57 entries
+                    </div>
+                </div>
+                <div class="col-sm-7">
+                    <div id="example1_paginate" class="dataTables_paginate paging_simple_numbers">
+                        <ul class="pagination">
+                            <li id="example1_previous" class="paginate_button previous disabled"><a tabindex="0"
+                                                                                                    data-dt-idx="0"
+                                                                                                    aria-controls="example1"
+                                                                                                    href="#">Previous</a>
+                            </li>
+                            <li class="paginate_button active"><a tabindex="0" data-dt-idx="1" aria-controls="example1"
+                                                                  href="#">1</a></li>
+                            <li class="paginate_button "><a tabindex="0" data-dt-idx="2" aria-controls="example1"
+                                                            href="#">2</a></li>
+                            <li class="paginate_button "><a tabindex="0" data-dt-idx="3" aria-controls="example1"
+                                                            href="#">3</a></li>
+                            <li class="paginate_button "><a tabindex="0" data-dt-idx="4" aria-controls="example1"
+                                                            href="#">4</a></li>
+                            <li class="paginate_button "><a tabindex="0" data-dt-idx="5" aria-controls="example1"
+                                                            href="#">5</a></li>
+                            <li class="paginate_button "><a tabindex="0" data-dt-idx="6" aria-controls="example1"
+                                                            href="#">6</a></li>
+                            <li id="example1_next" class="paginate_button next"><a tabindex="0" data-dt-idx="7"
+                                                                                   aria-controls="example1" href="#">Next</a>
+                            </li>
                         </ul>
                     </div>
                 </div>
-                <div class="btn-group dropup pagesize">
-                    <button href="#" data-toggle="dropdown" class="btn dropdown-toggle">Rows&nbsp;<span
-                            class="caret"></span></button>
-                    <ul class="dropdown-menu">
-                        <li><a href="#">5</a></li>
-                        <li><a href="#">30</a></li>
-                        <li><a href="#">200</a></li>
-                        <li><a href="#">All</a></li>
-                    </ul>
-                </div>
-                <div class="btn-group dropup columnpicker">
-                    <button href="#" data-toggle="dropdown" class="btn dropdown-toggle">Columns&nbsp;<span
-                            class="caret"></span></button>
-                    <ul class="dropdown-menu">
-                        <li><input type="checkbox" value="id" title="id" checked="">&nbsp;ID</li>
-                        <li><input type="checkbox" value="name" title="name" checked="">&nbsp;List name</li>
-                        <li><input type="checkbox" value="Total" title="Total" checked="">&nbsp;Total</li>
-                        <li><input type="checkbox" value="active" title="active" checked="">&nbsp;Active</li>
-                        <li><input type="checkbox" value="inactive" title="inactive" checked="">&nbsp;Inactive</li>
-                    </ul>
-                </div>
-                <div class="btn-group dropup actions">
-                    <button href="#" data-toggle="dropdown" class="btn dropdown-toggle"><i
-                            class="icon-list"></i>&nbsp;<span class="caret"></span></button>
-                    <ul class="dropdown-menu">
-                        <li><label>
-                            <input type="checkbox" checked="">
-                        </label>&nbsp;Filter
-                        </li>
-                        <li><label>
-                            <input type="checkbox" checked="">
-                        </label>&nbsp;ColumnPicker
-                        </li>
-                        <li><a class="refresh" href="#"><i class="icon-refresh"></i>&nbsp;Refresh</a></li>
-                    </ul>
-                </div>
             </div>
-        </td>
-    </tr>
-    </tfoot>
-</table>
+        </div>
+        <!-- /dataTables_wrapper -->
+    </div>
+    <!-- /.box-body -->
+</div>
+<!-- /.box -->
