@@ -4,7 +4,6 @@ from authentication.models import Account
 from seed.models import Seed
 
 
-# TODO tatata
 class Job(models.Model):
     Action_CHOICES = (
         ('RS', 'Mark spam as read'),
@@ -22,6 +21,7 @@ class Job(models.Model):
         ('CL', 'Click links INBOX'),
         ('FM', 'Flag Mails INBOX')
     )
+    # TODO-CVC test
     user = models.ForeignKey(Account, on_delete=models.CASCADE)
     seed_list = models.ManyToManyField(Seed)
     actions = models.CharField(max_length=2, choices=Action_CHOICES, default='RS')
