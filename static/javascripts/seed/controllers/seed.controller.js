@@ -22,7 +22,6 @@
     'use strict';
 
 
-
     JobController.$inject = ['$location', '$scope', 'Job', 'Authentication'];
 
 
