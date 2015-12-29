@@ -17,6 +17,5 @@
             Job.logg(vm.message);
         }
 
-        //TODO babatata
     }
 })();
