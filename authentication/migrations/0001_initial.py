@@ -14,9 +14,9 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name='Account',
             fields=[
-                ('id', models.AutoField(primary_key=True, auto_created=True, serialize=False, verbose_name='ID')),
+                ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
                 ('password', models.CharField(max_length=128, verbose_name='password')),
-                ('last_login', models.DateTimeField(verbose_name='last login', default=django.utils.timezone.now)),
+                ('last_login', models.DateTimeField(default=django.utils.timezone.now, verbose_name='last login')),
                 ('username', models.CharField(max_length=40, unique=True)),
                 ('first_name', models.CharField(max_length=40, blank=True)),
                 ('last_name', models.CharField(max_length=40, blank=True)),
