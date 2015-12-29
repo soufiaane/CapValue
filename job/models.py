@@ -22,11 +22,11 @@ class Job(models.Model):
     )
     user = models.ForeignKey(Account, on_delete=models.CASCADE)
     seed_list = models.ManyToManyField(Seed)
-    actions = models.CharField(max_length=2, choices=Action_CHOICES)
+    actions = models.CharField(max_length=2, choices=Action_CHOICES, default='RS')
+    status = models.CharField(max_length=2, choices=STATUS_OPTIONS, default='CL')
 
     entered = models.DateTimeField(auto_now_add=True)
-    finished = models.DateTimeField(blank=True)
+    finished = models.DateTimeField(blank=True, auto_now_add=True)
 
     keyword = models.CharField(max_length=40, blank=True)
-    status = models.CharField(max_length=2, choices=STATUS_OPTIONS)
     processed = models.IntegerField(default=0)
