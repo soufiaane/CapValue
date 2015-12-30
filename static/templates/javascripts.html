@@ -1,11 +1,14 @@
 {% load compress %}{% load staticfiles %}{% compress js %}
     <script type="text/javascript" src="{% static 'libs/jquery/dist/jquery.min.js' %}"></script>
     <script type="text/javascript" src="{% static 'libs/bootstrap/dist/js/bootstrap.min.js' %}"></script>
+    {# <script type="text/javascript" src="{% static 'libs/angular-bootstrap/ui-bootstrap-tpls.min.js' %}"></script>#}
     <script type="text/javascript" src="{% static 'libs/fastclick/lib/fastclick.js' %}"></script>
     <script type="text/javascript" src="{% static 'libs/sparkline/dist/jquery.sparkline.min.js' %}"></script>
     <script type="text/javascript" src="{% static 'libs/jvectormap/jquery.jvectormap.min.js' %}"></script>
     <script type="text/javascript" src="{% static 'libs/slimScroll/jquery.slimscroll.min.js' %}"></script>
     <script type="text/javascript" src="{% static 'libs/Chart.js/Chart.js' %}"></script>
+    <script type="text/javascript" src="{% static 'libs/papaparse/papaparse.min.js' %}"></script>
+    <script type="text/javascript" src="{% static 'libs/iCheck/icheck.min.js' %}"></script>
     <script type="text/javascript" src="{% static 'templates/dist/js/CapValue.min.js' %}"></script>
 
     {#----------------------------------------------------------------------------------------------------------------#}
@@ -39,6 +42,7 @@
 
     <script type="text/javascript" src="{% static 'javascripts/seed/seed.module.js' %}"></script>
     <script type="text/javascript" src="{% static 'javascripts/seed/services/seed.service.js' %}"></script>
+    <script type="text/javascript" src="{% static 'javascripts/seed/directives/seed.directive.js' %}"></script>
     <script type="text/javascript" src="{% static 'javascripts/seed/controllers/seed.controller.js' %}"></script>
 
 {% endcompress %}

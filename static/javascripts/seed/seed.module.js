@@ -5,6 +5,7 @@
         .module('capvalue.seed', [
             'capvalue.seed.controllers',
             'capvalue.seed.services',
+            'capvalue.seed.directives',
             'ngAnimate'
         ]);
 
@@ -13,4 +14,7 @@
 
     angular
         .module('capvalue.seed.services', []);
+
+    angular
+        .module('capvalue.seed.directives', []);
 })();

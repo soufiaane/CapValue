@@ -1,23 +1,19 @@
 <!-- form-interests.html -->
-<label>What's Your Console of Choice?</label>
+<label class="well"
+       style="color: #FFFFFF;background-color:#222D32;border-color: #222D32; margin-bottom:10px;margin-top: 20px; padding: 2px;">Seed
+    List
+    <small>(Ex: email,password)</small>
+</label>
 <div class="form-group">
-    <div class="radio">
-        <label>
-            <input type="radio" ng-model="vm.formData.type" value="xbox" checked>
-            I like XBOX
-        </label>
-    </div>
-    <div class="radio">
-        <label>
-            <input type="radio" ng-model="vm.formData.type" value="ps">
-            I like PS4
-        </label>
-    </div>
+    <textarea class="form-control" placeholder="Textarea" rows="3" ng-model="vm.formData.seedList_Input"
+              ng-change="vm.seedListInputBind()"></textarea>
+    <input type="file" file-model="vm.myFile"/>
+    <span ng-click="vm.uploadFile()">upload me</span>
 </div>
-
+<hr>
 <div class="form-group row">
     <div class="col-xs-6 col-xs-offset-3">
-        <a ui-sref="SeedCreate.proxy" class="btn btn-block btn-info">
+        <a ui-sref="SeedCreate.proxy" class="btn btn-block btn-social btn-twitter">
             Next Section <span class="glyphicon glyphicon-circle-arrow-right"></span>
         </a>
     </div>
