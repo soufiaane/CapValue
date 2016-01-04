@@ -8,6 +8,7 @@
     SeedController.$inject = ['$location', '$scope', 'Seed', 'Authentication', 'FileUpload'];
 
     function SeedController() {
+
         var vm = this;
 
         vm.uploadFile = uploadFile;
@@ -50,9 +51,8 @@
             Papa.parse(file,
                 {
                     worker: true,
-                    step: function (results, parser) {
-                        var progress = results.data[0].indexes;
-                        console.log(typeof(results.data[0]));
+                    step: function (results) {
+                        var progress = results.indexes[0];
                         var newPercent = Math.round(progress / size * 100);
                         if (newPercent === percent) return;
                         percent = newPercent;
