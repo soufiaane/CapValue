@@ -7,7 +7,7 @@
 
     SeedController.$inject = ['$location', '$scope', 'Seed', 'Authentication', 'FileUpload'];
 
-    function SeedController($location, $scope, Seed, Authentication, FileUpload) {
+    function SeedController() {
         var vm = this;
 
         vm.uploadFile = uploadFile;
@@ -49,20 +49,22 @@
             var parsedData = vm.parsedData;
             Papa.parse(file,
                 {
-                    download: true,
-                    step: function (result) {
-                        var progress = result.data[0].indexes;
+                    worker: true,
+                    step: function (results, parser) {
+                        var progress = results.data[0].indexes;
+                        console.log(typeof(results.data[0]));
                         var newPercent = Math.round(progress / size * 100);
                         if (newPercent === percent) return;
                         percent = newPercent;
-                        //console.log({percent: percent});
                     },
-                    complete: function (results) {
-                        vm.parsedData = results;
+                    complete: function (results, file) {
+                        //TODO-CVC insert div with file and total seed imported + remove option
+                        var ol = document.createElement("ol");
+                        var li = document.createElement("li");
+                        ol.appendChild(li);
+                        document.getElementById('uploadedFiles').appendChild(ol);
                     }
                 });
-
-            console.log('FINAL RESULT IS: ', vm.parsedData);
         }
     }
 })();
