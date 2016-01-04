@@ -1,5 +1,5 @@
 # CapValue
-
+[![Build Status](https://travis-ci.org/soufiaane/CapValue.svg?branch=master)](https://travis-ci.org/soufiaane/CapValue)
 python version =3.4.4 x64
 
 ------------------------------------------
