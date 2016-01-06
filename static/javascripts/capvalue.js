@@ -10,7 +10,8 @@
             'capvalue.job',
             'capvalue.seed',
             'ncy-angular-breadcrumb',
-            'ngAnimate'
+            'ngAnimate',
+            'multiStepForm'
         ]).run(run);
 
     run.$inject = ['$http'];
