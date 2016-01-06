@@ -6,7 +6,8 @@
             'capvalue.seed.controllers',
             'capvalue.seed.services',
             'capvalue.seed.directives',
-            'ngAnimate'
+            'ngAnimate',
+            'multiStepForm'
         ]);
 
     angular
