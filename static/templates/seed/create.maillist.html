@@ -17,8 +17,9 @@
     <textarea class="form-control" placeholder="... ." rows="5" ng-model="vm.seedList.textarea_Input"
               ng-change="vm.seedListInputBind('textarea')"></textarea>
 
-
-    <input type="file" file-model="vm.selectedFile"/>
+    <div>
+        <input id="seedfile_import" type="file" file-model="vm.selectedFile"/>
+    </div>
     <span ng-click="vm.seedListInputBind('file')">upload me</span>
 
     <div id="uploadedFiles" class="row"></div>

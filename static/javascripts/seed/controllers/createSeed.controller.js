@@ -42,13 +42,10 @@
             if ((type == 'file') && vm.selectedFile) {
                 vm.uploadedFiles.push(vm.selectedFile);
                 vm.selectedFile = null;
+                document.getElementById("seedfile_import").value = "";
             }
             if (vm.seedList.proxyType == "manual") {
                 if (type == 'file') {
-                    if (vm.selectedFile) {
-                        vm.uploadedFiles.push(vm.selectedFile);
-                        vm.selectedFile = null;
-                    }
                     for (var i = 0; i < vm.uploadedFiles.length; i++) {
                         var file = vm.uploadedFiles[i];
                         var size = file.size;
