@@ -1,22 +1,25 @@
-<!-- form-interests.html -->
+<div id="formErrors" class="col-xs-8 col-sm-offset-2">
+
+</div>
 <label class="well"
-       style="color: #FFFFFF;background-color:#222D32;border-color: #222D32; margin-bottom:10px;margin-top: 20px; padding: 2px;">Seed
+       style="color: #FFF;background-color:#222D32;border-color: #222D32; margin-bottom:10px;margin-top: 20px; padding: 2px;">Seed
     List
-    <small>(Ex: email,password)</small>
+    <div ng-show="vm.seedList.proxyType == 'manual'">
+        <small>(Format: email,password,proxy,port,login,password)</small>
+    </div>
+    <div ng-show="vm.seedList.proxyType !== 'manual'">
+        <small>(Format: email,password)</small>
+    </div>
 </label>
-<div class="form-group">
-    <textarea class="form-control" placeholder="Textarea" rows="3" ng-model="vm.formData.seedList_Input"
-              ng-change="vm.seedListInputBind()"></textarea>
-    <input type="file" file-model="vm.myFile"/>
-    <span ng-click="vm.uploadFile()">upload me</span>
+
+<div class="form-group" style="color:#fff;">
+
+    <textarea class="form-control" placeholder="... ." rows="5" ng-model="vm.seedList.textarea_Input"
+              ng-change="vm.seedListInputBind('textarea')"></textarea>
+
+
+    <input type="file" file-model="vm.selectedFile"/>
+    <span ng-click="vm.seedListInputBind('file')">upload me</span>
 
     <div id="uploadedFiles" class="row"></div>
-</div>
-<hr>
-<div class="form-group row">
-    <div class="col-xs-6 col-xs-offset-3">
-        <a ui-sref="SeedCreate.proxy" class="btn btn-block btn-social btn-twitter">
-            Next Section <span class="glyphicon glyphicon-circle-arrow-right"></span>
-        </a>
-    </div>
 </div>

@@ -11,11 +11,11 @@
         ]);
 
     angular
-        .module('capvalue.seed.controllers', []);
+        .module('capvalue.seed.controllers', ['multiStepForm']);
 
     angular
-        .module('capvalue.seed.services', []);
+        .module('capvalue.seed.services', ['multiStepForm']);
 
     angular
-        .module('capvalue.seed.directives', []);
+        .module('capvalue.seed.directives', ['multiStepForm']);
 })();

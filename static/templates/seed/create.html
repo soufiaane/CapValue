@@ -1,52 +1,52 @@
 <!-- form.html -->
 <div class="row">
     <div class="col-sm-8 col-sm-offset-2">
+        <pre>{$ vm.seedList $}</pre>
 
         <div id="form-container">
             <multi-step-container steps="vm.steps">
-                <header>
-                    <div class="page-header text-center">
-                        <h2 style="color: #ffffff;">Seed List Creation</h2>
+                <div class="page-header text-center" style="padding: 1px;">
+                    <h2 style="color: #ffffff;">Seed List Creation</h2>
 
-                        <div id="status-buttons" class="text-center">
-                            <a class="{$ ($getActiveIndex() == '1') ? 'active' : 'disabled' $}"><span>1</span>
-                                Infos</a>
-                            <a class="{$ ($getActiveIndex() == '2') ? 'active' : 'disabled' $}"><span>2</span>
-                                Email
-                                List</a>
-                            <a class="{$ ($getActiveIndex() == '3') ? 'active' : 'disabled' $}"><span>3</span> Proxy</a>
-                        </div>
+                    <div id="status-buttons" class="text-center">
+                        <a class="{$ ($getActiveIndex() == '1') ? 'active' : 'disabled' $}"><span>1</span>
+                            Infos</a>
+                        <a class="{$ ($getActiveIndex() == '2') ? 'active' : 'disabled' $}"><span>2</span>
+                            Email
+                            List</a>
+                        <a class="{$ ($getActiveIndex() == '3') ? 'active' : 'disabled' $}"><span>3</span> Proxy</a>
                     </div>
+                </div>
 
-                    <div>
-                        <form id="signup-form" ng-submit="vm.processForm()" style="min-height: 150px;" novalidate>
+                <div class="text-center">
+                    <form id="seedCreate_form" ng-submit="vm.processForm()"
+                          style="min-height: 100px; padding-bottom: 0px" novalidate>
 
-                            <!-- our nested state views will be injected here -->
-                            <step-container></step-container>
-                        </form>
-                    </div>
+                        <!-- our nested state views will be injected here -->
+                        <step-container></step-container>
+                    </form>
+                </div>
 
-                    <hr>
-                    <nav>
-                        <ul class="pager">
-                            <li class="previous pull-left">
-                                <button href="#" ng-disabled="$isFirst()" ng-click="$previousStep()"
-                                        class="btn btn-lg btn-warning"><span
-                                        class="glyphicon glyphicon-circle-arrow-left"></span>
-                                    Previous&nbsp;</button>
-                            </li>
+                <hr>
+                <ul class="pager">
+                    <li class="previous pull-left">
+                        <button href="#" ng-disabled="$isFirst()" ng-click="$previousStep()"
+                                class="btn btn-lg btn-warning"><span
+                                class="glyphicon glyphicon-circle-arrow-left"></span>
+                            Previous&nbsp;</button>
+                    </li>
 
-                            <li class="next pull-right">
-                                <button href="#" ng-click="$nextStep()" ng-disabled="$isLast()"
-                                        class="btn btn-lg btn-success">
-                                    Next&nbsp;
-                                    <span class="glyphicon glyphicon-circle-arrow-right"></span></button>
-                            </li>
-                        </ul>
-                    </nav>
-                </header>
-                <pre>{$ vm.formData $}</pre>
+                    <li class="next pull-right">
+                        <button href="#" ng-click="vm.checkStep($nextStep, $getActiveIndex)"
+                                ng-disabled="$isLast()"
+                                class="btn btn-lg btn-success">
+                            Next&nbsp;
+                            <span class="glyphicon glyphicon-circle-arrow-right"></span></button>
+                    </li>
+                </ul>
             </multi-step-container>
         </div>
+        <pre>{$ vm.seedList $}</pre>
+
     </div>
 </div>
