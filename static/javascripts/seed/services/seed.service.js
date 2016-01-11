@@ -3,41 +3,38 @@
 
     angular
         .module('capvalue.seed.services')
-        .factory('Seed', Seed)
-        .factory('FileUpload', FileUpload);
+        .factory('Seed', Seed);
 
-    Seed.$inject = ['$cookies', '$http'];
-    FileUpload.$inject = ['$http'];
+    Seed.$inject = ['$http'];
 
-    function Seed($cookies, $http) {
+    function Seed($http) {
         return Seed = {
-            logg: logg
+            all: all,
+            create: create,
+            get: get
         };
 
-        function logg(message) {
-            return console.log(message);
+        function all() {
+            return $http.get('/api/v1/seeds/');
+        }
+
+        function get(username) {
+            return $http.get('/api/v1/accounts/' + username + '/seeds/');
+        }
+
+        function create(list_name, proxyType) {
+            return $http.post('/api/v1/seeds/', {
+                list_name: list_name,
+                proxyType: proxyType
+            }).then(createSuccessFn, createErrorFn);
+
+            function createSuccessFn() {
+                console.log('SUCCESSSSSSSSSSSSSS');
+            }
+
+            function createErrorFn() {
+                console.error('Epic failure! (seed.service.create.createErrorFn)');
+            }
         }
     }
-
-    function FileUpload($http) {
-        var FileUpload = {
-            uploadFileToUrl: uploadFileToUrl
-        };
-
-        return FileUpload;
-
-        function uploadFileToUrl(file, uploadUrl) {
-            var fd = new FormData();
-            fd.append('file', file);
-            $http.post(uploadUrl, fd, {
-                    transformRequest: angular.identity,
-                    headers: {'Content-Type': undefined}
-                })
-                .success(function () {
-                })
-                .error(function () {
-                });
-        }
-    }
-
 })();

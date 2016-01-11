@@ -1,5 +1,6 @@
-from django.db import models
+from datetime import datetime
 
+from django.db import models
 from authentication.models import Account
 from seed.models import Seed
 
@@ -26,8 +27,6 @@ class Job(models.Model):
     actions = models.CharField(max_length=2, choices=Action_CHOICES, default='RS')
     status = models.CharField(max_length=2, choices=STATUS_OPTIONS, default='CL')
 
-    entered = models.DateTimeField(auto_now_add=True)
-    finished = models.DateTimeField(blank=True, auto_now_add=True)
+    created_at = models.DateTimeField(auto_now_add=True, default=datetime.now)
+    updated_at = models.DateTimeField(auto_now=True, default=datetime.now)
 
-    keyword = models.CharField(max_length=40, blank=True)
-    processed = models.IntegerField(default=0)

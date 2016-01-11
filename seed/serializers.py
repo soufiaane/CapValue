@@ -1,14 +1,18 @@
 from rest_framework import serializers
-from job.models import Job
+from seed.models import Seed
+from authentication.serializers import AccountSerializer
 
 
 class SeedSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Job
-        fields = ('jobid', 'user', 'entered', 'finished',
-                  'keyword', 'status', 'processed',
-                  'actions',)
-        read_only_fields = ('entered', 'finished',)
+    user = AccountSerializer(read_only=True, required=False)
 
-        def create(self, validated_data):
-            return Job.objects.create(**validated_data)
+    class Meta:
+        model = Seed
+
+        fields = ('id', 'user', 'list_name', 'proxyType', 'created_at', 'updated_at')
+        read_only_fields = ('id', 'created_at', 'updated_at')
+
+        def get_validation_exclusions(self, *args, **kwargs):
+            exclusions = super(SeedSerializer, self).get_validation_exclusions()
+
+            return exclusions + ['user']

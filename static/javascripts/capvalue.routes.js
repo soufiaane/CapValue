@@ -26,15 +26,15 @@
                 controllerAs: 'vm',
                 templateUrl: '/static/templates/layout/index.html'
             })
-            .state('Job', {
+            .state('JobList', {
                 url: "/job/create/",
-                controller: 'JobController',
+                controller: 'JobCreateController',
                 controllerAs: 'vm',
                 templateUrl: '/static/templates/job/create.html'
             })
-            .state('JobList', {
+            .state('JobCreate', {
                 url: "/job/list/",
-                controller: 'JobController',
+                controller: 'JobCreateController',
                 controllerAs: 'vm',
                 templateUrl: '/static/templates/job/list.html'
             })

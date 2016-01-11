@@ -4,7 +4,8 @@
     angular
         .module('capvalue.job', [
             'capvalue.job.controllers',
-            'capvalue.job.services'
+            'capvalue.job.services',
+            'capvalue.job.directives'
         ]);
 
     angular
@@ -12,4 +13,7 @@
 
     angular
         .module('capvalue.job.services', []);
+
+    angular
+        .module('capvalue.job.directives', []);
 })();

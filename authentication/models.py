@@ -1,5 +1,4 @@
 from django.contrib.auth.models import AbstractBaseUser, BaseUserManager
-from CapValue.roles import *
 from django.db import models
 
 

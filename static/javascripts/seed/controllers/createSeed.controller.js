@@ -3,10 +3,10 @@
         angular
             .module('capvalue.seed.controllers')
             .controller('SeedCreateController', SeedCreateController);
-        SeedCreateController.$inject = ['FileUpload'];
+        SeedCreateController.$inject = ['Seed'];
 
 
-        function SeedCreateController() {
+        function SeedCreateController(Seed) {
             var vm = this;
 
             vm.steps = [
@@ -33,8 +33,7 @@
             vm.checkStep2 = checkStep2;
             vm.checkStep3 = checkStep3;
             vm.seedListInputBind = seedListInputBind;
-            vm.uploadFile = uploadFile;
-
+            vm.processForm = processForm;
             //*******************************************************************************************************
             //*******************************************************************************************************
             function seedListInputBind(type) {
@@ -137,10 +136,6 @@
                 }
             }
 
-            function uploadFile() {
-                vm.uploadedFiles.push();
-            }
-
             function reset() {
                 vm.user = angular.copy(vm.master);
                 //TODO-CVC Goto Step1
@@ -202,10 +197,10 @@
             function checkStep2($nextStep) {
                 var errors = [];
 
-                if (!(vm.seedList.name)) {
+                if (vm.seedList.emails == {textarea: [], files: []}) {
                     errors.push({
-                        name: 'seedList.name',
-                        error: 'Seed List Name is required !'
+                        name: 'seedList.emails',
+                        error: 'Email list is empty !'
                     });
                 }
                 if (!(vm.seedList.proxyType)) {
@@ -225,6 +220,10 @@
 
             function checkStep3($nextStep) {
                 $nextStep();
+            }
+
+            function processForm() {
+                Seed.create(vm.seedList.name, vm.seedList.proxyType);
             }
         }
     })();

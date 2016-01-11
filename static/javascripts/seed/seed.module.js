@@ -14,8 +14,8 @@
         .module('capvalue.seed.controllers', ['multiStepForm']);
 
     angular
-        .module('capvalue.seed.services', ['multiStepForm']);
+        .module('capvalue.seed.services', []);
 
     angular
-        .module('capvalue.seed.directives', ['multiStepForm']);
+        .module('capvalue.seed.directives', []);
 })();
