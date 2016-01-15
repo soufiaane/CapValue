@@ -8,21 +8,17 @@ from seed.permissions import IsOwnerOfSeedList
 class SeedViewSet(viewsets.ModelViewSet):
     queryset = Seed.objects.all()
     serializer_class = SeedSerializer
-
-    def get_permissions(self):
-        if self.request.method in permissions.SAFE_METHODS:
-            return (permissions.AllowAny(),)
-        return (permissions.IsAuthenticated(), IsOwnerOfSeedList(),)
+    permission_classes = (permissions.IsAuthenticatedOrReadOnly, IsOwnerOfSeedList,)
 
     def perform_create(self, serializer):
         serializer.save(user=self.request.user)
-
         return super(SeedViewSet, self).perform_create(serializer)
 
 
 class AccountSeedViewSet(viewsets.ViewSet):
     queryset = Seed.objects.select_related('user').all()
     serializer_class = SeedSerializer
+    permission_classes = (permissions.IsAuthenticatedOrReadOnly, IsOwnerOfSeedList,)
 
     def list(self, request, account_username=None):
         queryset = self.queryset.filter(user__username=account_username)

@@ -6,7 +6,7 @@ from seed.models import Seed
 
 
 class Job(models.Model):
-    Action_CHOICES = (
+    ACTION_CHOICES = (
         ('RS', 'Mark spam as read'),
         ('NS', 'Not spam'),
         ('RI', 'Mark inbox as read'),
@@ -18,14 +18,17 @@ class Job(models.Model):
         ('FM', 'Flag Mails INBOX')
     )
     STATUS_OPTIONS = (
-        ('RS', 'Mark spam as read'),
-        ('CL', 'Click links INBOX'),
-        ('FM', 'Flag Mails INBOX')
+        ('PND', 'Pending'),
+        ('RN', 'Running'),
+        ('Ps', 'Paused'),
+        ('END', 'Finished')
     )
     user = models.ForeignKey(Account, on_delete=models.CASCADE)
     seed_list = models.ManyToManyField(Seed)
-    actions = models.CharField(max_length=2, choices=Action_CHOICES, default='RS')
-    status = models.CharField(max_length=2, choices=STATUS_OPTIONS, default='CL')
+
+    keywords = models.CharField(max_length=10, default='*')
+    actions = models.CharField(max_length=2, choices=ACTION_CHOICES)
+    status = models.CharField(max_length=3, choices=STATUS_OPTIONS, default='PND')
 
     created_at = models.DateTimeField(auto_now_add=True, default=datetime.now)
     updated_at = models.DateTimeField(auto_now=True, default=datetime.now)

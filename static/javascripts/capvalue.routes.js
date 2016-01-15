@@ -40,7 +40,7 @@
             })
             .state('SeedList', {
                 url: "/seed/list/",
-                controller: 'SeedCreateController',
+                controller: 'SeedListController',
                 controllerAs: 'vm',
                 templateUrl: '/static/templates/seed/list.html'
             })

@@ -28,11 +28,11 @@
                 username: username
             }).then(registerSuccessFn, registerErrorFn);
 
-            function registerSuccessFn(data, status, headers, config) {
+            function registerSuccessFn() {
                 Authentication.login(username, password);
             }
 
-            function registerErrorFn(data, status, headers, config) {
+            function registerErrorFn() {
                 console.error('Epic failure!');
             }
         }

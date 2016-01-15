@@ -8,7 +8,6 @@
 
         function SeedCreateController(Seed) {
             var vm = this;
-
             vm.steps = [
                 {
                     templateUrl: '/static/templates/seed/create.info.html',
