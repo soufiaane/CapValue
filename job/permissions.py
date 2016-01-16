@@ -1,8 +1,11 @@
 from rest_framework import permissions
 
 
-class IsOwnerOfSeedList(permissions.BasePermission):
+class IsOwnerOfJob(permissions.BasePermission):
     def has_object_permission(self, request, view, obj):
         if request.method in permissions.SAFE_METHODS:
-            return True
+            return permissions.AllowAny()
+        if request.method == "POST":
+            return permissions.AllowAny()
+
         return obj.owner == request.user

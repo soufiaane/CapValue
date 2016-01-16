@@ -36,10 +36,9 @@ INSTALLED_APPS = (
     'rest_framework',
     'rest_framework_nested',
     'authentication',
-    'compressor',
+    'djcelery',
     'job',
     'seed',
-    # 'rolepermissions',
 )
 
 MIDDLEWARE_CLASSES = (
@@ -63,3 +62,20 @@ DATABASES = {
         },
     }
 }
+
+from kombu import Exchange, Queue
+CELERY_CONCURRENCY = 8
+
+CELERY_ACCEPT_CONTENT = ['json']
+
+CELERY_RESULT_BACKEND = 'amqp'
+CELERYD_HIJACK_ROOT_LOGGER = True
+CELERY_HIJACK_ROOT_LOGGER = True
+BROKER_URL = 'amqp://soufiaane:soufiane0@192.168.1.3:5672/cvchost'
+CELERYBEAT_SCHEDULER = 'djcelery.schedulers.DatabaseScheduler'
+
+AMQP_SERVER = "192.168.1.3"
+AMQP_PORT = 5672
+AMQP_USER = "soufiaane"
+AMQP_PASSWORD = "soufiane0"
+AMQP_VHOST = "/cvchost"

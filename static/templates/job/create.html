@@ -1,72 +1,210 @@
-<div id="legend">
-    <legend class=""> New job :</legend>
+<div class="row">
+    <div class="col-sm-8 col-sm-offset-2">
+        <div id="form-container">
+            <div class="page-header text-center" style="padding: 1px;">
+                <h2 style="color: #ffffff;">New job :</h2>
+                <pre>{$ vm.job $}</pre>
+            </div>
+            <div class="text-center">
+                <form id="seedCreate_form" ng-submit="vm.submitJob()"
+                      style="min-height: 100px; padding-bottom: 0" novalidate>
+                    <table class="table table-responsive">
+                        <tr style="width: 100px">
+                            <td style="border: none;">
+                                <span class="pull-left"
+                                      style="color:#fff; font-weight: bold; font-size: large;">Keyword :</span>
+                            </td>
+                            <td style="border: none;">
+                                <input id="seedlist_name" type="text" class="form-control" placeholder="Keyword..."
+                                       aria-describedby="sizing-addon1" ng-model="vm.job.keyword"
+                                       name="seedList.name">
+                            </td>
+                        </tr>
+                    </table>
+
+
+                    <div class="box-body">
+                        <table class="table table-responsive table-condensed">
+                            <tr style="width: 100px">
+                                <td style="border: none; padding: 0; width: 50%;" class="pull-left">
+                                    <label class="checkbox"
+                                           style="color:#fff; font-weight: bold; font-size: small;">
+                                        <input type="checkbox" ng-model="vm.job.actions[0].isChecked">
+                                        Mark spam as read.
+                                    </label>
+                                </td>
+                                <td style="border: none; padding: 0; width: 50%;" class="pull-left">
+                                    <label class="checkbox"
+                                           style="color:#fff; font-weight: bold; font-size: small;">
+                                        <input type="checkbox" ng-model="vm.job.actions[1].isChecked">
+                                        Not spam (spam to inbox).
+                                    </label>
+                                </td>
+                            </tr>
+                            <tr style="width: 100px">
+                                <td style="border: none; padding: 0; width: 50%;" class="pull-left">
+                                    <label class="checkbox"
+                                           style="color:#fff; font-weight: bold; font-size: small;">
+                                        <input type="checkbox" ng-model="vm.job.actions[2].isChecked">
+                                        Mark inbox as read.
+                                    </label>
+                                </td>
+                                <td style="border: none; padding: 0; width: 50%;" class="pull-left">
+                                    <label class="checkbox"
+                                           style="color:#fff; font-weight: bold; font-size: small;">
+                                        <input type="checkbox" ng-model="vm.job.actions[3].isChecked">
+                                        Open inbox.
+                                    </label>
+                                </td>
+                            </tr>
+                            <tr style="width: 100px">
+                                <td style="border: none; padding: 0; width: 50%;" class="pull-left">
+                                    <label class="checkbox"
+                                           style="color:#fff; font-weight: bold; font-size: small;">
+                                        <input type="checkbox" ng-model="vm.job.actions[4].isChecked">
+                                        Safe spam mail.
+                                    </label>
+                                </td>
+                                <td style="border: none; padding: 0; width: 50%;" class="pull-left">
+                                    <label class="checkbox"
+                                           style="color:#fff; font-weight: bold; font-size: small;">
+                                        <input type="checkbox" ng-model="vm.job.actions[5].isChecked">
+                                        Add contacts <b>INBOX</b>
+                                    </label>
+                                </td>
+                            </tr>
+                            <tr style="width: 100px">
+                                <td style="border: none; padding: 0; width: 50%;" class="pull-left">
+                                    <label class="checkbox"
+                                           style="color:#fff; font-weight: bold; font-size: small;">
+                                        <input type="checkbox" ng-model="vm.job.actions[6].isChecked">
+                                        Click links <b>INBOX</b>
+                                    </label>
+                                </td>
+                                <td style="border: none; padding: 0; width: 50%;" class="pull-left">
+                                    <label class="checkbox"
+                                           style="color:#fff; font-weight: bold; font-size: small;">
+                                        <input type="checkbox" ng-model="vm.job.actions[7].isChecked">
+                                        Flag Mails <b>INBOX</b>
+                                    </label>
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+
+
+                    <div class="box-body">
+                        <div class="form-inline dt-bootstrap">
+                            <div class="row">
+                                <div class="col-sm-12">
+                                    <table class="table-condensed table-responsive"
+                                           style="width: 100%; border-style: solid;" ng-model="vm.seed_list">
+                                        <thead>
+                                        <tr role="row">
+                                            <th></th>
+                                            <th class="sorting_asc" tabindex="0" style="color: #fff;">
+                                                List ID
+                                            </th>
+                                            <th class="sorting_asc" tabindex="1" style="color: #fff;">
+                                                List Name
+                                            </th>
+                                            <th class="sorting" tabindex="2" style="color: #fff;">
+                                                Count
+                                            </th>
+                                        </tr>
+                                        </thead>
+
+                                        <thead>
+                                        <tr role="row">
+                                            <th></th>
+                                            <th tabindex="0" rowspan="1" colspan="1">
+                                                <input type="text" class="input-sm" placeholder="List ID..."
+                                                       style="width: 100%;">
+                                            </th>
+                                            <th tabindex="1" rowspan="1" colspan="1">
+                                                <input type="text" class="input-sm" placeholder="List Name..."
+                                                       style="width: 100%;">
+                                            </th>
+                                            <th tabindex="2" rowspan="1" colspan="1">
+                                                <input type="text" class="input-sm" placeholder="Count.."
+                                                       style="width: 100%;">
+                                            </th>
+                                        </tr>
+                                        </thead>
+                                        <tbody>
+                                        <tr role="row" class="odd" ng-repeat="seed in vm.seed_list"
+                                            style="width: 100px;">
+                                            <td style="border: none; padding: 0; color: #fff; text-align: left;">
+                                                <input type="checkbox" ng-click="vm.toggleSeedSelection(seed)">
+                                            </td>
+                                            <td style="border: none; padding: 0; color: #fff; text-align: left;">
+                                                {$ seed.id $}
+                                            </td>
+                                            <td style="border: none; padding: 0; color: #fff; text-align: left;">
+                                                {$ seed.list_name $}
+                                            </td>
+                                            <td style="border: none; padding: 0; color: #fff; text-align: left;">
+                                                50
+                                            </td>
+                                        </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-sm-5">
+                                    <div class="dataTables_info" role="status" aria-live="polite">Showing 1
+                                        to 10 of 57 entries
+                                    </div>
+                                </div>
+                                <div class="col-sm-7">
+                                    <div class="pull-right">
+                                        <ul class="pagination">
+                                            <li class="paginate_button previous disabled" id="example2_previous">
+                                                <a href="#" data-dt-idx="0" tabindex="0">Previous</a>
+                                            </li>
+                                            <li class="paginate_button active">
+                                                <a href="#" data-dt-idx="1" tabindex="0">1</a>
+                                            </li>
+                                            <li class="paginate_button ">
+                                                <a href="#" data-dt-idx="2" tabindex="0">2</a>
+                                            </li>
+                                            <li class="paginate_button ">
+                                                <a href="#" data-dt-idx="3" tabindex="0">3</a>
+                                            </li>
+                                            <li class="paginate_button ">
+                                                <a href="#" data-dt-idx="4" tabindex="0">4</a>
+                                            </li>
+                                            <li class="paginate_button ">
+                                                <a href="#" data-dt-idx="5" tabindex="0">5</a>
+                                            </li>
+                                            <li class="paginate_button ">
+                                                <a href="#" data-dt-idx="6" tabindex="0">6</a>
+                                            </li>
+                                            <li class="paginate_button next" id="example2_next">
+                                                <a href="#" data-dt-idx="7"
+                                                   tabindex="0">Next</a>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+
+                    <hr style="margin: 0;">
+                    <hr style="margin: 0;">
+                    <hr style="margin: 0;">
+                    <hr style="margin: 0;">
+                    <div class="text-center">
+                        <button type="submit" class="btn btn-danger btn-block">Submit</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
 </div>
-<form id="FnewJOB" class="form-horizontal" method="POST">
-    <div class="control-group">
-        <!-- Level -->
-        <label class="control-label">Keywords :</label>
 
-        <div class="span4 pull-left">
-            <input type="text" name="keywords" id="keywords" style="height: 30px">
-            <br><i class="icon-info-sign" title="search"></i> To get all keywords use : <code> .* </code>
-        </div>
-    </div>
 
-    <div class="control-group">
-        <!-- Level -->
-        <label class="control-label">Actions :</label>
-
-        <div class="span4 pull-left _process">
-            <label class="checkbox"><input type="checkbox" name="action[]" id="RS" value="0">Mark spam as
-                read.</label>
-            <label class="checkbox"> <input type="checkbox" name="action[]" id="NS" value="1">Not spam (spam
-                to inbox).</label>
-            <label class="checkbox"> <input type="checkbox" name="action[]" id="RI" value="2">Mark inbox as
-                read.</label>
-            <label class="checkbox"> <input type="checkbox" name="action[]" id="OI" value="3">Open
-                inbox.</label>
-            <label class="checkbox"> <input type="checkbox" name="action[]" id="RM" value="4">Replay inbox
-                mail.</label>
-            <!-- <label class="checkbox"> <input type="checkbox" name="action[]" id="MS" value="5">Mark As Spam.</label> -->
-            <label class="checkbox"> <input type="checkbox" name="action[]" id="TR" value="6">Trust inbox
-                mail</label>
-            <label class="checkbox"> <input type="checkbox" name="action[]" id="SS" value="7">Safe spam mail</label>
-            <label class="checkbox"> <input type="checkbox" name="action[]" id="AC" value="8">Add contacts
-                <b>INBOX</b></label>
-            <!--  tmp click action for grp4  -->
-            <label class="checkbox"> <input type="checkbox" name="action[]" id="CL" value="9">Click links
-                <b>INBOX</b></label>
-
-            <label class="checkbox"> <input type="checkbox" name="action[]" id="FM" value="12">Flag Mails
-                <b>INBOX</b></label>
-        </div>
-
-        <div class="_clear">
-                        <span style="margin-left:-2.3%" class="text-info">Clear mailbox : <b>( no filter needed
-                            )</b></span><br/><br/>
-            <label class="checkbox"> <input type="checkbox" name="action[]" id="CI" value="11">Clear <span
-                    class="label label-info">Inbox</span> <code> ( this action may take a long time )</code></label>
-            <label class="checkbox"> <input type="checkbox" name="action[]" id="CS" value="10">Clear <span
-                    class="label label-important">Spam</span></label>
-        </div>
-    </div>
-
-    <div class="control-group">
-        <!-- Level -->
-        <label class="control-label">List :</label>
-        <label class="control-label"></label>
-
-        <div class=" pull-left" style="margin-left: -16.5%;">
-            <input type="hidden" name="list[]" value="" id="list"/>
-
-            <div id="result" class="span6"></div>
-        </div>
-    </div>
-
-    <div class="control-group">
-        <!-- Level -->
-        <button type="button" class="btn btn-success" id="btn_fast" name="btn_fast" value="btn_fast">
-            Start process
-        </button>
-    </div>
-</form>
