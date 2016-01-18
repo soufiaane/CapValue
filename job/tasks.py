@@ -1,6 +1,8 @@
 from __future__ import absolute_import
+
 from celery.utils.log import get_task_logger
-from CapValue.celery import app
+
+from CapValue.celery_settings import app
 
 logger = get_task_logger(__name__)
 

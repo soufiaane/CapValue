@@ -2,11 +2,11 @@
     'use strict';
     angular
         .module('capvalue.seed.controllers')
-        .controller('SeedListController', SeedListController);
-    SeedListController.$inject = ['Seed', 'Authentication', 'ngTableParams'];
+        .controller('JobListController', JobListController);
+    JobListController.$inject = ['Job', 'Seed', 'Authentication', 'ngTableParams'];
 
 
-    function SeedListController(Seed, Authentication, ngTableParams) {
+    function JobListController(Job, Seed, Authentication, ngTableParams) {
         var vm = this;
         var user = Authentication.getAuthenticatedAccount();
         Seed.get(user.username).then(SuccessSeedListFn, ErrorSeedListFn);

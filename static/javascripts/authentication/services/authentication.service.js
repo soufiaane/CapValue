@@ -5,10 +5,10 @@
         .module('capvalue.authentication.services')
         .factory('Authentication', Authentication);
 
-    Authentication.$inject = ['$cookies', '$http'];
+    Authentication.$inject = ['$cookies', '$http', '$state'];
 
 
-    function Authentication($cookies, $http) {
+    function Authentication($cookies, $http, $state) {
 
         return Authentication = {
             getAuthenticatedAccount: getAuthenticatedAccount,
@@ -42,6 +42,8 @@
 
             function loginSuccessFn(data) {
                 Authentication.setAuthenticatedAccount(data.data);
+                //$state.go('Home', {}, {reload: true});
+                //TODO-CVC use $state
                 window.location = '/';
             }
 
@@ -55,6 +57,8 @@
 
             function logoutSuccessFn() {
                 Authentication.unauthenticate();
+                //$state.go('Home', {}, {reload: true});
+                //TODO-CVC use $state
                 window.location = '/';
             }
 

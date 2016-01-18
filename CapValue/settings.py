@@ -1,5 +1,7 @@
 import os
 
+from kombu import Exchange, Queue
+
 DEBUG = True
 BASE_DIR = os.path.dirname(os.path.dirname(__file__))
 ROOT_URLCONF = 'CapValue.urls'
@@ -63,17 +65,13 @@ DATABASES = {
     }
 }
 
-from kombu import Exchange, Queue
 CELERY_CONCURRENCY = 8
-
 CELERY_ACCEPT_CONTENT = ['json']
-
 CELERY_RESULT_BACKEND = 'amqp'
 CELERYD_HIJACK_ROOT_LOGGER = True
 CELERY_HIJACK_ROOT_LOGGER = True
 BROKER_URL = 'amqp://soufiaane:soufiane0@192.168.1.3:5672/cvchost'
 CELERYBEAT_SCHEDULER = 'djcelery.schedulers.DatabaseScheduler'
-
 AMQP_SERVER = "192.168.1.3"
 AMQP_PORT = 5672
 AMQP_USER = "soufiaane"
