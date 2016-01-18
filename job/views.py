@@ -18,7 +18,7 @@ class JobViewSet(viewsets.ModelViewSet):
         for seed in data['seed_list']:
             s_list.append(Seed.objects.get(pk=seed['id']).id)
         serializer.save(user=self.request.user, keywords=data['keywords'], actions=data['actions'], seed_list=s_list)
-        reportTask.delay()
+        # reportTask.delay()
         return super(JobViewSet, self).perform_create(serializer)
 
 

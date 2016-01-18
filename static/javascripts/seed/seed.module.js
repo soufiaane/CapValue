@@ -5,14 +5,11 @@
         .module('capvalue.seed', [
             'capvalue.seed.controllers',
             'capvalue.seed.services',
-            'capvalue.seed.directives',
-            'ngAnimate',
-            'multiStepForm'
+            'capvalue.seed.directives'
         ]);
 
     angular
-        .module('capvalue.seed.controllers', ['multiStepForm']);
-
+        .module('capvalue.seed.controllers', []);
     angular
         .module('capvalue.seed.services', []);
 

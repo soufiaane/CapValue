@@ -19,22 +19,14 @@
         }
 
         function get(username) {
-            return $http.get('/api/v1/accounts/' + username + '/seeds/')
+            return $http.get('/api/v1/accounts/' + username + '/seeds/');
         }
 
         function create(list_name, proxyType) {
             return $http.post('/api/v1/seeds/', {
                 list_name: list_name,
                 proxyType: proxyType
-            }).then(createSuccessFn, createErrorFn);
-
-            function createSuccessFn() {
-                console.log('SUCCESSSSSSSSSSSSSS');
-            }
-
-            function createErrorFn() {
-                console.error('Epic failure! (seed.service.create.createErrorFn)');
-            }
+            });
         }
     }
 })();

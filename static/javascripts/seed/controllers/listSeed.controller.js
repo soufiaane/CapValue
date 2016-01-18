@@ -3,23 +3,22 @@
     angular
         .module('capvalue.seed.controllers')
         .controller('SeedListController', SeedListController);
-    SeedListController.$inject = ['Seed', 'Authentication'];
+    SeedListController.$inject = ['Seed', 'Authentication', 'ngTableParams'];
 
 
-    function SeedListController(Seed, Authentication) {
+    function SeedListController(Seed, Authentication, ngTableParams) {
         var vm = this;
         var user = Authentication.getAuthenticatedAccount();
-        Seed.get(user.username).then(SuccessFn, ErrorFn);
+        Seed.get(user.username).then(SuccessSeedListFn, ErrorSeedListFn);
 
-        function SuccessFn(data) {
-            vm.seed_list = data.data;
-            console.log('SUCCESSSSSSSSSSSSSS!!!');
+        function SuccessSeedListFn(results) {
+            vm.tableParams = new ngTableParams({page: 1, count: 5}, {data: results.data, counts: []});
+            console.log('');
         }
 
-        function ErrorFn() {
-            console.error('Epic failure!');
+        function ErrorSeedListFn() {
+            console.error('Error fetching Seed List');
+            return [];
         }
-
-
     }
 })();

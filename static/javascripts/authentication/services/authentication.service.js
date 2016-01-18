@@ -10,7 +10,7 @@
 
     function Authentication($cookies, $http) {
 
-        var Authentication = {
+        return Authentication = {
             getAuthenticatedAccount: getAuthenticatedAccount,
             isAuthenticated: isAuthenticated,
             login: login,
@@ -20,14 +20,11 @@
             unauthenticate: unauthenticate
         };
 
-        return Authentication;
-
         function register(password, username) {
             return $http.post('/api/v1/accounts/', {
                 password: password,
                 username: username
             }).then(registerSuccessFn, registerErrorFn);
-
             function registerSuccessFn() {
                 Authentication.login(username, password);
             }
@@ -43,50 +40,48 @@
                 password: password
             }).then(loginSuccessFn, loginErrorFn);
 
-            function loginSuccessFn(data, status, headers, config) {
+            function loginSuccessFn(data) {
                 Authentication.setAuthenticatedAccount(data.data);
-
                 window.location = '/';
             }
 
-            function loginErrorFn(data, status, headers, config) {
+            function loginErrorFn() {
                 console.error('Epic failure!');
             }
         }
 
         function logout() {
-            return $http.post('/api/v1/auth/logout/')
-                .then(logoutSuccessFn, logoutErrorFn);
+            return $http.post('/api/v1/auth/logout/').then(logoutSuccessFn, logoutErrorFn);
 
-            function logoutSuccessFn(data, status, headers, config) {
+            function logoutSuccessFn() {
                 Authentication.unauthenticate();
-
                 window.location = '/';
             }
 
-            function logoutErrorFn(data, status, headers, config) {
+            function logoutErrorFn() {
                 console.error('Epic failure!');
             }
         }
 
         function getAuthenticatedAccount() {
-            if (!$cookies.authenticatedAccount) {
+            var authAccount = $cookies.get('authenticatedAccount');
+            if (!authAccount) {
                 return;
             }
 
-            return JSON.parse($cookies.authenticatedAccount);
+            return JSON.parse(authAccount);
         }
 
         function isAuthenticated() {
-            return !!$cookies.authenticatedAccount;
+            return !!$cookies.get('authenticatedAccount');
         }
 
         function setAuthenticatedAccount(account) {
-            $cookies.authenticatedAccount = JSON.stringify(account);
+            $cookies.put('authenticatedAccount', JSON.stringify(account));
         }
 
         function unauthenticate() {
-            delete $cookies.authenticatedAccount;
+            $cookies.remove('authenticatedAccount');
         }
     }
 })();

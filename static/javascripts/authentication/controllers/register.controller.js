@@ -5,10 +5,10 @@
         .module('capvalue.authentication.controllers')
         .controller('RegisterController', RegisterController);
 
-    RegisterController.$inject = ['$location', '$scope', 'Authentication'];
+    RegisterController.$inject = ['Authentication'];
 
 
-    function RegisterController($location, Authentication) {
+    function RegisterController( Authentication) {
         var vm = this;
         activate();
         vm.register = register;
@@ -19,7 +19,7 @@
 
         function activate() {
             if (Authentication.isAuthenticated()) {
-                $location.url('/');
+                window.location = '/';
             }
         }
     }

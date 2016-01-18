@@ -5,9 +5,9 @@
         .module('capvalue.layout.controllers')
         .controller('NavbarController', NavbarController);
 
-    NavbarController.$inject = ['Authentication'];
+    NavbarController.$inject = ['Authentication', '$state'];
 
-    function NavbarController(Authentication) {
+    function NavbarController(Authentication, $state) {
         var vm = this;
 
         vm.logout = logout;

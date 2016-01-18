@@ -9,7 +9,6 @@
 
     function NavbarController($scope) {
         var vm = this;
-
     }
 
     $("[data-toggle='offcanvas']").click(function (e) {
