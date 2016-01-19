@@ -59,12 +59,12 @@ MIDDLEWARE_CLASSES = (
 
 DATABASES = {
     'default': {
-        'NAME': 'CVC',
-        'ENGINE': 'mysql.connector.django',
-        'USER': 'soufiaane',
+        'NAME'    : 'CVC',
+        'ENGINE'  : 'mysql.connector.django',
+        'USER'    : 'soufiaane',
         'PASSWORD': 'soufiane0',
-        'OPTIONS': {
-          'autocommit': True,
+        'OPTIONS' : {
+            'autocommit': True,
         },
     }
 }

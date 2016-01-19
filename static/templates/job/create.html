@@ -98,7 +98,9 @@
                                 <tbody>
                                 <tr role="row" class="odd" ng-repeat="seed in $data" style="width: 100px;">
                                     <td style="border: none; padding: 0; color: #fff; text-align: left;">
-                                        <input type="checkbox" ng-click="vm.toggleSeedSelection(seed)">
+                                        <input type="checkbox"
+                                               ng-click="vm.toggleSeedSelection(seed.id)"
+                                               ng-checked="vm.job.selectedSeeds.indexOf(seed.id) > -1">
                                     </td>
                                     <td style="border: none; padding: 0; color: #fff; text-align: left;" title="'Id'"
                                         filter="{ id: 'number'}" sortable="'id'">

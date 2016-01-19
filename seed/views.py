@@ -10,20 +10,23 @@ class SeedViewSet(viewsets.ModelViewSet):
     queryset = Seed.objects.all()
     serializer_class = SeedSerializer
     permission_classes = (permissions.IsAuthenticatedOrReadOnly, IsOwnerOfSeedList,)
-    filter_backends = (filters.DjangoFilterBackend,)
-    filter_fields = ('categoria', 'categoria__titulo',)
 
     def perform_create(self, serializer):
         serializer.save(user=self.request.user)
         return super(SeedViewSet, self).perform_create(serializer)
 
 
-class AccountSeedViewSet(viewsets.ModelViewSet):
+class AccountSeedList(viewsets.GenericViewSet):
     queryset = Seed.objects.select_related('user').all()
     serializer_class = SeedSerializer
     permission_classes = (permissions.IsAuthenticatedOrReadOnly, IsOwnerOfSeedList,)
 
     def list(self, request, **kwargs):
-        queryset = self.queryset.filter(user__username=kwargs.get('account_username'))
-        serializer = self.serializer_class(queryset, many=True)
+        username = kwargs.get('username')
+        queryset = self.queryset.filter(user__username=username)
+        page = self.paginate_queryset(queryset)
+        if page is not None:
+            serializer = self.get_pagination_serializer(page)
+        else:
+            serializer = self.get_serializer(queryset, many=True)
         return Response(serializer.data)

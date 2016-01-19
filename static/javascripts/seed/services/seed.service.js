@@ -18,8 +18,11 @@
             return $http.get('/api/v1/seeds/');
         }
 
-        function get(username) {
-            return $http.get('/api/v1/accounts/' + username + '/seeds/?page=1');
+        function get(username, page) {
+            if (!page) {
+                return $http.get('/api/v1/seeds/' + username + '/');
+            }
+            return $http.get('/api/v1/seeds/' + username + '/?page=' + page);
         }
 
         function create(list_name, proxyType) {

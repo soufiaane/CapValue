@@ -7,38 +7,51 @@
 
     function JobCreateController(Job, Seed, Authentication, $state, ngTableParams) {
         var vm = this;
-        vm.job = {selectedSeeds: []};
+        vm.job = {
+            selectedSeeds: [], actions: [
+                {name: "RS", isChecked: true},
+                {name: "NS", isChecked: false},
+                {name: "RI", isChecked: false},
+                {name: "OI", isChecked: false},
+                {name: "SS", isChecked: false},
+                {name: "AC", isChecked: false},
+                {name: "CL", isChecked: false},
+                {name: "FM", isChecked: false}
+            ]
+        };
         var user = Authentication.getAuthenticatedAccount();
-        Seed.get(user.username).then(Seed_SuccessFn, Seed_ErrorFn);
-        vm.job.actions = [
-            {name: "RS", isChecked: true},
-            {name: "NS", isChecked: false},
-            {name: "RI", isChecked: false},
-            {name: "OI", isChecked: false},
-            {name: "SS", isChecked: false},
-            {name: "AC", isChecked: false},
-            {name: "CL", isChecked: false},
-            {name: "FM", isChecked: false}
-        ];
         vm.submitJob = submitJob;
         vm.toggleSeedSelection = toggleSeedSelection;
 
-        function Seed_SuccessFn(results) {
-            vm.tableParams = new ngTableParams({page: 1, count: 5}, {data: results.data, counts: []});
-        }
+        vm.tableParams = new ngTableParams({
+            page: 1,
+            count: 10
+        }, {
+            getData: function (params) {
+                var page = params.page();
+                return Seed.get(user.username, page).then(function (results) {
+                    params.total(results.data.count);
+                    vm.seed_list_count = results.data.count;
+                    console.log('Seed List Fetched Successfully !');
+                    return results.data.results;
+                }, ErrorSeedListFn);
+            },
+            counts: []
+        });
 
-        function Seed_ErrorFn() {
+        function ErrorSeedListFn() {
             console.error('Epic failure!');
         }
 
-        function toggleSeedSelection(seed) {
-            var idx = vm.job.selectedSeeds.indexOf(seed);
+
+        function toggleSeedSelection(seed_id) {
+            var idx = vm.job.selectedSeeds.indexOf(seed_id);
             // is currently selected
             if (idx > -1) {
                 vm.job.selectedSeeds.splice(idx, 1);
             }
             else {
-                vm.job.selectedSeeds.push(seed);
+                vm.job.selectedSeeds.push(seed_id);
             }
         }
 
@@ -63,5 +76,6 @@
                 console.error('Error when attempting to Create Job');
             }
         }
+
     }
 })();
