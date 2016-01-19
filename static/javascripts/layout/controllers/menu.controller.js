@@ -3,12 +3,15 @@
 
     angular
         .module('capvalue.layout.controllers')
-        .controller('MenuController', NavbarController);
+        .controller('MenuController', MenuController);
 
-    NavbarController.$inject = ['$scope'];
+    MenuController.$inject = ['Authentication', '$state'];
 
-    function NavbarController($scope) {
+    function MenuController(Authentication) {
         var vm = this;
+        vm.show_user_infos = false;
+        vm.user = Authentication.getAuthenticatedAccount();
+        vm.show_user_infos = Authentication.isAuthenticated();
     }
 
     $("[data-toggle='offcanvas']").click(function (e) {

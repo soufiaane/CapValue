@@ -1,19 +1,18 @@
-{% load staticfiles %}
-{% if user.is_authenticated %}
-    <!-- Sidebar user panel -->
-    <div class="user-panel">
+<!-- Sidebar user panel -->
+<div ng-controller="MenuController as vm">
+    <div class="user-panel" ng-show="vm.show_user_infos">
         <div class="pull-left image">
-            <img src="{% static 'templates/dist/img/avatar5.png' %}" class="img-circle" alt="User Image">
+            <img src="{$ vm.user.profile_picture $}" class="img-circle" alt="User Image">
         </div>
         <div class="pull-left info">
-            <p>{{ user.username }}</p>
+            <p>{$ vm.user.username $}</p>
             <a href="#">
                 <i class="fa fa-circle text-success"></i>
                 Mailer
             </a>
         </div>
     </div>
-{% endif %}
+</div>
 <!-- sidebar menu: : style can be found in sidebar.less -->
 <ul class="sidebar-menu">
     <li class="header">REPORTING</li>

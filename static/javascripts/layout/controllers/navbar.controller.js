@@ -9,7 +9,7 @@
 
     function NavbarController(Authentication, $state) {
         var vm = this;
-
+        vm.user = Authentication.getAuthenticatedAccount();
         vm.logout = logout;
 
         function logout() {

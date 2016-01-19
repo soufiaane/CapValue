@@ -19,6 +19,8 @@ STATIC_ROOT = 'c:/staticfiles'
 TEMPLATE_DIRS = (os.path.join(BASE_DIR, 'static/templates'),)
 AUTH_USER_MODEL = 'authentication.Account'
 STATICFILES_DIRS = (os.path.join(BASE_DIR, 'static'),)
+GRAVATAR_DEFAULT_IMAGE = 'identicon'
+GRAVATAR_DEFAULT_SIZE = '215'
 # ROLEPERMISSIONS_MODULE = 'CapValue.roles'
 REST_FRAMEWORK = {
     'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
@@ -41,6 +43,7 @@ INSTALLED_APPS = (
     'django_extensions',
     'rest_framework',
     'rest_framework_nested',
+    'django_gravatar',
     'authentication',
     'djcelery',
     'job',

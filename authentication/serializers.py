@@ -1,5 +1,6 @@
 from django.contrib.auth import update_session_auth_hash
 from rest_framework import serializers
+
 from authentication.models import Account
 
 
@@ -11,7 +12,7 @@ class AccountSerializer(serializers.ModelSerializer):
         model = Account
         fields = ('id', 'username', 'created_at', 'updated_at',
                   'first_name', 'last_name', 'password',
-                  'confirm_password','is_admin')
+                  'confirm_password', 'is_admin', 'profile_picture', 'email')
         read_only_fields = ('id', 'created_at', 'updated_at',)
 
         def create(self, validated_data):

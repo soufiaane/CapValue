@@ -1,5 +1,6 @@
 from django.contrib.auth.models import AbstractBaseUser, BaseUserManager
 from django.db import models
+from django_gravatar.helpers import get_gravatar_url
 
 
 class AccountManager(BaseUserManager):
@@ -7,13 +8,18 @@ class AccountManager(BaseUserManager):
         if not kwargs.get('username'):
             raise ValueError('Users must have a valid username.')
 
+        if not kwargs.get('email'):
+            raise ValueError('Users must have a valid Email Address.')
+
         account = self.model(
             username=kwargs.get('username')
         )
 
+        if not kwargs.get('profile_picture'):
+            account.profile_picture = get_gravatar_url(kwargs.get('email'))
+
         account.set_password(password)
         account.save()
-
         return account
 
     def create_superuser(self, password, **kwargs):
@@ -28,10 +34,13 @@ class Account(AbstractBaseUser):
     username = models.CharField(max_length=40, unique=True)
     first_name = models.CharField(max_length=40, blank=True)
     last_name = models.CharField(max_length=40, blank=True)
+    email = models.EmailField(max_length=254)
+    profile_picture = models.CharField(max_length=256, blank=True, default=get_gravatar_url('mgh.soufiane@gmail.com'))
     is_admin = models.BooleanField(default=False)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
     objects = AccountManager()
+
     USERNAME_FIELD = 'username'
 
     def __unicode__(self):

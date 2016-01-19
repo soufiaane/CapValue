@@ -1,10 +1,12 @@
+import json
+
 from django.contrib.auth import authenticate, login, logout
 from rest_framework import permissions, viewsets, status, views
 from rest_framework.response import Response
+
 from authentication.models import Account
 from authentication.permissions import IsAccountOwner
 from authentication.serializers import AccountSerializer
-import json
 
 
 class AccountViewSet(viewsets.ModelViewSet):
