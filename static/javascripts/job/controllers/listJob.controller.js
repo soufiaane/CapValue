@@ -1,7 +1,7 @@
 (function () {
     'use strict';
     angular
-        .module('capvalue.seed.controllers')
+        .module('capvalue.job.controllers')
         .controller('JobListController', JobListController);
     JobListController.$inject = ['Job', 'Seed', 'Authentication', 'ngTableParams'];
 

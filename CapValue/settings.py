@@ -20,6 +20,10 @@ TEMPLATE_DIRS = (os.path.join(BASE_DIR, 'static/templates'),)
 AUTH_USER_MODEL = 'authentication.Account'
 STATICFILES_DIRS = (os.path.join(BASE_DIR, 'static'),)
 # ROLEPERMISSIONS_MODULE = 'CapValue.roles'
+REST_FRAMEWORK = {
+    'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
+    'PAGINATE_BY'             : 10
+}
 
 STATICFILES_FINDERS = (
     'django.contrib.staticfiles.finders.FileSystemFinder',

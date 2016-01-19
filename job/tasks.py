@@ -9,5 +9,4 @@ logger = get_task_logger(__name__)
 
 @app.task(name='report_task')
 def reportTask():
-    print('report_task')
-    logger.info('Reported Email')
+    return True

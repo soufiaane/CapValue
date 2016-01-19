@@ -1,6 +1,8 @@
 from rest_framework import serializers
-from seed.models import Seed
+
 from authentication.serializers import AccountSerializer
+from seed.models import Seed
+
 
 class SeedSerializer(serializers.ModelSerializer):
     user = AccountSerializer(read_only=True, required=False)

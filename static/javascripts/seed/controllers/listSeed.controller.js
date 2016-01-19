@@ -5,16 +5,24 @@
         .controller('SeedListController', SeedListController);
     SeedListController.$inject = ['Seed', 'Authentication', 'ngTableParams'];
 
-
     function SeedListController(Seed, Authentication, ngTableParams) {
         var vm = this;
-        var user = Authentication.getAuthenticatedAccount();
-        Seed.get(user.username).then(SuccessSeedListFn, ErrorSeedListFn);
 
-        function SuccessSeedListFn(results) {
-            vm.tableParams = new ngTableParams({page: 1, count: 5}, {data: results.data, counts: []});
-            console.log('Seed List Fetched Successfully !');
-        }
+        vm.tableParams = new ngTableParams({
+                page: 1,
+                count: 10
+            },
+            {
+                getData: function (params) {
+                    return Seed.get(Authentication.getAuthenticatedAccount().username).then(function (results) {
+                        params.total(results.data.length);
+                        console.log('Seed List Fetched Successfully !');
+                        return results.data;
+                    }, ErrorSeedListFn);
+                },
+                counts: []
+            });
+
 
         function ErrorSeedListFn() {
             console.error('Error fetching Seed List');

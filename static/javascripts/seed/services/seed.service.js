@@ -19,7 +19,7 @@
         }
 
         function get(username) {
-            return $http.get('/api/v1/accounts/' + username + '/seeds/');
+            return $http.get('/api/v1/accounts/' + username + '/seeds/?page=1');
         }
 
         function create(list_name, proxyType) {
