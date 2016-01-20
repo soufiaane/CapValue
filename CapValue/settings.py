@@ -3,25 +3,25 @@ import os
 from kombu import Exchange, Queue
 
 DEBUG = True
-BASE_DIR = os.path.dirname(os.path.dirname(__file__))
-ROOT_URLCONF = 'CapValue.urls'
-WSGI_APPLICATION = 'CapValue.wsgi.application'
-SECRET_KEY = 'u@nup3l^ofar)mja-h6khvar^%))*$9^j%9q-9hg0#(3xyel=k'
 TEMPLATE_DEBUG = True
-ALLOWED_HOSTS = []
-LANGUAGE_CODE = 'en-us'
-TIME_ZONE = 'UTC'
 USE_I18N = True
 USE_L10N = True
 USE_TZ = True
+LANGUAGE_CODE = 'en-us'
+TIME_ZONE = 'UTC'
+ROOT_URLCONF = 'CapValue.urls'
+BASE_DIR = os.path.dirname(os.path.dirname(__file__))
+WSGI_APPLICATION = 'CapValue.wsgi.application'
+SECRET_KEY = 'u@nup3l^ofar)mja-h6khvar^%))*$9^j%9q-9hg0#(3xyel=k'
+ALLOWED_HOSTS = []
 STATIC_URL = '/static/'
-STATIC_ROOT = 'c:/staticfiles'
+STATIC_ROOT = '/var/www/cvc.ma/static/'
 TEMPLATE_DIRS = (os.path.join(BASE_DIR, 'static/templates'),)
 AUTH_USER_MODEL = 'authentication.Account'
 STATICFILES_DIRS = (os.path.join(BASE_DIR, 'static'),)
 GRAVATAR_DEFAULT_IMAGE = 'identicon'
 GRAVATAR_DEFAULT_SIZE = '215'
-# ROLEPERMISSIONS_MODULE = 'CapValue.roles'
+ROLEPERMISSIONS_MODULE = 'CapValue.roles'
 REST_FRAMEWORK = {
     'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
     'PAGINATE_BY'             : 10
@@ -30,7 +30,6 @@ REST_FRAMEWORK = {
 STATICFILES_FINDERS = (
     'django.contrib.staticfiles.finders.FileSystemFinder',
     'django.contrib.staticfiles.finders.AppDirectoriesFinder',
-    'compressor.finders.CompressorFinder',
 )
 
 INSTALLED_APPS = (
@@ -48,7 +47,8 @@ INSTALLED_APPS = (
     'djcelery',
     'job',
     'seed',
-    'proxies'
+    'proxies',
+    'emails'
 )
 
 MIDDLEWARE_CLASSES = (

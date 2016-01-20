@@ -1,12 +1,13 @@
 from rest_framework import viewsets, permissions
 from rest_framework.response import Response
-from job.serializers import JobSerializer
+
 from job.models import Job
-from seed.models import Seed
 from job.permissions import IsOwnerOfJob
-from job.tasks import reportTask
+from job.serializers import JobSerializer
+from seed.models import Seed
 
 
+# from job.tasks import reportTask
 class JobViewSet(viewsets.ModelViewSet):
     queryset = Job.objects.all()
     serializer_class = JobSerializer
