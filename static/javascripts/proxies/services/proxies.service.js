@@ -5,7 +5,7 @@
         .module('capvalue.proxies.services')
         .factory('Proxy', Proxy);
 
-    Job.$inject = ['$http'];
+    Proxy.$inject = ['$http'];
 
     function Proxy($http) {
         return Proxy = {

@@ -14,6 +14,12 @@
                 controllerAs: 'vm',
                 templateUrl: '/static/templates/layout/index.html'
             })
+            .state('Login', {
+                url: "/login",
+                controller: 'LoginController',
+                controllerAs: 'vm',
+                templateUrl: '/static/templates/authentication/login.html'
+            })
             .state('Register', {
                 url: "/register",
                 controller: 'RegisterController',
