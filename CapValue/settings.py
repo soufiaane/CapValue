@@ -61,7 +61,7 @@ MIDDLEWARE_CLASSES = (
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 )
 
-if os.environ.get('IS_PRODUCTION') == 'TRUE':
+if os.environ.get('PRODUCTION') == 'TRUE':
     DATABASES = {
         'default': {
             'ENGINE'  : 'django.db.backends.mysql',
