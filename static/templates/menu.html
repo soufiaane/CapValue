@@ -1,6 +1,6 @@
 <!-- Sidebar user panel -->
 <div ng-controller="MenuController as vm">
-    <div class="user-panel" ng-show="vm.show_user_infos">
+    <div class="user-panel" ng-if="vm.show_user_infos">
         <div class="pull-left image">
             <img src="{$ vm.user.profile_picture $}" class="img-circle" alt="User Image">
         </div>
