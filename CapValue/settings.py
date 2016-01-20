@@ -62,17 +62,30 @@ MIDDLEWARE_CLASSES = (
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 )
 
-DATABASES = {
-    'default': {
-        'ENGINE'  : 'django.db.backends.mysql',
-        'NAME'    : 'CVC',
-        'USER'    : 'soufiaane',
-        'PASSWORD': 'soufiane0',
-        'OPTIONS' : {
-            'autocommit': True,
-        },
+if os.environ.get('IS_PRODUCTION') == 'TRUE':
+    DATABASES = {
+        'default': {
+            'ENGINE'  : 'django.db.backends.mysql',
+            'NAME'    : 'CVC',
+            'USER'    : 'soufiaane',
+            'PASSWORD': 'soufiane0',
+            'OPTIONS' : {
+                'autocommit': True,
+            },
+        }
     }
-}
+else:
+    DATABASES = {
+        'default': {
+            'ENGINE'  : 'mysql.connector.django',
+            'NAME'    : 'CVC',
+            'USER'    : 'soufiaane',
+            'PASSWORD': 'soufiane0',
+            'OPTIONS' : {
+                'autocommit': True,
+            },
+        }
+    }
 
 CELERY_CONCURRENCY = 8
 CELERY_ACCEPT_CONTENT = ['json']
