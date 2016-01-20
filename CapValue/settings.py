@@ -2,7 +2,6 @@ import os
 
 from kombu import Exchange, Queue
 
-souf = 'b'
 DEBUG = True
 TEMPLATE_DEBUG = True
 USE_I18N = True
