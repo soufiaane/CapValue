@@ -9,6 +9,7 @@
             'capvalue.layout',
             'capvalue.job',
             'capvalue.seed',
+            'capvalue.proxies',
             'capvalue.utils',
             'ncy-angular-breadcrumb',
             'multiStepForm',

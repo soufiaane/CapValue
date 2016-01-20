@@ -48,6 +48,7 @@ INSTALLED_APPS = (
     'djcelery',
     'job',
     'seed',
+    'proxies'
 )
 
 MIDDLEWARE_CLASSES = (

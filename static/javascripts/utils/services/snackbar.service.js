@@ -29,6 +29,11 @@
          * @param {Object} options Options for displaying the snackbar
          */
         function _snackbar(content, options) {
+            options = {
+                style: "toast", // add a custom class to your snackbar
+                timeout: 1000, // time in milliseconds after the snackbar autohides, 0 is disabled
+                htmlAllowed: true // allows HTML as content value
+            };
             options = _.extend({timeout: 3000}, options);
             options.content = content;
 
@@ -44,6 +49,11 @@
          * @memberOf capvalue.utils.services.Snackbar
          */
         function error(content, options) {
+            options = {
+                style: "toast", // add a custom class to your snackbar
+                timeout: 1000, // time in milliseconds after the snackbar autohides, 0 is disabled
+                htmlAllowed: true // allows HTML as content value
+            };
             _snackbar('Error: ' + content, options);
         }
 
@@ -56,6 +66,11 @@
          * @memberOf capvalue.utils.services.Snackbar
          */
         function show(content, options) {
+            options = {
+                style: "toast", // add a custom class to your snackbar
+                timeout: 1000, // time in milliseconds after the snackbar autohides, 0 is disabled
+                htmlAllowed: true // allows HTML as content value
+            };
             _snackbar(content, options);
         }
     }

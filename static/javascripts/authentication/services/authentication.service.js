@@ -5,10 +5,10 @@
         .module('capvalue.authentication.services')
         .factory('Authentication', Authentication);
 
-    Authentication.$inject = ['$cookies', '$http', '$state'];
+    Authentication.$inject = ['$cookies', '$http', '$state', 'Snackbar'];
 
 
-    function Authentication($cookies, $http, $state) {
+    function Authentication($cookies, $http, Snackbar) {
 
         return Authentication = {
             getAuthenticatedAccount: getAuthenticatedAccount,
@@ -26,11 +26,12 @@
                 username: username
             }).then(registerSuccessFn, registerErrorFn);
             function registerSuccessFn() {
+                Snackbar.show('User Created Successfully !');
                 Authentication.login(username, password);
             }
 
             function registerErrorFn() {
-                console.error('Epic failure!');
+                Snackbar.error('Error Creating a new User !');
             }
         }
 
@@ -42,13 +43,11 @@
 
             function loginSuccessFn(data) {
                 Authentication.setAuthenticatedAccount(data.data);
-                //$state.go('Home', {}, {reload: true});
-                //TODO-CVC use $state
                 window.location = '/';
             }
 
             function loginErrorFn() {
-                console.error('Epic failure!');
+                Snackbar.error('Error login in the User !');
             }
         }
 
@@ -63,7 +62,7 @@
             }
 
             function logoutErrorFn() {
-                console.error('Epic failure!');
+                Snackbar.error('Error login out the User !');
             }
         }
 

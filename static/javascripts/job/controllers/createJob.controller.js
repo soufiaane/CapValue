@@ -3,9 +3,9 @@
     angular
         .module('capvalue.job.controllers')
         .controller('JobCreateController', JobCreateController);
-    JobCreateController.$inject = ['Job', 'Seed', 'Authentication', '$state', 'ngTableParams'];
+    JobCreateController.$inject = ['Job', 'Seed', 'Authentication', '$state', 'ngTableParams', 'Snackbar'];
 
-    function JobCreateController(Job, Seed, Authentication, $state, ngTableParams) {
+    function JobCreateController(Job, Seed, Authentication, $state, ngTableParams, Snackbar) {
         var vm = this;
         vm.job = {
             selectedSeeds: [], actions: [
@@ -68,12 +68,12 @@
             Job.create(vm.job.keyword, vm.job.selectedSeeds, selected_actions).then(createJobSuccessFn, createJobErrorFn);
 
             function createJobSuccessFn() {
-                console.log('Job Created Successfully');
+                Snackbar.show('Job Created Successfully');
                 $state.go($state.current, {}, {reload: true});
             }
 
             function createJobErrorFn() {
-                console.error('Error when attempting to Create Job');
+                Snackbar.error('Error when attempting to Create Job');
             }
         }
 

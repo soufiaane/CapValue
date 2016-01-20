@@ -5,7 +5,7 @@
         .module('capvalue.authentication.controllers')
         .controller('RegisterController', RegisterController);
 
-    RegisterController.$inject = ['Authentication'];
+    RegisterController.$inject = ['Authentication', 'Snackbar'];
 
 
     function RegisterController( Authentication) {
