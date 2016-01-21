@@ -8,7 +8,7 @@ from kombu import Exchange, Queue
 
 warnings.filterwarnings("ignore", category=DeprecationWarning)
 DEBUG = True
-TEMPLATE_DEBUG = True
+TEMPLATE_DEBUG = False
 USE_I18N = True
 USE_L10N = True
 USE_TZ = True
@@ -20,8 +20,8 @@ WSGI_APPLICATION = 'CapValue.wsgi.application'
 SECRET_KEY = 'u@nup3l^ofar)mja-h6khvar^%))*$9^j%9q-9hg0#(3xyel=k'
 ALLOWED_HOSTS = []
 STATIC_URL = '/static/'
-STATIC_ROOT = '/var/www/cvc.ma/static/'
-TEMPLATE_DIRS = (os.path.join(BASE_DIR, 'static/templates'),)
+STATIC_ROOT = '/var/www/cvc.ma/static_files/'
+TEMPLATE_DIRS = (os.path.join(BASE_DIR, 'static_files/templates'),)
 AUTH_USER_MODEL = 'authentication.Account'
 STATICFILES_DIRS = (os.path.join(BASE_DIR, 'static'),)
 GRAVATAR_DEFAULT_IMAGE = 'identicon'
