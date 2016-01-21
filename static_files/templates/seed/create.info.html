@@ -1,0 +1,37 @@
+<div id="formErrors" class="col-xs-8 col-sm-offset-2">
+
+</div>
+
+<table class="table table-responsive">
+    <tr style="width: 100px">
+        <td style="border: none;">
+            <span class="pull-left" style="color:#fff; font-weight: bold; font-size: large;">Name :</span>
+        </td>
+        <td style="border: none;">
+            <input id="seedlist_name" type="text" class="form-control" placeholder="Seed_*****"
+                   aria-describedby="sizing-addon1" ng-model="vm.seedList.name" name="seedList.name">
+        </td>
+    </tr>
+    <tr style=" width: 100px">
+        <td style="border: none;">
+            <span class="pull-left" style="color:#fff; font-weight: bold; font-size: large;">Proxy Type :</span>
+        </td>
+        <td style="border: none;">
+            <div id="seedlist_proxytype" class="btn-block btn-group"
+                 style="">
+                <label class="btn btn-info">
+                    <input type="radio" ng-model="vm.seedList.proxyType" value="manual" checked>
+                    Manual
+                </label>
+                <label class="btn btn-info">
+                    <input type="radio" ng-model="vm.seedList.proxyType" value="proxy">
+                    Proxy
+                </label>
+                <label class="btn btn-info">
+                    <input type="radio" ng-model="vm.seedList.proxyType" value="vpn">
+                    VPN
+                </label>
+            </div>
+        </td>
+    </tr>
+</table>
