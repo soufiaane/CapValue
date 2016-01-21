@@ -78,6 +78,13 @@ if os.environ.get('PRODUCTION') == 'TRUE':
             },
         }
     }
+elif os.environ.get('REMOTE') == 'TRUE':
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.sqlite3',
+            'NAME'  : 'db.sqlite3'
+        }
+    }
 else:
     DATABASES = {
         'default': {
