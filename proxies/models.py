@@ -1,12 +1,10 @@
 from datetime import datetime
-
 from django.db import models
-
 from authentication.models import Account
 
 
 class IP(models.Model):
-    ip_address = models.IPAddressField()
+    ip_address = models.GenericIPAddressField(protocol='both', unpack_ipv4=False)
     ip_port = models.IntegerField()
     ip_login = models.CharField(max_length=40, blank=True)
     ip_password = models.CharField(max_length=40, blank=True)
@@ -29,3 +27,4 @@ class Proxy(models.Model):
 
     def __unicode__(self):
         return '{0}'.format(self.proxy_name)
+
