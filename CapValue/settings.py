@@ -105,7 +105,6 @@ AMQP_PORT = 5672
 AMQP_USER = "soufiaane"
 AMQP_PASSWORD = "soufiane0"
 AMQP_VHOST = "/cvchost"
-SOUF = "SOUF"
 LOGGING = copy.deepcopy(DEFAULT_LOGGING)
 LOGGING['filters']['suppress_deprecated'] = {
     '()': 'CapValue.settings.SuppressDeprecated'
