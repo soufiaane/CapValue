@@ -1,7 +1,9 @@
+import copy
+import logging
 import os
-import logging, copy
-from kombu import Exchange, Queue
+
 from django.utils.log import DEFAULT_LOGGING
+from kombu import Exchange, Queue
 
 DEBUG = True
 TEMPLATE_DEBUG = True
@@ -102,14 +104,16 @@ AMQP_VHOST = "/cvchost"
 
 LOGGING = copy.deepcopy(DEFAULT_LOGGING)
 LOGGING['filters']['suppress_deprecated'] = {
-	'()': 'CapValue.settings.SuppressDeprecated'
+    '()': 'CapValue.settings.SuppressDeprecated'
 }
 LOGGING['handlers']['console']['filters'].append('suppress_deprecated')
-class SuppressDeprecated(logging.Filter):
-	def filter(self, record):
-		WARNINGS_TO_SUPPRESS = [
-			'RemovedInDjango18Warning',
-			'RemovedInDjango19Warning'
-		]
 
-		return not any([warn in record.getMessage() for warn in WARNINGS_TO_SUPPRESS])
+
+class SuppressDeprecated(logging.Filter):
+    def filter(self, record):
+        WARNINGS_TO_SUPPRESS = [
+            'RemovedInDjango18Warning',
+            'RemovedInDjango19Warning'
+        ]
+
+        return not any([warn in record.getMessage() for warn in WARNINGS_TO_SUPPRESS])
