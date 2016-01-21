@@ -1,7 +1,7 @@
 import copy
 import os
 
-from django.core.wsgi import get_wsgi_application
+import django.core.handlers.wsgi
 from django.utils.log import DEFAULT_LOGGING
 
 LOGGING = copy.deepcopy(DEFAULT_LOGGING)
@@ -11,4 +11,4 @@ LOGGING['filters']['suppress_deprecated'] = {
 LOGGING['handlers']['console']['filters'].append('suppress_deprecated')
 
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", "CapValue.settings")
-application = get_wsgi_application()
+application = django.core.handlers.wsgi.WSGIHandler()
