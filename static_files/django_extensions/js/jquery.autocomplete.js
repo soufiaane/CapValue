@@ -6,7 +6,7 @@
  * @license MIT | GPL | Apache 2.0, see LICENSE.txt
  * @see https://github.com/dyve/jquery-autocomplete
  */
-(function($) {
+(function ($) {
     "use strict";
 
     /**
@@ -14,7 +14,7 @@
      * @param {object|string} options
      * @returns (object} jQuery object
      */
-    $.fn.autocomplete = function(options) {
+    $.fn.autocomplete = function (options) {
         var url;
         if (arguments.length > 1) {
             url = options;
@@ -22,10 +22,10 @@
             options.url = url;
         } else if (typeof options === 'string') {
             url = options;
-            options = { url: url };
+            options = {url: url};
         }
         var opts = $.extend({}, $.fn.autocomplete.defaults, options);
-        return this.each(function() {
+        return this.each(function () {
             var $this = $(this);
             $this.data('autocompleter', new $.Autocompleter(
                 $this,
@@ -87,7 +87,7 @@
      * @returns {Object} object with members value (String) and data (Object)
      * @private
      */
-    var sanitizeResult = function(result) {
+    var sanitizeResult = function (result) {
         var value, data;
         var type = typeof result;
         if (type === 'string') {
@@ -117,7 +117,7 @@
      * @returns {Number} integer
      * @private
      */
-    var sanitizeInteger = function(value, stdValue, options) {
+    var sanitizeInteger = function (value, stdValue, options) {
         var num = parseInt(value, 10);
         options = options || {};
         if (isNaN(num) || (options.min && num < options.min)) {
@@ -129,7 +129,7 @@
     /**
      * Create partial url for a name/value pair
      */
-    var makeUrlParam = function(name, value) {
+    var makeUrlParam = function (name, value) {
         return [name, encodeURIComponent(value)].join('=');
     };
 
@@ -138,9 +138,9 @@
      * @param {string} url Base url
      * @param {object} [params] Dictionary of parameters
      */
-    var makeUrl = function(url, params) {
+    var makeUrl = function (url, params) {
         var urlAppend = [];
-        $.each(params, function(index, value) {
+        $.each(params, function (index, value) {
             urlAppend.push(makeUrlParam(index, value));
         });
         if (urlAppend.length) {
@@ -157,7 +157,7 @@
      * @param {boolean} matchCase
      * @returns {number}
      */
-    var sortValueAlpha = function(a, b, matchCase) {
+    var sortValueAlpha = function (a, b, matchCase) {
         a = String(a.value);
         b = String(b.value);
         if (!matchCase) {
@@ -180,7 +180,7 @@
      * @param {string} cellSeparator String that separates cells
      * @returns {array} Array of autocomplete data objects
      */
-    var plainTextParser = function(text, lineSeparator, cellSeparator) {
+    var plainTextParser = function (text, lineSeparator, cellSeparator) {
         var results = [];
         var i, j, data, line, value, lines;
         // Be nice, fix linebreaks before splitting on lineSeparator
@@ -192,7 +192,7 @@
                 data.push(decodeURIComponent(line[j]));
             }
             value = data.shift();
-            results.push({ value: value, data: data });
+            results.push({value: value, data: data});
         }
         return results;
     };
@@ -203,7 +203,7 @@
      * @param {object} options Settings
      * @constructor
      */
-    $.Autocompleter = function($elem, options) {
+    $.Autocompleter = function ($elem, options) {
 
         /**
          * Assert parameters
@@ -289,10 +289,10 @@
         /**
          * Sanitize options
          */
-        this.options.minChars = sanitizeInteger(this.options.minChars, $.fn.autocomplete.defaults.minChars, { min: 0 });
-        this.options.maxItemsToShow = sanitizeInteger(this.options.maxItemsToShow, $.fn.autocomplete.defaults.maxItemsToShow, { min: 0 });
-        this.options.maxCacheLength = sanitizeInteger(this.options.maxCacheLength, $.fn.autocomplete.defaults.maxCacheLength, { min: 1 });
-        this.options.delay = sanitizeInteger(this.options.delay, $.fn.autocomplete.defaults.delay, { min: 0 });
+        this.options.minChars = sanitizeInteger(this.options.minChars, $.fn.autocomplete.defaults.minChars, {min: 0});
+        this.options.maxItemsToShow = sanitizeInteger(this.options.maxItemsToShow, $.fn.autocomplete.defaults.maxItemsToShow, {min: 0});
+        this.options.maxCacheLength = sanitizeInteger(this.options.maxCacheLength, $.fn.autocomplete.defaults.maxCacheLength, {min: 1});
+        this.options.delay = sanitizeInteger(this.options.delay, $.fn.autocomplete.defaults.delay, {min: 0});
         if (this.options.preventDefaultReturn != 2) {
             this.options.preventDefaultReturn = this.options.preventDefaultReturn ? 1 : 0;
         }
@@ -326,9 +326,9 @@
         /**
          * Attach keyboard monitoring to $elem
          */
-        $elem.keydown(function(e) {
+        $elem.keydown(function (e) {
             self.lastKeyPressed_ = e.keyCode;
-            switch(self.lastKeyPressed_) {
+            switch (self.lastKeyPressed_) {
 
                 case self.options.delimiterKeyCode: // comma = 188
                     if (self.options.useDelimiter && self.active_) {
@@ -376,7 +376,7 @@
                         e.preventDefault();
                         return false;
                     }
-                break;
+                    break;
 
                 case 13: // return
                     if (self.active_) {
@@ -390,7 +390,7 @@
                         e.preventDefault();
                         return false;
                     }
-                break;
+                    break;
 
                 case 27: // escape
                     if (self.active_) {
@@ -398,7 +398,7 @@
                         self.deactivate(true);
                         return false;
                     }
-                break;
+                    break;
 
                 default:
                     self.activate();
@@ -409,7 +409,7 @@
         /**
          * Attach paste event listener because paste may occur much later then keydown or even without a keydown at all
          */
-        $elem.on('paste', function() {
+        $elem.on('paste', function () {
             self.activate();
         });
 
@@ -417,10 +417,12 @@
          * Finish on blur event
          * Use a timeout because instant blur gives race conditions
          */
-        var onBlurFunction = function() {
+        var onBlurFunction = function () {
             self.deactivate(true);
-        }
-        $elem.blur(function() {
+        };
+        ;
+        ;
+        $elem.blur(function () {
             if (self.finishOnBlur_) {
                 self.finishTimeout_ = setTimeout(onBlurFunction, 200);
             }
@@ -436,7 +438,7 @@
      * Position output DOM elements
      * @private
      */
-    $.Autocompleter.prototype.position = function() {
+    $.Autocompleter.prototype.position = function () {
         var offset = this.dom.$elem.offset();
         var height = this.dom.$results.outerHeight();
         var totalHeight = $(window).outerHeight();
@@ -458,7 +460,7 @@
      * Read from cache
      * @private
      */
-    $.Autocompleter.prototype.cacheRead = function(filter) {
+    $.Autocompleter.prototype.cacheRead = function (filter) {
         var filterLength, searchLength, search, maxPos, pos;
         if (this.options.useCache) {
             filter = String(filter);
@@ -492,7 +494,7 @@
      * Write to cache
      * @private
      */
-    $.Autocompleter.prototype.cacheWrite = function(filter, data) {
+    $.Autocompleter.prototype.cacheWrite = function (filter, data) {
         if (this.options.useCache) {
             if (this.cacheLength_ >= this.options.maxCacheLength) {
                 this.cacheFlush();
@@ -511,7 +513,7 @@
      * Flush cache
      * @public
      */
-    $.Autocompleter.prototype.cacheFlush = function() {
+    $.Autocompleter.prototype.cacheFlush = function () {
         this.cacheData_ = {};
         this.cacheLength_ = 0;
     };
@@ -523,7 +525,7 @@
      * @param data
      * @returns Result of called hook, false if hook is undefined
      */
-    $.Autocompleter.prototype.callHook = function(hook, data) {
+    $.Autocompleter.prototype.callHook = function (hook, data) {
         var f = this.options[hook];
         if (f && $.isFunction(f)) {
             return f(data, this);
@@ -534,13 +536,13 @@
     /**
      * Set timeout to activate autocompleter
      */
-    $.Autocompleter.prototype.activate = function() {
+    $.Autocompleter.prototype.activate = function () {
         if (!this.options.enabled) return;
         var self = this;
         if (this.keyTimeout_) {
             clearTimeout(this.keyTimeout_);
         }
-        this.keyTimeout_ = setTimeout(function() {
+        this.keyTimeout_ = setTimeout(function () {
             self.activateNow();
         }, this.options.delay);
     };
@@ -548,7 +550,7 @@
     /**
      * Activate autocompleter immediately
      */
-    $.Autocompleter.prototype.activateNow = function() {
+    $.Autocompleter.prototype.activateNow = function () {
         var value = this.beforeUseConverter(this.dom.$elem.val());
         if (value !== this.lastProcessedValue_ && value !== this.lastSelectedValue_) {
             this.fetchData(value);
@@ -560,9 +562,9 @@
      * @param {string} value Value to base autocompletion on
      * @private
      */
-    $.Autocompleter.prototype.fetchData = function(value) {
+    $.Autocompleter.prototype.fetchData = function (value) {
         var self = this;
-        var processResults = function(results, filter) {
+        var processResults = function (results, filter) {
             if (self.options.processData) {
                 results = self.options.processData(results);
             }
@@ -574,7 +576,7 @@
         } else if (this.options.data) {
             processResults(this.options.data, value);
         } else {
-            this.fetchRemoteData(value, function(remoteData) {
+            this.fetchRemoteData(value, function (remoteData) {
                 processResults(remoteData, value);
             });
         }
@@ -586,14 +588,14 @@
      * @param {function} callback The function to call after data retrieval
      * @private
      */
-    $.Autocompleter.prototype.fetchRemoteData = function(filter, callback) {
+    $.Autocompleter.prototype.fetchRemoteData = function (filter, callback) {
         var data = this.cacheRead(filter);
         if (data) {
             callback(data);
         } else {
             var self = this;
             var dataType = self.options.remoteDataType === 'json' ? 'json' : 'text';
-            var ajaxCallback = function(data) {
+            var ajaxCallback = function (data) {
                 var parsed = false;
                 if (data !== false) {
                     parsed = self.parseRemoteData(data);
@@ -606,11 +608,11 @@
             $.ajax({
                 url: this.makeUrl(filter),
                 success: ajaxCallback,
-                error: function(jqXHR, textStatus, errorThrown) {
-                    if($.isFunction(self.options.onError)) {
+                error: function (jqXHR, textStatus, errorThrown) {
+                    if ($.isFunction(self.options.onError)) {
                         self.options.onError(jqXHR, textStatus, errorThrown);
                     } else {
-                      ajaxCallback(false);
+                        ajaxCallback(false);
                     }
                 },
                 dataType: dataType
@@ -624,7 +626,7 @@
      * @param {string} value Parameter value
      * @public
      */
-    $.Autocompleter.prototype.setExtraParam = function(name, value) {
+    $.Autocompleter.prototype.setExtraParam = function (name, value) {
         var index = $.trim(String(name));
         if (index) {
             if (!this.options.extraParams) {
@@ -645,7 +647,7 @@
      * @param {string} param The value parameter to pass to the backend
      * @returns {string} The finished url with parameters
      */
-    $.Autocompleter.prototype.makeUrl = function(param) {
+    $.Autocompleter.prototype.makeUrl = function (param) {
         var self = this;
         var url = this.options.url;
         var params = $.extend({}, this.options.extraParams);
@@ -664,7 +666,7 @@
      * @param remoteData Data received from remote server
      * @returns {array} Parsed data
      */
-    $.Autocompleter.prototype.parseRemoteData = function(remoteData) {
+    $.Autocompleter.prototype.parseRemoteData = function (remoteData) {
         var remoteDataType;
         var data = remoteData;
         if (this.options.remoteDataType === 'json') {
@@ -691,7 +693,7 @@
      * @returns {boolean} Include this result
      * @private
      */
-    $.Autocompleter.prototype.defaultFilter = function(result, filter) {
+    $.Autocompleter.prototype.defaultFilter = function (result, filter) {
         if (!result.value) {
             return false;
         }
@@ -719,7 +721,7 @@
      * @returns {boolean} Include this result
      * @private
      */
-    $.Autocompleter.prototype.filterResult = function(result, filter) {
+    $.Autocompleter.prototype.filterResult = function (result, filter) {
         // No filter
         if (this.options.filter === false) {
             return true;
@@ -737,7 +739,7 @@
      * @param results
      * @param filter
      */
-    $.Autocompleter.prototype.filterResults = function(results, filter) {
+    $.Autocompleter.prototype.filterResults = function (results, filter) {
         var filtered = [];
         var i, result;
 
@@ -761,15 +763,15 @@
      * @param results
      * @param filter
      */
-    $.Autocompleter.prototype.sortResults = function(results, filter) {
+    $.Autocompleter.prototype.sortResults = function (results, filter) {
         var self = this;
         var sortFunction = this.options.sortFunction;
         if (!$.isFunction(sortFunction)) {
-            sortFunction = function(a, b, f) {
+            sortFunction = function (a, b, f) {
                 return sortValueAlpha(a, b, self.options.matchCase);
             };
         }
-        results.sort(function(a, b) {
+        results.sort(function (a, b) {
             return sortFunction(a, b, filter, self.options);
         });
         return results;
@@ -781,7 +783,7 @@
      * @param a
      * @param b
      */
-    $.Autocompleter.prototype.matchStringConverter = function(s, a, b) {
+    $.Autocompleter.prototype.matchStringConverter = function (s, a, b) {
         var converter = this.options.matchStringConverter;
         if ($.isFunction(converter)) {
             s = converter(s, a, b);
@@ -793,7 +795,7 @@
      * Convert string before use
      * @param {String} s
      */
-    $.Autocompleter.prototype.beforeUseConverter = function(s) {
+    $.Autocompleter.prototype.beforeUseConverter = function (s) {
         s = this.getValue(s);
         var converter = this.options.beforeUseConverter;
         if ($.isFunction(converter)) {
@@ -805,14 +807,14 @@
     /**
      * Enable finish on blur event
      */
-    $.Autocompleter.prototype.enableFinishOnBlur = function() {
+    $.Autocompleter.prototype.enableFinishOnBlur = function () {
         this.finishOnBlur_ = true;
     };
 
     /**
      * Disable finish on blur event
      */
-    $.Autocompleter.prototype.disableFinishOnBlur = function() {
+    $.Autocompleter.prototype.disableFinishOnBlur = function () {
         this.finishOnBlur_ = false;
     };
 
@@ -820,12 +822,12 @@
      * Create a results item (LI element) from a result
      * @param result
      */
-    $.Autocompleter.prototype.createItemFromResult = function(result) {
+    $.Autocompleter.prototype.createItemFromResult = function (result) {
         var self = this;
         var $li = $('<li/>');
         $li.html(this.showResult(result.value, result.data));
         $li.data({value: result.value, data: result.data})
-            .click(function() {
+            .click(function () {
                 self.selectItem($li);
             })
             .mousedown(self.disableFinishOnBlur)
@@ -838,7 +840,7 @@
      * Get all items from the results list
      * @param result
      */
-    $.Autocompleter.prototype.getItems = function() {
+    $.Autocompleter.prototype.getItems = function () {
         return $('>ul>li', this.dom.$results);
     };
 
@@ -847,7 +849,7 @@
      * @param results
      * @param filter
      */
-    $.Autocompleter.prototype.showResults = function(results, filter) {
+    $.Autocompleter.prototype.showResults = function (results, filter) {
         var numResults = results.length;
         var self = this;
         var $ul = $('<ul></ul>');
@@ -878,8 +880,11 @@
                 this.dom.$results.css(this.options.autoWidth, autoWidth);
             }
             this.getItems().hover(
-                function() { self.focusItem(this); },
-                function() { /* void */ }
+                function () {
+                    self.focusItem(this);
+                },
+                function () { /* void */
+                }
             );
             if (this.autoFill(first, filter) || this.options.selectFirst || (this.options.selectOnly && numResults === 1)) {
                 this.focusItem($first);
@@ -891,7 +896,7 @@
         }
     };
 
-    $.Autocompleter.prototype.showResult = function(value, data) {
+    $.Autocompleter.prototype.showResult = function (value, data) {
         if ($.isFunction(this.options.showResult)) {
             return this.options.showResult(value, data);
         } else {
@@ -899,7 +904,7 @@
         }
     };
 
-    $.Autocompleter.prototype.autoFill = function(value, filter) {
+    $.Autocompleter.prototype.autoFill = function (value, filter) {
         var lcValue, lcFilter, valueLength, filterLength;
         if (this.options.autoFill && this.lastKeyPressed_ !== 8) {
             lcValue = String(value).toLowerCase();
@@ -909,7 +914,7 @@
             if (lcValue.substr(0, filterLength) === lcFilter) {
                 var d = this.getDelimiterOffsets();
                 var pad = d.start ? ' ' : ''; // if there is a preceding delimiter
-                this.setValue( pad + value );
+                this.setValue(pad + value);
                 var start = filterLength + d.start + pad.length;
                 var end = valueLength + d.start + pad.length;
                 this.selectRange(start, end);
@@ -919,15 +924,15 @@
         return false;
     };
 
-    $.Autocompleter.prototype.focusNext = function() {
+    $.Autocompleter.prototype.focusNext = function () {
         this.focusMove(+1);
     };
 
-    $.Autocompleter.prototype.focusPrev = function() {
+    $.Autocompleter.prototype.focusPrev = function () {
         this.focusMove(-1);
     };
 
-    $.Autocompleter.prototype.focusMove = function(modifier) {
+    $.Autocompleter.prototype.focusMove = function (modifier) {
         var $items = this.getItems();
         modifier = sanitizeInteger(modifier, 0);
         if (modifier) {
@@ -941,7 +946,7 @@
         this.focusItem(0);
     };
 
-    $.Autocompleter.prototype.focusItem = function(item) {
+    $.Autocompleter.prototype.focusItem = function (item) {
         var $item, $items = this.getItems();
         if ($items.length) {
             $items.removeClass(this.selectClass_).removeClass(this.options.selectClass);
@@ -961,7 +966,7 @@
         }
     };
 
-    $.Autocompleter.prototype.selectCurrent = function() {
+    $.Autocompleter.prototype.selectCurrent = function () {
         var $item = $('li.' + this.selectClass_, this.dom.$results);
         if ($item.length === 1) {
             this.selectItem($item);
@@ -970,7 +975,7 @@
         }
     };
 
-    $.Autocompleter.prototype.selectItem = function($li) {
+    $.Autocompleter.prototype.selectItem = function ($li) {
         var value = $li.data('value');
         var data = $li.data('data');
         var displayValue = this.displayValue(value, data);
@@ -981,13 +986,13 @@
         var delimiter = this.options.delimiterChar;
         var elem = this.dom.$elem;
         var extraCaretPos = 0;
-        if ( this.options.useDelimiter ) {
+        if (this.options.useDelimiter) {
             // if there is a preceding delimiter, add a space after the delimiter
-            if ( elem.val().substring(d.start-1, d.start) == delimiter && delimiter != ' ' ) {
+            if (elem.val().substring(d.start - 1, d.start) == delimiter && delimiter != ' ') {
                 displayValue = ' ' + displayValue;
             }
             // if there is not already a delimiter trailing this value, add it
-            if ( elem.val().substring(d.end, d.end+1) != delimiter && this.lastKeyPressed_ != this.options.delimiterKeyCode ) {
+            if (elem.val().substring(d.end, d.end + 1) != delimiter && this.lastKeyPressed_ != this.options.delimiterKeyCode) {
                 displayValue = displayValue + delimiter;
             } else {
                 // move the cursor after the existing trailing delimiter
@@ -996,23 +1001,23 @@
         }
         this.setValue(displayValue);
         this.setCaret(d.start + displayValue.length + extraCaretPos);
-        this.callHook('onItemSelect', { value: value, data: data });
+        this.callHook('onItemSelect', {value: value, data: data});
         this.deactivate(true);
         elem.focus();
     };
 
-    $.Autocompleter.prototype.displayValue = function(value, data) {
+    $.Autocompleter.prototype.displayValue = function (value, data) {
         if ($.isFunction(this.options.displayValue)) {
             return this.options.displayValue(value, data);
         }
         return value;
     };
 
-    $.Autocompleter.prototype.hideResults = function() {
+    $.Autocompleter.prototype.hideResults = function () {
         this.dom.$results.hide();
     };
 
-    $.Autocompleter.prototype.deactivate = function(finish) {
+    $.Autocompleter.prototype.deactivate = function (finish) {
         if (this.finishTimeout_) {
             clearTimeout(this.finishTimeout_);
         }
@@ -1037,7 +1042,7 @@
         this.hideResults();
     };
 
-    $.Autocompleter.prototype.selectRange = function(start, end) {
+    $.Autocompleter.prototype.selectRange = function (start, end) {
         var input = this.dom.$elem.get(0);
         if (input.setSelectionRange) {
             input.focus();
@@ -1055,14 +1060,14 @@
      * Move caret to position
      * @param {Number} pos
      */
-    $.Autocompleter.prototype.setCaret = function(pos) {
+    $.Autocompleter.prototype.setCaret = function (pos) {
         this.selectRange(pos, pos);
     };
 
     /**
      * Get caret position
      */
-    $.Autocompleter.prototype.getCaret = function() {
+    $.Autocompleter.prototype.getCaret = function () {
         var $elem = this.dom.$elem;
         var elem = $elem[0];
         var val, selection, range, start, end, stored_range;
@@ -1102,8 +1107,8 @@
      * Set the value that is currently being autocompleted
      * @param {String} value
      */
-    $.Autocompleter.prototype.setValue = function(value) {
-        if ( this.options.useDelimiter ) {
+    $.Autocompleter.prototype.setValue = function (value) {
+        if (this.options.useDelimiter) {
             // set the substring between the current delimiters
             var val = this.dom.$elem.val();
             var d = this.getDelimiterOffsets();
@@ -1118,8 +1123,8 @@
      * Get the value currently being autocompleted
      * @param {String} value
      */
-    $.Autocompleter.prototype.getValue = function(value) {
-        if ( this.options.useDelimiter ) {
+    $.Autocompleter.prototype.getValue = function (value) {
+        if (this.options.useDelimiter) {
             var d = this.getDelimiterOffsets();
             return value.substring(d.start, d.end).trim();
         } else {
@@ -1130,14 +1135,14 @@
     /**
      * Get the offsets of the value currently being autocompleted
      */
-    $.Autocompleter.prototype.getDelimiterOffsets = function() {
+    $.Autocompleter.prototype.getDelimiterOffsets = function () {
         var val = this.dom.$elem.val();
-        if ( this.options.useDelimiter ) {
+        if (this.options.useDelimiter) {
             var preCaretVal = val.substring(0, this.getCaret().start);
             var start = preCaretVal.lastIndexOf(this.options.delimiterChar) + 1;
             var postCaretVal = val.substring(this.getCaret().start);
             var end = postCaretVal.indexOf(this.options.delimiterChar);
-            if ( end == -1 ) end = val.length;
+            if (end == -1) end = val.length;
             end += this.getCaret().start;
         } else {
             start = 0;
@@ -1149,4 +1154,4 @@
         };
     };
 
-})((typeof window.jQuery == 'undefined' && typeof window.django != 'undefined')? django.jQuery : jQuery);
+})((typeof window.jQuery == 'undefined' && typeof window.django != 'undefined') ? django.jQuery : jQuery);
