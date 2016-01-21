@@ -20,7 +20,7 @@ WSGI_APPLICATION = 'CapValue.wsgi.application'
 SECRET_KEY = 'u@nup3l^ofar)mja-h6khvar^%))*$9^j%9q-9hg0#(3xyel=k'
 ALLOWED_HOSTS = []
 STATIC_URL = '/static/'
-STATIC_ROOT = '/var/www/cvc.ma/static_files/'
+STATIC_ROOT = os.path.join(os.getcwd(), 'static_files')
 TEMPLATE_DIRS = (os.path.join(BASE_DIR, 'static_files/templates'),)
 AUTH_USER_MODEL = 'authentication.Account'
 STATICFILES_DIRS = (os.path.join(BASE_DIR, 'static'),)
