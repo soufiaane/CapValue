@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html ng-app="capvalue">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <!-- Tell the browser to be responsive to screen width -->
+    <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
+    <title>CVC Tools</title>
+    <base href="/"/>
+    {% include 'stylesheets.html' %}
+</head>
+
+<body class="hold-transition skin-purple sidebar-mini">
+<div class="wrapper">
+    <header class="main-header">
+        {% include 'navbar.html' %}
+    </header>
+    <!-- Left side column. contains the logo and sidebar -->
+    <aside class="main-sidebar">
+        <!-- sidebar: style can be found in sidebar.less -->
+        <section class="sidebar">
+            {% include 'menu.html' %}
+        </section>
+        <!-- /.sidebar -->
+    </aside>
+    <!-- Content Wrapper. Contains page content -->
+    <div class="content-wrapper">
+        <!-- Content Header (Page header) -->
+        <section class="content-header">
+            {% include 'breadcrumb.html' %}
+        </section>
+
+        <!-- ###############################" -->
+        <!-- Main content -->
+        <section class="content">
+            <div ui-view></div>
+        </section>
+        <!-- /.content -->
+        <!-- ###############################" -->
+
+    </div>
+    <!-- /.content-wrapper -->
+    <footer class="main-footer">
+        {% include 'footer.html' %}
+    </footer>
+</div>
+<!-- ./wrapper -->
+{% include 'javascripts.html' %}
+</body>
+</html>

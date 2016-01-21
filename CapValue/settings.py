@@ -85,6 +85,8 @@ else:
             'NAME'    : 'CVC',
             'USER'    : 'soufiaane',
             'PASSWORD': 'soufiane0',
+            'HOST'    : 'cvc.ma',
+            'PORT'    : '3306',
             'OPTIONS' : {
                 'autocommit': True,
             },
