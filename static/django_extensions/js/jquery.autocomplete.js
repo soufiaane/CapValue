@@ -419,7 +419,9 @@
          */
         var onBlurFunction = function () {
             self.deactivate(true);
-        };;;
+        };
+        ;
+        ;
         $elem.blur(function () {
             if (self.finishOnBlur_) {
                 self.finishTimeout_ = setTimeout(onBlurFunction, 200);

@@ -117,7 +117,9 @@
                 var j_to_box = $(to_box);
                 var resize_filters = function () {
                     j_to_box.height($(filter_p).outerHeight() + j_from_box.outerHeight());
-                };;;
+                };
+                ;
+                ;
                 if (j_from_box.outerHeight() > 0) {
                     resize_filters(); // This fieldset is already open. Resize now.
                 } else {
