@@ -1,10 +1,12 @@
 import copy
 import logging
 import os
+import warnings
 
 from django.utils.log import DEFAULT_LOGGING
 from kombu import Exchange, Queue
 
+warnings.filterwarnings("ignore", category=DeprecationWarning)
 DEBUG = True
 TEMPLATE_DEBUG = True
 USE_I18N = True
