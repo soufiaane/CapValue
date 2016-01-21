@@ -8,7 +8,7 @@
     RegisterController.$inject = ['Authentication', 'Snackbar'];
 
 
-    function RegisterController( Authentication) {
+    function RegisterController(Authentication) {
         var vm = this;
         activate();
         vm.register = register;
