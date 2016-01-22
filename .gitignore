@@ -42,4 +42,6 @@ coverage.xml
 *.log
 docs/_build/
 target/
+/static_files/admin
+/static_files/rest_framework
 /static_files/*
