@@ -107,8 +107,11 @@ var CalendarNamespace = {
         calDiv.appendChild(calTable);
     }
 };
+<<<<<<< HEAD
 ;;
 
+=======
+>>>>>>> 55aac05ead6f38b2b1e0fa7cd4a1e5b92e93f225
 // Calendar -- A calendar instance
 function Calendar(div_id, callback, selected) {
     // div_id (string) is the ID of the element in which the calendar will
@@ -168,4 +171,8 @@ Calendar.prototype = {
         this.drawCurrent();
     }
 };
+<<<<<<< HEAD
 ;;
+=======
+
+>>>>>>> 55aac05ead6f38b2b1e0fa7cd4a1e5b92e93f225
