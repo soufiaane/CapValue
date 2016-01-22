@@ -1,4 +1,4 @@
-from django.conf.urls import patterns, include, url
+from django.conf.urls import include, url
 from rest_framework_nested import routers
 
 from authentication.views import AccountViewSet
@@ -14,7 +14,7 @@ accounts_router = routers.NestedSimpleRouter(
 accounts_router.register(r'jobs', AccountJobViewSet)
 # accounts_router.register(r'seeds', AccountSeedViewSet)
 
-urlpatterns = patterns('',
-                       url(r'^', include(router.urls)),
-                       url(r'^', include(accounts_router.urls)),
-                       )
+urlpatterns = [
+    url(r'^', include(router.urls)),
+    url(r'^', include(accounts_router.urls))
+]

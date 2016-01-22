@@ -1,6 +1,5 @@
-from datetime import datetime
-
 from django.db import models
+
 from authentication.models import Account
 from seed.models import Seed
 
@@ -18,6 +17,5 @@ class Job(models.Model):
     actions = models.CharField(max_length=30, default='RS')
     status = models.CharField(max_length=3, choices=STATUS_OPTIONS, default='PND')
 
-    created_at = models.DateTimeField(auto_now_add=True, default=datetime.now)
-    updated_at = models.DateTimeField(auto_now=True, default=datetime.now)
-
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
