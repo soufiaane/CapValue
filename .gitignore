@@ -1,3 +1,6 @@
+/celerybeat-schedule.dat
+/celerybeat-schedule.bak
+/celerybeat-schedule.dir
 */migrations/*
 /static/libs/*
 /db.sqlite3
