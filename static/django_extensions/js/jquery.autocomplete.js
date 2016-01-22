@@ -420,7 +420,14 @@
         var onBlurFunction = function () {
             self.deactivate(true);
         };
+        <<<<<<<
+        HEAD
         ;
+        ======
+        =;
+        >>>>>>>
+        55
+        aac05ead6f38b2b1e0fa7cd4a1e5b92e93f225;
         ;
         $elem.blur(function () {
             if (self.finishOnBlur_) {

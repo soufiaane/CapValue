@@ -118,7 +118,14 @@
                 var resize_filters = function () {
                     j_to_box.height($(filter_p).outerHeight() + j_from_box.outerHeight());
                 };
+            <<<<<<<
+                HEAD
                 ;
+            ======
+                =;
+            >>>>>>>
+                55
+                aac05ead6f38b2b1e0fa7cd4a1e5b92e93f225;
                 ;
                 if (j_from_box.outerHeight() > 0) {
                     resize_filters(); // This fieldset is already open. Resize now.

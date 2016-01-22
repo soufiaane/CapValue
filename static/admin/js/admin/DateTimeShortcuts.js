@@ -83,7 +83,14 @@ var DateTimeShortcuts = {
         }
         else {
             timezoneOffset *= -1;
+        <<<<<<<
+            HEAD
             ;
+        ======
+            =;
+        >>>>>>>
+            55
+            aac05ead6f38b2b1e0fa7cd4a1e5b92e93f225;
             ;
             message = ngettext(
                 'Note: You are %s hour behind server time.',
@@ -169,12 +176,17 @@ var DateTimeShortcuts = {
     },
     openClock: function (num) {
         var clock_box = document.getElementById(DateTimeShortcuts.clockDivName + num);
-        ;
+        <<<<<<<
+        HEAD
         ;
         var clock_link = document.getElementById(DateTimeShortcuts.clockLinkName + num);
+        ======
+        =;
+        var clock_link = document.getElementById(DateTimeShortcuts.clockLinkName + num);
+        >>>>>>>
+        55
+        aac05ead6f38b2b1e0fa7cd4a1e5b92e93f225;
         ;
-        ;
-
         // Recalculate the clockbox position
         // is it left-to-right or right-to-left layout ?
         if (getStyle(document.body, 'direction') != 'rtl') {
@@ -296,10 +308,16 @@ var DateTimeShortcuts = {
     },
     openCalendar: function (num) {
         var cal_box = document.getElementById(DateTimeShortcuts.calendarDivName1 + num);
-        ;
+        <<<<<<<
+        HEAD
         ;
         var cal_link = document.getElementById(DateTimeShortcuts.calendarLinkName + num);
-        ;
+        ======
+        =;
+        var cal_link = document.getElementById(DateTimeShortcuts.calendarLinkName + num);
+        >>>>>>>
+        55
+        aac05ead6f38b2b1e0fa7cd4a1e5b92e93f225;
         ;
         var inp = DateTimeShortcuts.calendarInputs[num];
 
@@ -363,13 +381,27 @@ var DateTimeShortcuts = {
     handleCalendarQuickLink: function (num, offset) {
         var d = DateTimeShortcuts.now();
         d.setDate(d.getDate() + offset);
+        <<<<<<<
+        HEAD
         ;
+        ======
+        =;
+        >>>>>>>
+        55
+        aac05ead6f38b2b1e0fa7cd4a1e5b92e93f225;
         ;
         DateTimeShortcuts.calendarInputs[num].value = d.strftime(get_format('DATE_INPUT_FORMATS')[0]);
         DateTimeShortcuts.calendarInputs[num].focus();
         DateTimeShortcuts.dismissCalendar(num);
     }
 };
-;;
-
+<<<<<<<
+HEAD
+;
+======
+=;
+>>>>>>>
+55
+aac05ead6f38b2b1e0fa7cd4a1e5b92e93f225;
+;
 addEvent(window, 'load', DateTimeShortcuts.init);
