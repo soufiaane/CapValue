@@ -2,7 +2,6 @@
 /celerybeat-schedule.bak
 /celerybeat-schedule.dir
 */migrations/*
-/static/libs/*
 /db.sqlite3
 __pycache__/
 *.py[cod]
@@ -42,6 +41,4 @@ coverage.xml
 *.log
 docs/_build/
 target/
-/static_files/admin
-/static_files/rest_framework
 /static_files/*
