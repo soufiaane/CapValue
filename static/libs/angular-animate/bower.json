@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 {
   "name": "angular-animate",
   "version": "1.4.8",
@@ -7,3 +8,14 @@
     "angular": "1.4.8"
   }
 }
+=======
+{
+  "name": "angular-animate",
+  "version": "1.4.8",
+  "main": "./angular-animate.js",
+  "ignore": [],
+  "dependencies": {
+    "angular": "1.4.8"
+  }
+}
+>>>>>>> 942286391f24f61d690faaf4c33948109167ed24

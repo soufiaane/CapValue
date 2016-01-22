@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 {
   "name": "angular-ui-router",
   "version": "0.2.15",
@@ -21,3 +22,28 @@
     "files.js"
   ]
 }
+=======
+{
+  "name": "angular-ui-router",
+  "version": "0.2.15",
+  "main": "./release/angular-ui-router.js",
+  "dependencies": {
+    "angular": ">= 1.0.8"
+  },
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "component.json",
+    "package.json",
+    "lib",
+    "config",
+    "sample",
+    "test",
+    "tests",
+    "ngdoc_assets",
+    "Gruntfile.js",
+    "files.js"
+  ]
+}
+>>>>>>> 942286391f24f61d690faaf4c33948109167ed24

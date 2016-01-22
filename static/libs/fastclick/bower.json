@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 {
   "name": "fastclick",
   "main": "lib/fastclick.js",
@@ -10,3 +11,17 @@
     "examples"
   ]
 }
+=======
+{
+  "name": "fastclick",
+  "main": "lib/fastclick.js",
+  "ignore": [
+    "**/.*",
+    "component.json",
+    "package.json",
+    "Makefile",
+    "tests",
+    "examples"
+  ]
+}
+>>>>>>> 942286391f24f61d690faaf4c33948109167ed24
