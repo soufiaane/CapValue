@@ -5,7 +5,7 @@ from proxies.views import ProxyViewSet, IPViewSet
 
 router = routers.SimpleRouter()
 router.register(r'^', ProxyViewSet)
-router.register(r'^P<proxy_pk>/ip', IPViewSet)
+router.register(r'^<proxy_pk>/ip', IPViewSet)
 
 urlpatterns = [
     url(r'^', include(router.urls))

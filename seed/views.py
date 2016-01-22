@@ -1,15 +1,14 @@
 from rest_framework import viewsets, permissions
-from rest_framework.response import Response
-
-from seed.models import Seed
 from seed.permissions import IsOwnerOfSeedList
+from rest_framework.response import Response
 from seed.serializers import SeedSerializer
+from seed.models import Seed
 
 
 class SeedViewSet(viewsets.ModelViewSet):
     queryset = Seed.objects.all()
     serializer_class = SeedSerializer
-    permission_classes = (permissions.IsAuthenticatedOrReadOnly, IsOwnerOfSeedList,)
+    # permission_classes = (permissions.IsAuthenticatedOrReadOnly,)
 
     def perform_create(self, serializer):
         serializer.save(user=self.request.user)

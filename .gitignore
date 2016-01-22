@@ -2,6 +2,7 @@
 /celerybeat-schedule.bak
 /celerybeat-schedule.dir
 */migrations/*
+*/migrations/
 /db.sqlite3
 __pycache__/
 *.py[cod]

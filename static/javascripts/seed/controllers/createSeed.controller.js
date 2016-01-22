@@ -3,10 +3,10 @@
     angular
         .module('capvalue.seed.controllers')
         .controller('SeedCreateController', SeedCreateController);
-    SeedCreateController.$inject = ['Seed', '$state', 'Snackbar'];
+    SeedCreateController.$inject = ['Seed', '$state', 'Snackbar', 'Authentication'];
 
 
-    function SeedCreateController(Seed, $state, Snackbar) {
+    function SeedCreateController(Seed, $state, Snackbar, Authentication) {
         var vm = this;
         vm.steps = [
             {
@@ -214,7 +214,8 @@
         }
 
         function processForm() {
-            Seed.create(vm.seedList.name, vm.seedList.proxyType).then(createSeedSuccessFn, createSeedErrorFn);
+            Seed.create(vm.seedList.name, vm.seedList.proxyType, Authentication.getAuthenticatedAccount())
+                .then(createSeedSuccessFn, createSeedErrorFn);
 
             function createSeedSuccessFn() {
                 Snackbar.show('Seed List Created Successfully');

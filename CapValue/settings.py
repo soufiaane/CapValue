@@ -25,7 +25,7 @@ STATICFILES_DIRS = (os.path.join(BASE_DIR, 'static'),)
 TEMPLATES = [
     {
         'BACKEND' : 'django.template.backends.django.DjangoTemplates',
-        'DIRS'    : [os.path.join(BASE_DIR, 'static/templates'), os.path.join(BASE_DIR, 'static_files/templates'),],
+        'DIRS'    : [os.path.join(BASE_DIR, 'static/templates'), os.path.join(BASE_DIR, 'static_files/templates'), ],
         'APP_DIRS': True,
         'OPTIONS' : {
             'context_processors': [
@@ -41,7 +41,11 @@ TEMPLATES = [
 
 REST_FRAMEWORK = {
     'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
-    'PAGINATE_BY'             : 10
+    'PAGINATE_BY'             : 10,
+    'DEFAULT_RENDERER_CLASSES': (
+        'rest_framework.renderers.JSONRenderer',
+        'rest_framework.renderers.BrowsableAPIRenderer',
+    )
 }
 
 STATICFILES_FINDERS = (
