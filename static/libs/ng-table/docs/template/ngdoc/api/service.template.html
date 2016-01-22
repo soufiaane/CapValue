@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 {% extends "api/object.template.html" %}
 
 {% block related_components %}
@@ -7,3 +8,14 @@
   </li>
   {%- endif %}
 {% endblock %}
+=======
+{% extends "api/object.template.html" %}
+
+{% block related_components %}
+  {% if doc.providerDoc -%}
+  <li>
+    <a href="{$ doc.providerDoc.path $}">- {$ doc.providerDoc.name $}</a>
+  </li>
+  {%- endif %}
+{% endblock %}
+>>>>>>> 942286391f24f61d690faaf4c33948109167ed24

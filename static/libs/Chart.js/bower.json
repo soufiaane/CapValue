@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 {
   "name": "Chart.js",
   "version": "1.0.2",
@@ -8,4 +9,16 @@
     "Chart.js"
   ],
   "dependencies": {}
+=======
+{
+  "name": "Chart.js",
+  "version": "1.0.2",
+  "description": "Simple HTML5 Charts using the canvas element",
+  "homepage": "https://github.com/nnnick/Chart.js",
+  "author": "nnnick",
+  "main": [
+    "Chart.js"
+  ],
+  "dependencies": {}
+>>>>>>> 942286391f24f61d690faaf4c33948109167ed24
 }

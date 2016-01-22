@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 {
   "name": "angular-animate",
   "version": "1.4.8",
@@ -24,3 +25,31 @@
   },
   "homepage": "http://angularjs.org"
 }
+=======
+{
+  "name": "angular-animate",
+  "version": "1.4.8",
+  "description": "AngularJS module for animations",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/angular/angular.js.git"
+  },
+  "keywords": [
+    "angular",
+    "framework",
+    "browser",
+    "animation",
+    "client-side"
+  ],
+  "author": "Angular Core Team <angular-core+npm@google.com>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/angular/angular.js/issues"
+  },
+  "homepage": "http://angularjs.org"
+}
+>>>>>>> 942286391f24f61d690faaf4c33948109167ed24
