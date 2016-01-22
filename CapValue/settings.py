@@ -1,6 +1,6 @@
+from kombu import Exchange, Queue
 import copy
 import os
-from kombu import Exchange, Queue
 
 DEBUG = True
 USE_I18N = True
@@ -25,10 +25,15 @@ STATICFILES_DIRS = (os.path.join(BASE_DIR, 'static'),)
 TEMPLATES = [
     {
         'BACKEND' : 'django.template.backends.django.DjangoTemplates',
-        'DIRS'    : [os.path.join(BASE_DIR, 'static_files/templates')],
+        'DIRS'    : [os.path.join(BASE_DIR, 'static/templates'), os.path.join(BASE_DIR, 'static_files/templates'),],
         'APP_DIRS': True,
         'OPTIONS' : {
-            'debug': True,
+            'context_processors': [
+                'django.template.context_processors.debug',
+                'django.template.context_processors.request',
+                'django.contrib.auth.context_processors.auth',
+                'django.contrib.messages.context_processors.messages',
+            ],
 
         },
     },

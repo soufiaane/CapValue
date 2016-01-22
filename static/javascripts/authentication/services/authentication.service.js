@@ -56,8 +56,6 @@
 
             function logoutSuccessFn() {
                 Authentication.unauthenticate();
-                //$state.go('Home', {}, {reload: true});
-                //TODO-CVC use $state
                 window.location = '/';
             }
 

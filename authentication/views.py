@@ -1,12 +1,9 @@
-import json
-
-from django.contrib.auth import authenticate, login, logout
 from rest_framework import permissions, viewsets, status, views
-from rest_framework.response import Response
-
-from authentication.models import Account
-from authentication.permissions import IsAccountOwner
+from django.contrib.auth import authenticate, login, logout
 from authentication.serializers import AccountSerializer
+from authentication.permissions import IsAccountOwner
+from rest_framework.response import Response
+from authentication.models import Account
 
 
 class AccountViewSet(viewsets.ModelViewSet):
@@ -30,10 +27,8 @@ class AccountViewSet(viewsets.ModelViewSet):
 
 class LoginView(views.APIView):
     def post(self, request, format=None):
-        data = json.loads(request.body.decode('utf-8'))
-
-        username = data.get('username', None)
-        password = data.get('password', None)
+        username = request.data.get('username', None)
+        password = request.data.get('password', None)
         account = authenticate(username=username, password=password)
 
         if account is not None:
