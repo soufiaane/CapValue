@@ -1,14 +1,8 @@
 import copy
-import logging
 import os
-import warnings
-
-from django.utils.log import DEFAULT_LOGGING
 from kombu import Exchange, Queue
 
-warnings.filterwarnings("ignore", category=DeprecationWarning)
 DEBUG = True
-TEMPLATE_DEBUG = False
 USE_I18N = True
 USE_L10N = True
 USE_TZ = True
@@ -21,12 +15,27 @@ SECRET_KEY = 'u@nup3l^ofar)mja-h6khvar^%))*$9^j%9q-9hg0#(3xyel=k'
 ALLOWED_HOSTS = []
 STATIC_URL = '/static/'
 STATIC_ROOT = os.path.join(os.getcwd(), 'static_files')
-TEMPLATE_DIRS = (os.path.join(BASE_DIR, 'static_files/templates'),)
 AUTH_USER_MODEL = 'authentication.Account'
 STATICFILES_DIRS = (os.path.join(BASE_DIR, 'static'),)
 GRAVATAR_DEFAULT_IMAGE = 'identicon'
 GRAVATAR_DEFAULT_SIZE = '215'
 ROLEPERMISSIONS_MODULE = 'CapValue.roles'
+
+
+
+TEMPLATES = [
+    {
+        'BACKEND': 'django.template.backends.django.DjangoTemplates',
+        'DIRS': [os.path.join(BASE_DIR, 'static_files/templates')],
+        'APP_DIRS': True,
+        'OPTIONS': {
+            # ... some options here ...
+        },
+    },
+]
+
+
+
 REST_FRAMEWORK = {
     'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
     'PAGINATE_BY'             : 10
@@ -88,7 +97,7 @@ elif os.environ.get('REMOTE') == 'TRUE':
 else:
     DATABASES = {
         'default': {
-            'ENGINE'  : 'mysql.connector.django',
+            'ENGINE'  : 'django.db.backends.mysql',
             'NAME'    : 'CVC',
             'USER'    : 'soufiaane',
             'PASSWORD': 'soufiane0',
@@ -112,18 +121,3 @@ AMQP_PORT = 5672
 AMQP_USER = "soufiaane"
 AMQP_PASSWORD = "soufiane0"
 AMQP_VHOST = "/cvchost"
-LOGGING = copy.deepcopy(DEFAULT_LOGGING)
-LOGGING['filters']['suppress_deprecated'] = {
-    '()': 'CapValue.settings.SuppressDeprecated'
-}
-LOGGING['handlers']['console']['filters'].append('suppress_deprecated')
-
-
-class SuppressDeprecated(logging.Filter):
-    def filter(self, record):
-        WARNINGS_TO_SUPPRESS = [
-            'RemovedInDjango18Warning',
-            'RemovedInDjango19Warning'
-        ]
-
-        return not any([warn in record.getMessage() for warn in WARNINGS_TO_SUPPRESS])
