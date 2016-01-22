@@ -1,9 +1,0 @@
-<<<<<<< HEAD
-/* jquery.sparkline @VERSION@ - http://omnipotent.net/jquery.sparkline/ 
-** Licensed under the New BSD License - see above site for details */
-
-=======
-/* jquery.sparkline @VERSION@ - http://omnipotent.net/jquery.sparkline/ 
-** Licensed under the New BSD License - see above site for details */
-
->>>>>>> 942286391f24f61d690faaf4c33948109167ed24
