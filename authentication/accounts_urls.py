@@ -5,10 +5,10 @@ from authentication.views import AccountViewSet
 from job.views import AccountJobViewSet
 
 router = routers.SimpleRouter()
-router.register(r'', AccountViewSet)
+router.register(r'^', AccountViewSet)
 
 accounts_router = routers.NestedSimpleRouter(
-    router, r'', lookup='account'
+    router, r'^', lookup='account'
 )
 
 accounts_router.register(r'jobs', AccountJobViewSet)
