@@ -21,7 +21,7 @@
         };
 
         function register(password, username) {
-            return $http.post('/api/v1/accounts/', {
+            return $http.post('api/v1/accounts/', {
                 password: password,
                 username: username
             }).then(registerSuccessFn, registerErrorFn);
@@ -36,7 +36,7 @@
         }
 
         function login(username, password) {
-            return $http.post('/api/v1/auth/login/', {
+            return $http.post('api/v1/auth/login/', {
                 username: username,
                 password: password
             }).then(loginSuccessFn, loginErrorFn);
@@ -52,7 +52,7 @@
         }
 
         function logout() {
-            return $http.post('/api/v1/auth/logout/').then(logoutSuccessFn, logoutErrorFn);
+            return $http.post('api/v1/auth/logout/').then(logoutSuccessFn, logoutErrorFn);
 
             function logoutSuccessFn() {
                 Authentication.unauthenticate();
