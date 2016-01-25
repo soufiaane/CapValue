@@ -8,7 +8,7 @@ from seed.models import Seed
 class SeedView(generics.ListCreateAPIView):
     queryset = Seed.objects.all()
     serializer_class = SeedSerializer
-    permission_classes = (permissions.IsAuthenticatedOrReadOnly,IsOwnerOfSeedList,)
+    permission_classes = (permissions.IsAuthenticatedOrReadOnly,)
 
     def post(self, request, *args, **kwargs):
         serialized = self.serializer_class(data=request.data)
@@ -46,7 +46,7 @@ class SeedDetail(generics.RetrieveUpdateDestroyAPIView):
 class AccountSeedList(viewsets.GenericViewSet):
     queryset = Seed.objects.select_related('user').all()
     serializer_class = SeedSerializer
-    permission_classes = (permissions.IsAuthenticatedOrReadOnly, IsOwnerOfSeedList,)
+    permission_classes = (permissions.IsAuthenticatedOrReadOnly,)
 
     def list(self, request, **kwargs):
         username = kwargs.get('username')

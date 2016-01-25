@@ -38,16 +38,15 @@ class LoginView(views.APIView):
                 serialized = AccountSerializer(account)
 
                 return Response(serialized.data)
-            else:
-                return Response({
+
+            return Response({
                     'status' : 'Unauthorized',
                     'message': 'This account has been disabled.'
                 }, status=status.HTTP_401_UNAUTHORIZED)
-        else:
-            return Response({
+        return Response({
                 'status' : 'Unauthorized',
                 'message': 'Username/password combination invalid.'
-            }, status=status.HTTP_401_UNAUTHORIZED)
+            }, status=status.HTTP_400_BAD_REQUEST)
 
 
 class LogoutView(views.APIView):
@@ -55,5 +54,4 @@ class LogoutView(views.APIView):
 
     def post(self, request, format=None):
         logout(request)
-
         return Response({}, status=status.HTTP_204_NO_CONTENT)
