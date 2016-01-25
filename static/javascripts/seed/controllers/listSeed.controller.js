@@ -27,7 +27,7 @@
 
 
         function ErrorSeedListFn() {
-            console.error('Error fetching Seed List');
+            Snackbar.error('Error fetching Seed List');
             return [];
         }
     }

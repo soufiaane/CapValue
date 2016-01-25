@@ -22,6 +22,7 @@
         var user = Authentication.getAuthenticatedAccount();
         vm.submitJob = submitJob;
         vm.toggleSeedSelection = toggleSeedSelection;
+        vm.findWithAttr = findWithAttr;
 
         vm.tableParams = new ngTableParams({
             page: 1,
@@ -39,19 +40,28 @@
             counts: []
         });
 
+        function findWithAttr(array, attr, value) {
+            for (var i = 0; i < array.length; i += 1) {
+                if (array[i][attr] === value) {
+                    return i;
+                }
+            }
+            return -1;
+        }
+
         function ErrorSeedListFn() {
             console.error('Epic failure!');
         }
 
 
-        function toggleSeedSelection(seed_id) {
-            var idx = vm.job.selectedSeeds.indexOf(seed_id);
+        function toggleSeedSelection(seed, seed_id) {
+            var idx = findWithAttr(vm.job.selectedSeeds, 'id', seed_id);
             // is currently selected
             if (idx > -1) {
                 vm.job.selectedSeeds.splice(idx, 1);
             }
             else {
-                vm.job.selectedSeeds.push(seed_id);
+                vm.job.selectedSeeds.push(JSON.parse(JSON.stringify(seed)));
             }
         }
 
@@ -65,7 +75,7 @@
             }
             selected_actions = selected_actions.replace(/,\s*$/, "");
 
-            Job.create(vm.job.keyword, vm.job.selectedSeeds, selected_actions).then(createJobSuccessFn, createJobErrorFn);
+            Job.create(vm.job.keyword, JSON.stringify(vm.job.selectedSeeds), selected_actions).then(createJobSuccessFn, createJobErrorFn);
 
             function createJobSuccessFn() {
                 Snackbar.show('Job Created Successfully');

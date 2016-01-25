@@ -18,8 +18,11 @@
             return $http.get('/api/v1/jobs/');
         }
 
-        function get(username) {
-            return $http.get('/api/v1/accounts/' + username + '/jobs/');
+        function get(username, page) {
+            if (!page) {
+                return $http.get('/api/v1/jobs/' + username + '/');
+            }
+            return $http.get('/api/v1/jobs/' + username + '/?page=' + page);
         }
 
         function create(keyword, seed_list, actions) {

@@ -1,6 +1,5 @@
-from django.db import models
-
 from authentication.models import Account
+from django.db import models
 
 
 class Seed(models.Model):

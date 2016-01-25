@@ -2,7 +2,8 @@
     <div class="col-xs-12">
         <div class="box">
             <div class="box-header">
-                <h3 class="box-title">Jobs List :</h3>
+                <h3 class="box-title">Jobs List :&nbsp;&nbsp;&nbsp;&nbsp;<span class="badge label label-success">{$ vm.joblist_count $}</span>
+                </h3>
             </div>
             <!-- /.box-header -->
             <div class="box-body">
@@ -13,12 +14,15 @@
                                 <tbody>
                                 <tr role="row" class="odd" ng-repeat="job in $data">
                                     <td title="'Id'" filter="{ id: 'number'}" sortable="'id'">{$ job.id $}</td>
-                                    <td title="'List Name'" filter="{ list_name: 'text'}" sortable="'list_name'">{$
-                                        job.list_name $}
+                                    <td title="'Entered'" filter="{ created_at: 'text'}" sortable="'created_at'">{$
+                                        job.created_at | date:'dd-MM-yyyy'$}
                                     </td>
-                                    <td title="'Count'">50</td>
-                                    <td title="'Active'">30</td>
-                                    <td title="'Inactive'">20</td>
+                                    <td title="'Finished'">###</td>
+                                    <td title="'Status'">30</td>
+                                    <td title="'Keyword'">{$ job.keywords $}</td>
+                                    <td title="'Actions'">{$ job.actions $}</td>
+                                    <td title="'Processed'">32</td>
+                                    <td title="'Action'">{$ job.actions $}</td>
                                 </tr>
                                 </tbody>
                             </table>

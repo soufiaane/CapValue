@@ -34,7 +34,7 @@
             })
             .state('JobList', {
                 url: "/job/list/",
-                controller: 'JobCreateController',
+                controller: 'JobListController',
                 controllerAs: 'vm',
                 templateUrl: '/static/templates/job/list.html'
             })
