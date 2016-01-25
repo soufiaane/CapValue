@@ -2,6 +2,7 @@ from kombu import Exchange, Queue
 import copy
 import os
 
+
 DEBUG = True
 USE_I18N = True
 USE_L10N = True
@@ -64,7 +65,6 @@ INSTALLED_APPS = (
     'django.contrib.staticfiles',
     'django_extensions',
     'rest_framework',
-    'rest_framework_nested',
     'django_gravatar',
     'authentication',
     'djcelery',
