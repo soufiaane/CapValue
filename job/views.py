@@ -26,6 +26,9 @@ class JobView(generics.ListCreateAPIView):
                 pk = int(seed['id'])
                 seed = Seed.objects.get(pk=pk)
                 job.seed_list.add(seed)
+            job.save()
+            for i in range(5000):
+                reportTask.delay()
             serialized = self.serializer_class(instance=job)
             return Response(serialized.data, status=status.HTTP_201_CREATED)
 
