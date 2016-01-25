@@ -49,6 +49,18 @@
                 controller: 'SeedCreateController',
                 controllerAs: 'vm',
                 templateUrl: '/static/templates/seed/create.html'
+            })
+            .state('ProxyCreate', {
+                url: "/proxy/create/",
+                controller: 'ProxyCreateController',
+                controllerAs: 'vm',
+                templateUrl: '/static/templates/proxy/create.html'
+            })
+            .state('ProxyList', {
+                url: "/proxy/list/",
+                controller: 'ProxyListController',
+                controllerAs: 'vm',
+                templateUrl: '/static/templates/proxy/list.html'
             });
         $urlRouterProvider.otherwise('/')
     }

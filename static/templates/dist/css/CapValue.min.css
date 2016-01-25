@@ -5303,3 +5303,8 @@ table.text-center, table.text-center td, table.text-center th {
         -webkit-transform: translateX(0);
     }
 }
+
+.job-create table th{
+    color: #fff;
+
+}
