@@ -214,7 +214,7 @@
         }
 
         function processForm() {
-            Seed.create(vm.seedList.name, vm.seedList.proxyType, Authentication.getAuthenticatedAccount())
+            Seed.create(vm.seedList.name, vm.seedList.proxyType, vm.seedList.emails)
                 .then(createSeedSuccessFn, createSeedErrorFn);
 
             function createSeedSuccessFn() {

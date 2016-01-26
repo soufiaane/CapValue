@@ -10,6 +10,7 @@
             'capvalue.job',
             'capvalue.seed',
             'capvalue.proxies',
+            'capvalue.emails',
             'capvalue.utils',
             'ncy-angular-breadcrumb',
             'multiStepForm',

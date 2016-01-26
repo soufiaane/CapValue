@@ -1,12 +1,11 @@
+from emails.views import EmailView, AccountEmailList
 from django.conf.urls import url, include
 from rest_framework import routers
 
-from seed.views import SeedViewSet, AccountSeedList
-
 router = routers.SimpleRouter()
-router.register(r'^(?P<username>.+)', AccountSeedList)
-router.register(r'^', SeedViewSet)
+router.register(r'^emails/(?P<username>.+)', AccountEmailList)
 
 urlpatterns = [
+    url(r'^emails/$', EmailView.as_view(), name='emails'),
     url(r'^', include(router.urls))
 ]
