@@ -1,7 +1,7 @@
 from rest_framework import viewsets, permissions, status, generics
-from seed.permissions import IsOwnerOfSeedList
 from rest_framework.response import Response
 from seed.serializers import SeedSerializer
+from emails.models import Email
 from seed.models import Seed
 
 
@@ -14,6 +14,12 @@ class SeedView(generics.ListCreateAPIView):
         serialized = self.serializer_class(data=request.data)
         if serialized.is_valid():
             serialized.save(user=self.request.user)
+            seed = Seed.objects.get(pk=serialized.data['id'])
+            for email in request.data['emails']:
+                em = Email.objects.create(user=request.user, email=email['email'], password=email['password']).save()
+                seed.emails.add(em)
+                seed.save()
+            serialized = self.serializer_class(instance=seed)
             return Response(serialized.data, status=status.HTTP_201_CREATED)
 
         return Response({

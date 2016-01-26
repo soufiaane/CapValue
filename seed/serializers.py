@@ -8,5 +8,5 @@ class SeedSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Seed
-        fields = ('id', 'user', 'jobs', 'list_name', 'proxyType', 'created_at', 'updated_at')
-        read_only_fields = ('id', 'user', 'jobs', 'created_at', 'updated_at')
+        fields = ('id', 'user', 'jobs', 'emails', 'list_name', 'proxyType', 'created_at', 'updated_at')
+        read_only_fields = ('id', 'user', 'jobs', 'emails', 'created_at', 'updated_at')
