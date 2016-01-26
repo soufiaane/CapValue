@@ -8,6 +8,7 @@
 
     function SeedCreateController(Seed, $state, Snackbar, Authentication) {
         var vm = this;
+        activate();
         vm.steps = [
             {
                 templateUrl: '/static/templates/seed/create.info.html',
@@ -224,6 +225,12 @@
 
             function createSeedErrorFn() {
                 Snackbar.error('Error when attempting to Create Seed');
+            }
+        }
+
+        function activate() {
+            if (!Authentication.isAuthenticated()) {
+                $state.go('Login');
             }
         }
     }

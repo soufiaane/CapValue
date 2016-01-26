@@ -1,7 +1,5 @@
 from kombu import Exchange, Queue
-import copy
 import os
-
 
 DEBUG = True
 USE_I18N = True
@@ -17,8 +15,6 @@ ALLOWED_HOSTS = ['*']
 AUTH_USER_MODEL = 'authentication.Account'
 GRAVATAR_DEFAULT_IMAGE = 'identicon'
 GRAVATAR_DEFAULT_SIZE = '215'
-ROLEPERMISSIONS_MODULE = 'CapValue.roles'
-
 STATIC_URL = '/static/'
 STATIC_ROOT = os.path.join(os.getcwd(), 'static_files')
 STATICFILES_DIRS = (os.path.join(BASE_DIR, 'static'),)
@@ -88,8 +84,8 @@ if os.environ.get('PRODUCTION') == 'TRUE':
     DATABASES = {
         'default': {
             'ENGINE'  : 'django.db.backends.mysql',
-            'HOST': '127.0.0.1',
-            'PORT': 3306,
+            'HOST'    : '127.0.0.1',
+            'PORT'    : 3306,
             'NAME'    : 'CVC',
             'USER'    : 'soufiaane',
             'PASSWORD': 'soufiane0',

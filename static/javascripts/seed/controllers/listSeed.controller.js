@@ -3,10 +3,11 @@
     angular
         .module('capvalue.seed.controllers')
         .controller('SeedListController', SeedListController);
-    SeedListController.$inject = ['Seed', 'Authentication', 'ngTableParams', 'Snackbar'];
+    SeedListController.$inject = ['Seed', 'Authentication', 'ngTableParams', 'Snackbar', '$state'];
 
-    function SeedListController(Seed, Authentication, ngTableParams, Snackbar) {
+    function SeedListController(Seed, Authentication, ngTableParams, Snackbar, $state) {
         var vm = this;
+        activate();
         var user = Authentication.getAuthenticatedAccount();
 
         vm.tableParams = new ngTableParams({
@@ -29,6 +30,12 @@
         function ErrorSeedListFn() {
             Snackbar.error('Error fetching Seed List');
             return [];
+        }
+
+        function activate() {
+            if (!Authentication.isAuthenticated()) {
+                $state.go('Login');
+            }
         }
     }
 })();

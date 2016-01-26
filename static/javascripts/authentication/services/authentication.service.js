@@ -61,7 +61,7 @@
         function getAuthenticatedAccount() {
             var authAccount = $cookies.get('authenticatedAccount');
             if (!authAccount) {
-                return;
+                return false;
             }
 
             return JSON.parse(authAccount);

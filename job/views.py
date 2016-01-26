@@ -2,7 +2,7 @@ from rest_framework import viewsets, permissions, generics, status
 from rest_framework.response import Response
 from job.serializers import JobSerializer
 from job.permissions import IsOwnerOfJob
-from job.tasks import reportTask
+from job.tasks import reportHotmail
 from job.models import Job
 from job.models import Seed
 import json
@@ -11,14 +11,13 @@ import json
 class JobView(generics.ListCreateAPIView):
     queryset = Job.objects.all()
     serializer_class = JobSerializer
-    permission_classes = (permissions.IsAuthenticatedOrReadOnly, IsOwnerOfJob,)
+    permission_classes = (permissions.AllowAny,)
 
     def post(self, request, *args, **kwargs):
         keywords = request.data.get('keywords', None)
         seed_list = json.loads(request.data.get('seed_list', None))
         actions = request.data.get('actions', None)
         user = request.user
-
         serialized = self.serializer_class(data={'keywords': keywords, 'actions': actions})
         if serialized.is_valid():
             job = Job.objects.create(keywords=keywords, actions=actions, user=user)
@@ -26,9 +25,15 @@ class JobView(generics.ListCreateAPIView):
                 pk = int(seed['id'])
                 seed = Seed.objects.get(pk=pk)
                 job.seed_list.add(seed)
+
+            seeds = job.seed_list.all()
+            for seed in seeds:
+                emails = seed.emails.all()
+                for email in emails:
+                    reportHotmail.delay(reportHotmail, job, email)
+            job.status = "RN"
             job.save()
-            for i in range(5000):
-                reportTask.delay()
+
             serialized = self.serializer_class(instance=job)
             return Response(serialized.data, status=status.HTTP_201_CREATED)
 

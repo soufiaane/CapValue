@@ -8,7 +8,8 @@
     config.$inject = ['$stateProvider', '$urlRouterProvider'];
 
     function config($stateProvider, $urlRouterProvider) {
-        $stateProvider.state('Home', {
+        $stateProvider
+            .state('Home', {
                 url: "/",
                 controller: 'IndexController',
                 controllerAs: 'vm',
@@ -61,6 +62,21 @@
                 controller: 'ProxyListController',
                 controllerAs: 'vm',
                 templateUrl: '/static/templates/proxy/list.html'
+            })
+            .state("Modal", {
+                views:{
+                    "modal": {
+                        templateUrl: "modal.html"
+                    }
+                },
+                abstract: true
+            })
+            .state("Modal.confirmAddToCart", {
+                views:{
+                    "modal": {
+                        templateUrl: "modals/confirm.html"
+                    }
+                }
             });
         $urlRouterProvider.otherwise('/')
     }

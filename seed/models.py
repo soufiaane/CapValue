@@ -5,7 +5,7 @@ from django.db import models
 
 class Seed(models.Model):
     user = models.ForeignKey(Account, on_delete=models.CASCADE)
-    emails = models.ManyToManyField(Email, related_name='seed')
+    emails = models.ManyToManyField(Email, related_name='seeds')
     list_name = models.CharField(max_length=40, blank=True)
     proxyType = models.CharField(max_length=40, blank=True)
 

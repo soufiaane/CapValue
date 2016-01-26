@@ -1,6 +1,5 @@
-{% load staticfiles %}
 <!-- Logo -->
-<a href="/" class="logo">
+<a ui-sref="Home" class="logo">
     <!-- mini logo for sidebar mini 50x50 pixels -->
     <span class="logo-mini"><b>CVC</b></span>
     <!-- logo for regular state and mobile devices -->
@@ -9,7 +8,7 @@
 <!-- Header Navbar: style can be found in header.less -->
 <nav class="navbar navbar-static-top" role="navigation" ng-controller="NavbarController as vm">
     <!-- Sidebar toggle button-->
-    <a href="#" class="sidebar-toggle" data-toggle="offcanvas" role="button">
+    <a ui-sref="#" class="sidebar-toggle" data-toggle="offcanvas" role="button">
         <span class="sr-only">Toggle navigation</span>
     </a>
     <!-- Navbar Right Menu -->
@@ -107,12 +106,12 @@
                 </li>
             {% else %}
                 <li class="dropdown user user-menu">
-                    <a href="/register" class="dropdown-toggle">
+                    <a ui-sref="Register" class="dropdown-toggle">
                         <span class="hidden-xs">Register</span>
                     </a>
                 </li>
                 <li class="dropdown user user-menu">
-                    <a href="/login" class="dropdown-toggle">
+                    <a ui-sref="Login" class="dropdown-toggle">
                         <span class="hidden-xs">Login</span>
                     </a>
                 </li>

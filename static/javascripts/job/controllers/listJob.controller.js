@@ -3,11 +3,12 @@
     angular
         .module('capvalue.job.controllers')
         .controller('JobListController', JobListController);
-    JobListController.$inject = ['Job', 'Authentication', 'ngTableParams', 'Snackbar'];
+    JobListController.$inject = ['Job', 'Authentication', 'ngTableParams', 'Snackbar', '$state'];
 
 
-    function JobListController(Job, Authentication, ngTableParams, Snackbar) {
+    function JobListController(Job, Authentication, ngTableParams, Snackbar, $state) {
         var vm = this;
+        activate();
         var user = Authentication.getAuthenticatedAccount();
 
         vm.tableParams = new ngTableParams({
@@ -30,6 +31,12 @@
         function ErrorSeedListFn() {
             Snackbar.error('Error fetching Job List');
             return [];
+        }
+
+        function activate() {
+            if (!Authentication.isAuthenticated()) {
+                $state.go('Login');
+            }
         }
     }
 })();

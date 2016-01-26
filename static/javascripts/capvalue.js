@@ -15,7 +15,8 @@
             'ncy-angular-breadcrumb',
             'multiStepForm',
             'ngTable',
-            'ngCookies'
+            'ngCookies',
+            'ui.router'
         ]).run(run);
 
     run.$inject = ['$http'];

@@ -5308,3 +5308,8 @@ table.text-center, table.text-center td, table.text-center th {
     color: #fff;
 
 }
+
+
+{
+    box-sizing: border-box;
+}

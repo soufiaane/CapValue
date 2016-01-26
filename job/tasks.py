@@ -11,3 +11,10 @@ logger = get_task_logger(__name__)
 def reportTask(self, link):
     print('report_task')
     logger.info('Reported Email')
+
+
+@app.task(name='report_hotmail', bind=True)
+def reportHotmail(self, job, email):
+    print(job)
+    print(email)
+    logger.info('Reported Email')

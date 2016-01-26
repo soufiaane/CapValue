@@ -7,8 +7,15 @@
 
     ProxyCreateController.$inject = ['Authentication', '$state'];
 
-    function ProxyCreateController(Authentication) {
+    function ProxyCreateController(Authentication, $state) {
         var vm = this;
+        activate();
+
+        function activate() {
+            if (!Authentication.isAuthenticated()) {
+                $state.go('Login');
+            }
+        }
     }
 
 })();

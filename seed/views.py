@@ -16,8 +16,9 @@ class SeedView(generics.ListCreateAPIView):
             serialized.save(user=self.request.user)
             seed = Seed.objects.get(pk=serialized.data['id'])
             for email in request.data['emails']:
-                em = Email.objects.create(user=request.user, email=email['email'], password=email['password']).save()
-                seed.emails.add(em)
+                em = Email.objects.create(user=request.user, email=email['email'], password=email['password'])
+                em.save()
+                seed.emails.add(em.id)
                 seed.save()
             serialized = self.serializer_class(instance=seed)
             return Response(serialized.data, status=status.HTTP_201_CREATED)

@@ -7,6 +7,7 @@
 
     function JobCreateController(Job, Seed, Authentication, $state, ngTableParams, Snackbar) {
         var vm = this;
+        activate();
         vm.job = {
             selectedSeeds: [], actions: [
                 {name: "RS", isChecked: true},
@@ -84,6 +85,12 @@
 
             function createJobErrorFn() {
                 Snackbar.error('Error when attempting to Create Job');
+            }
+        }
+
+        function activate() {
+            if (!Authentication.isAuthenticated()) {
+                $state.go('Login');
             }
         }
 
