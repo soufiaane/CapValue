@@ -10,8 +10,8 @@ class AccountSerializer(serializers.ModelSerializer):
     class Meta:
         model = Account
         fields = ('id', 'username', 'created_at', 'updated_at', 'first_name', 'last_name', 'password',
-                  'confirm_password', 'is_admin', 'profile_picture')
-        read_only_fields = ('id', 'created_at', 'updated_at',)
+                  'confirm_password', 'is_admin', 'profile_picture', 'role', 'teams')
+        read_only_fields = ('id', 'teams','created_at', 'updated_at',)
 
         def create(self, validated_data):
             return Account.objects.create(**validated_data)

@@ -68,7 +68,9 @@ INSTALLED_APPS = (
     'job',
     'seed',
     'proxies',
-    'emails'
+    'emails',
+    'isp',
+    'team'
 )
 
 MIDDLEWARE_CLASSES = (

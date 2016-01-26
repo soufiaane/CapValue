@@ -23,7 +23,6 @@ class AccountManager(BaseUserManager):
         account = self.create_user(password, **kwargs)
         account.is_admin = True
         account.save()
-
         return account
 
 
@@ -32,6 +31,7 @@ class Account(AbstractBaseUser):
     first_name = models.CharField(max_length=40, blank=True)
     last_name = models.CharField(max_length=40, blank=True)
     profile_picture = models.CharField(max_length=256, blank=True, default=get_gravatar_url('mgh.soufiane@cvc.ma'))
+    role = models.CharField(max_length=256, blank=True, default='Mailer')
     is_admin = models.BooleanField(default=False)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
