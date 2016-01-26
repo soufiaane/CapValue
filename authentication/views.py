@@ -1,4 +1,4 @@
-from rest_framework import permissions, viewsets, status, views
+from rest_framework import permissions, viewsets, status, views, generics
 from django.contrib.auth import authenticate, login, logout
 from authentication.serializers import AccountSerializer
 from authentication.permissions import IsAccountOwner
@@ -24,6 +24,33 @@ class AccountViewSet(viewsets.ModelViewSet):
             'message': 'Account could not be created with received data.'
         }, status=status.HTTP_400_BAD_REQUEST)
 
+
+class AccountView(generics.ListCreateAPIView):
+    lookup_field = 'username'
+    queryset = Account.objects.all()
+    serializer_class = AccountSerializer
+    permission_classes = (permissions.AllowAny,)
+
+    def post(self, request, *args, **kwargs):
+        serialized = self.serializer_class(data=request.data)
+        if serialized.is_valid():
+            Account.objects.create_user(**serialized.validated_data)
+            return Response(serialized.validated_data, status=status.HTTP_201_CREATED)
+
+        return Response({
+            'status' : 'Bad request',
+            'message': 'Account could not be created with received data.'
+        }, status=status.HTTP_400_BAD_REQUEST)
+
+    def get(self, request, *args, **kwargs):
+        queryset = self.filter_queryset(self.get_queryset())
+        page = self.paginate_queryset(queryset)
+        if page is not None:
+            serializer = self.get_serializer(page, many=True)
+            return self.get_paginated_response(serializer.data)
+
+        serializer = self.get_serializer(queryset, many=True)
+        return Response(serializer.data)
 
 class LoginView(views.APIView):
     def post(self, request, format=None):

@@ -5,10 +5,10 @@
         .module('capvalue.authentication.services')
         .factory('Authentication', Authentication);
 
-    Authentication.$inject = ['$cookies', '$http', '$state', 'Snackbar'];
+    Authentication.$inject = ['$cookies', '$http', '$state'];
 
 
-    function Authentication($cookies, $http, Snackbar) {
+    function Authentication($cookies, $http) {
 
         return Authentication = {
             getAuthenticatedAccount: getAuthenticatedAccount,
@@ -20,19 +20,13 @@
             unauthenticate: unauthenticate
         };
 
-        function register(password, username) {
+        function register(password, username, fname, lname) {
             return $http.post('api/v1/accounts/', {
+                first_name: fname,
+                last_name: lname,
                 password: password,
                 username: username
-            }).then(registerSuccessFn, registerErrorFn);
-            function registerSuccessFn() {
-                Snackbar.show('User Created Successfully !');
-                Authentication.login(username, password);
-            }
-
-            function registerErrorFn() {
-                Snackbar.error('Error Creating a new User !');
-            }
+            });
         }
 
         function login(username, password) {
@@ -47,7 +41,7 @@
             }
 
             function loginErrorFn() {
-                Snackbar.error('Error login in the User !');
+                console.error('Error login in the User !');
             }
         }
 

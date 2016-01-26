@@ -9,14 +9,11 @@ class AccountManager(BaseUserManager):
             raise ValueError('Users must have a valid username.')
 
         account = self.model(
-            username=kwargs.get('username')
+            username=kwargs.get('username'),
+            first_name=kwargs.get('first_name') if kwargs.get('first_name')else kwargs.get('username'),
+            last_name=kwargs.get('last_name') if kwargs.get('last_name')else '',
+            profile_picture=get_gravatar_url(str(kwargs.get('username')) + '@cvc.ma')
         )
-
-        if not kwargs.get('profile_picture'):
-            if not kwargs.get('email'):
-                account.profile_picture = get_gravatar_url('mgh.soufiane@gmail.com')
-            else:
-                account.profile_picture = get_gravatar_url(kwargs.get('email'))
 
         account.set_password(password)
         account.save()
@@ -34,8 +31,7 @@ class Account(AbstractBaseUser):
     username = models.CharField(max_length=40, unique=True)
     first_name = models.CharField(max_length=40, blank=True)
     last_name = models.CharField(max_length=40, blank=True)
-    email = models.EmailField(max_length=254, default='mgh.soufiane@gmail.com')
-    profile_picture = models.CharField(max_length=256, blank=True, default=get_gravatar_url('mgh.soufiane@gmail.com'))
+    profile_picture = models.CharField(max_length=256, blank=True, default=get_gravatar_url('mgh.soufiane@cvc.ma'))
     is_admin = models.BooleanField(default=False)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)

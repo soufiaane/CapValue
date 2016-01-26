@@ -5,7 +5,7 @@
             <img src="{$ vm.user.profile_picture $}" class="img-circle" alt="User Image">
         </div>
         <div class="pull-left info">
-            <p>{$ vm.user.username $}</p>
+            <p>{$ vm.user.first_name + ' ' + vm.user.last_name $}</p>
             <a href="#">
                 <i class="fa fa-circle text-success"></i>
                 Mailer
