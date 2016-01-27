@@ -5,11 +5,19 @@
         .module('capvalue.authentication.controllers')
         .controller('RegisterController', RegisterController);
 
-    RegisterController.$inject = ['Authentication', 'Snackbar'];
+    RegisterController.$inject = ['Authentication', 'Snackbar', 'ISP', '$rootScope', '$scope', 'Team'];
 
 
-    function RegisterController(Authentication, Snackbar) {
+    function RegisterController(Authentication, Snackbar, ISP, $rootScope, $scope, Team) {
         var vm = this;
+        vm.isps = [];
+        vm.teams = [];
+        vm.selected_isp = "";
+        vm.selected_team = "";
+        ISP.all().then(function (results) {
+            vm.isps = results.data;
+        });
+        vm.ISPSelected = ISPSelected;
         activate();
         vm.register = register;
 
@@ -31,8 +39,20 @@
             }
         }
 
+        function ISPSelected() {
+            Team.get_team_isp(vm.selected_isp).then(function (results) {
+                vm.teams = results.data;
+
+                $rootScope.isp_teams = {
+                    show: true
+                };
+                $scope.isp_teams = $rootScope.isp_teams;
+            });
+        }
+
         function activate() {
             if (Authentication.isAuthenticated()) {
+                $rootScope.isp_teams.show = false;
                 window.location = '/';
             }
         }

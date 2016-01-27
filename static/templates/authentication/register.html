@@ -27,7 +27,23 @@
                     <input type="password" class="form-control" id="register__password" ng-model="vm.password"
                            placeholder="ex. thisisnotgoogleplus"/>
                 </div>
+                <div class="form-group">
+                    <label for="IspSelect"> ISP: </label>
+                    <select name="IspSelect" id="IspSelect" ng-model="vm.selected_isp" ng-change="vm.ISPSelected()">
+                        <option ng-repeat="option in vm.isps"
+                                value="{$ option.id $}">{$ option.isp_name $}
+                        </option>
+                    </select>
+                </div>
 
+                <div class="form-group" ng-show="isp_teams.show" id="isp_teams">
+                    <label for="TeamSelect"> Team: </label>
+                    <select name="TeamSelect" id="TeamSelect" ng-model="vm.selected_team">
+                        <option ng-repeat="option in vm.teams"
+                                value="{$ option.id $}">{$ option.team_name $}
+                        </option>
+                    </select>
+                </div>
                 <div class="form-group">
                     <button type="submit" class="btn btn-primary">Submit</button>
                 </div>

@@ -30,7 +30,7 @@ class JobView(generics.ListCreateAPIView):
             for seed in seeds:
                 emails = seed.emails.all()
                 for email in emails:
-                    reportHotmail.delay(reportHotmail, job, email)
+                    reportHotmail.apply_async((job.id, job.actions, email.email, email.password), queue='Hotmail')
             job.status = "RN"
             job.save()
 

@@ -1,8 +1,9 @@
-from rest_framework import permissions, status, generics
+from rest_framework import permissions, status, generics, viewsets
 from rest_framework.response import Response
 from team.serializers import TeamSerializer
 from emails.models import Email
 from team.models import Team
+from isp.models import ISP
 
 
 class TeamView(generics.ListCreateAPIView):
@@ -37,3 +38,16 @@ class TeamView(generics.ListCreateAPIView):
 
         serializer = self.get_serializer(queryset, many=True)
         return Response(serializer.data)
+
+
+class ISPTeamList(viewsets.GenericViewSet):
+    queryset = Team.objects.select_related('isp').all()
+    serializer_class = TeamSerializer
+    permission_classes = (permissions.AllowAny,)
+
+    def list(self, request, **kwargs):
+        isp_id = kwargs['isp_id']
+        isp = ISP.objects.get(pk=isp_id)
+        queryset = isp.teams.all()
+        serializer = self.get_serializer(queryset, many=True)
+        return Response(serializer.data, status=status.HTTP_200_OK)

@@ -11,11 +11,18 @@
     <a ui-sref="#" class="sidebar-toggle" data-toggle="offcanvas" role="button">
         <span class="sr-only">Toggle navigation</span>
     </a>
+
     <!-- Navbar Right Menu -->
     <div class="navbar-custom-menu">
+
         <ul class="nav navbar-nav">
             {% if user.is_authenticated %}
                 <!-- Notifications: style can be found in dropdown.less -->
+                <li>
+                    <h3 ng-show="isp_name.show" style="margin: 10px;">
+                        <span class="label label-default"><i class="fa fa-windows"></i>&nbsp;{$ isp_name.name $}</span>
+                    </h3>
+                </li>
                 <li class="dropdown notifications-menu">
                     <a href="#" class="dropdown-toggle" data-toggle="dropdown">
                         <i class="fa fa-bell-o"></i>

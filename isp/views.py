@@ -1,8 +1,9 @@
-from rest_framework import permissions, status, generics
+from rest_framework import permissions, status, generics, viewsets
 from rest_framework.response import Response
 from isp.serializers import ISPSerializer
 from emails.models import Email
 from isp.models import ISP
+from team.models import Team
 
 
 class ISPView(generics.ListCreateAPIView):
@@ -30,10 +31,18 @@ class ISPView(generics.ListCreateAPIView):
 
     def get(self, request, *args, **kwargs):
         queryset = self.filter_queryset(self.get_queryset())
-        page = self.paginate_queryset(queryset)
-        if page is not None:
-            serializer = self.get_serializer(page, many=True)
-            return self.get_paginated_response(serializer.data)
-
         serializer = self.get_serializer(queryset, many=True)
         return Response(serializer.data)
+
+
+class TeamISPList(viewsets.GenericViewSet):
+    queryset = ISP.objects.select_related('teams').all()
+    serializer_class = ISPSerializer
+    permission_classes = (permissions.AllowAny,)
+
+    def list(self, request, **kwargs):
+        team_id = kwargs['team_id']
+        team = Team.objects.get(pk=team_id)
+        queryset = team.isp.all()
+        serializer = self.get_serializer(queryset, many=True)
+        return Response(serializer.data, status=status.HTTP_200_OK)

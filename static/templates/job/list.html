@@ -18,11 +18,13 @@
                                         job.created_at | date:'dd-MM-yyyy'$}
                                     </td>
                                     <td title="'Finished'">###</td>
-                                    <td title="'Status'">30</td>
+                                    <td title="'Status'">{$ job.status $}</td>
                                     <td title="'Keyword'">{$ job.keywords $}</td>
-                                    <td title="'Actions'">{$ job.actions $}</td>
+                                    <td title="'Actions'">
+                                        <span class="badge label">{$ job.actions $}</span>
+                                    </td>
                                     <td title="'Processed'">32</td>
-                                    <td title="'Action'">{$ job.actions $}</td>
+                                    <td title="'Action'">??</td>
                                 </tr>
                                 </tbody>
                             </table>

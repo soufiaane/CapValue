@@ -1,9 +1,9 @@
-from rest_framework import permissions, viewsets, status, views, generics
+from rest_framework import permissions, status, views, generics
 from django.contrib.auth import authenticate, login, logout
 from authentication.serializers import AccountSerializer
-from authentication.permissions import IsAccountOwner
 from rest_framework.response import Response
 from authentication.models import Account
+from team.models import Team
 
 
 class AccountView(generics.ListCreateAPIView):
@@ -24,14 +24,21 @@ class AccountView(generics.ListCreateAPIView):
         }, status=status.HTTP_400_BAD_REQUEST)
 
     def get(self, request, *args, **kwargs):
-        queryset = self.filter_queryset(self.get_queryset())
+        user = request.user
+        if user.role == 'Manager':
+            queryset = self.filter_queryset(self.get_queryset())
+        elif user.role == 'Team Leader':
+            user_team = Team.objects.get(team_leader=user)
+            queryset = user_team.team_members.all()
+        else:
+            return Response({}, status=status.HTTP_403_FORBIDDEN)
         page = self.paginate_queryset(queryset)
         if page is not None:
             serializer = self.get_serializer(page, many=True)
             return self.get_paginated_response(serializer.data)
 
         serializer = self.get_serializer(queryset, many=True)
-        return Response(serializer.data)
+        return Response(serializer.data, status=status.HTTP_200_OK)
 
 class LoginView(views.APIView):
     def post(self, request, format=None):

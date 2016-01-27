@@ -131,3 +131,10 @@ AMQP_PORT = 5672
 AMQP_USER = "soufiaane"
 AMQP_PASSWORD = "C@pV@lue2016"
 AMQP_VHOST = "/cvcHost"
+CELERY_RESULT_SERIALIZER = 'json' #json pickle msgpack
+CELERY_TASK_SERIALIZER = 'json'
+
+CELERY_QUEUES = (
+    Queue('default', Exchange('default'), routing_key='default'),
+    Queue('Hotmail', Exchange('Hotmail'), routing_key='Hotmail'),
+)
