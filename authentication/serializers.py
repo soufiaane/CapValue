@@ -18,6 +18,10 @@ class AccountSerializer(serializers.ModelSerializer):
 
         def update(self, instance, validated_data):
             instance.username = validated_data.get('username', instance.username)
+            instance.first_name = validated_data.get('first_name', instance.first_name)
+            instance.last_name = validated_data.get('last_name', instance.last_name)
+            instance.is_admin = validated_data.get('is_admin', instance.is_admin)
+            instance.role = validated_data.get('role', instance.role)
 
             instance.save()
 
