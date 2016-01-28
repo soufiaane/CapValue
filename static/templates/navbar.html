@@ -8,7 +8,7 @@
 <!-- Header Navbar: style can be found in header.less -->
 <nav class="navbar navbar-static-top" role="navigation" ng-controller="NavbarController as vm">
     <!-- Sidebar toggle button-->
-    <a ui-sref="#" class="sidebar-toggle" data-toggle="offcanvas" role="button">
+    <a href="#" class="sidebar-toggle" data-toggle="offcanvas" role="button">
         <span class="sr-only">Toggle navigation</span>
     </a>
 
@@ -19,7 +19,7 @@
             {% if user.is_authenticated %}
                 <!-- Notifications: style can be found in dropdown.less -->
                 <li>
-                    <h3 ng-show="isp_name.show" style="margin: 10px;">
+                    <h3 ng-show="isp_name.show" style="margin: 10px;" ng-cloak>
                         <span class="label label-default"><i class="fa fa-windows"></i>&nbsp;{$ isp_name.name $}</span>
                     </h3>
                 </li>

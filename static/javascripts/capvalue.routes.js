@@ -63,20 +63,11 @@
                 controllerAs: 'vm',
                 templateUrl: '/static/templates/proxy/list.html'
             })
-            .state("Modal", {
-                views:{
-                    "modal": {
-                        templateUrl: "modal.html"
-                    }
-                },
-                abstract: true
-            })
-            .state("Modal.confirmAddToCart", {
-                views:{
-                    "modal": {
-                        templateUrl: "modals/confirm.html"
-                    }
-                }
+            .state('AccountsList', {
+                url: "/accounts/list/",
+                controller: 'AccountListController',
+                controllerAs: 'vm',
+                templateUrl: '/static/templates/account/list.html'
             });
         $urlRouterProvider.otherwise('/')
     }

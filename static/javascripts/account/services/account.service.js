@@ -5,17 +5,38 @@
         .module('capvalue.account.services')
         .factory('Account', Account);
 
-    Account.$inject = ['$http'];
+    Account.$inject = ['$http', 'ISP'];
 
-    function Account($http) {
-        return Proxy = {
+    function Account($http, ISP) {
+        return Account = {
             all: all,
             create: create,
             get: get
         };
 
-        function all() {
-            return $http.get('/api/v1/accounts/');
+        function all(page) {
+            if (!page) {
+                $http.get('/api/v1/accounts/').then(SuccessAccountListFn, ErrorAccountListFn);
+            }
+            $http.get('/api/v1/accounts/?page=' + page).then(SuccessAccountListFn, ErrorAccountListFn);
+
+            function SuccessAccountListFn(results) {
+                var accounts = [];
+                for (var i = 0; i < results.data.count; i++) {
+                    var account = results.data.results[i];
+                    var teams = [];
+                    for (var k = 0; k < account.teams.length ; k++) {
+                        teams.push();
+                    }
+                    account.isp = '';
+
+                }
+                    console.log(results);
+            }
+
+            function ErrorAccountListFn() {
+
+            }
         }
 
         function get(username) {

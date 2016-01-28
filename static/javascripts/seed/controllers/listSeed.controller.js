@@ -7,8 +7,8 @@
 
     function SeedListController(Seed, Authentication, ngTableParams, Snackbar, $state) {
         var vm = this;
-        activate();
         var user = Authentication.getAuthenticatedAccount();
+        activate();
 
         vm.tableParams = new ngTableParams({
             page: 1,

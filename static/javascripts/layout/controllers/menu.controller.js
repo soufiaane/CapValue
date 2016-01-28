@@ -5,11 +5,16 @@
         .module('capvalue.layout.controllers')
         .controller('MenuController', MenuController);
 
-    MenuController.$inject = ['Authentication', '$state'];
+    MenuController.$inject = ['Authentication', '$state', '$rootScope', '$scope'];
 
-    function MenuController(Authentication) {
+    function MenuController(Authentication, $rootScope, $scope) {
         var vm = this;
+        $rootScope.user_menu = false;
         vm.user = Authentication.getAuthenticatedAccount();
+        if (vm.user && vm.user.role == 'Manager'){
+            $rootScope.user_menu = true;
+            $scope.user_menu = $rootScope.user_menu
+        }
     }
 
     $("[data-toggle='offcanvas']").click(function (e) {

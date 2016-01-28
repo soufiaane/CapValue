@@ -35,7 +35,6 @@
     "commit": "c26cb388203275e8cc8727106b0af4f478e3b81d"
   },
   "_source": "git://github.com/troch/angular-multi-step-form.git",
-  "_target": "~1.2.7",
-  "_originalSource": "angular-multi-step-form",
-  "_direct": true
+  "_target": "1.2.7",
+  "_originalSource": "angular-multi-step-form"
 }

@@ -1,24 +1,24 @@
 {% if user.is_authenticated %}
-<!-- Sidebar user panel -->
-<div ng-controller="MenuController as vm">
+    <!-- Sidebar user panel -->
+    <div ng-controller="MenuController as vm">
 
-    <div class="user-panel">
-        <div class="pull-left image">
-            <img src="{$ vm.user.profile_picture $}" class="img-circle" alt="User Image">
-        </div>
-        <div class="pull-left info">
-            <p>{$ vm.user.first_name + ' ' + vm.user.last_name $}</p>
-            <a href="#">
-                <i class="fa fa-circle text-success"></i>
-                {$ vm.user.role $}
-            </a>
+        <div class="user-panel" ng-cloak>
+            <div class="pull-left image">
+                <img src="{$ vm.user.profile_picture $}" class="img-circle" alt="User Image">
+            </div>
+            <div class="pull-left info">
+                <p>{$ vm.user.first_name + ' ' + vm.user.last_name $}</p>
+                <a href="#">
+                    <i class="fa fa-circle text-success"></i>
+                    {$ vm.user.role $}
+                </a>
+            </div>
         </div>
     </div>
-</div>
 {% endif %}
 <!-- sidebar menu: : style can be found in sidebar.less -->
 <ul class="sidebar-menu">
-    <li class="header">REPORTING</li>
+    <li class="header"><i class="fa fa-line-chart">&nbsp;Reporting</i></li>
 
     <li class="treeview">
         <a href="#">
@@ -47,6 +47,20 @@
             <li><a ui-sref="ProxyList"><i class="fa fa-bars"></i> <span>Proxy Lists</span></a></li>
         </ul>
     </li>
+
+    <li class="header" ng-show="user_menu" ng-cloak>
+        <i class="fa fa-user">&nbsp;Users</i>
+    </li>
+
+    <li class="treeview" ng-show="user_menu" ng-cloak>
+        <a href="#">
+            <i class="fa fa-users"></i> <span>User Management</span> <i class="fa fa-angle-left pull-right"></i>
+        </a>
+        <ul class="treeview-menu">
+            <li><a ui-sref="AccountsList"><i class="fa fa-user"></i> <span>User Management</span></a></li>
+        </ul>
+    </li>
+
 </ul>
 
 
