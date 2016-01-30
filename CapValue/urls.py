@@ -9,5 +9,6 @@ urlpatterns = [
     url(r'^api/v1/', include('team.urls')),
     url(r'^api/v1/', include('isp.urls')),
     url(r'^api/v1/proxies/', include('proxies.urls')),
+    url(r'^api-auth/', include('rest_framework.urls', namespace='rest_framework')),
     url('^.*$', IndexView.as_view(), name='index')
 ]

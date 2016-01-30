@@ -69,6 +69,6 @@
                 controllerAs: 'vm',
                 templateUrl: '/static/templates/account/list.html'
             });
-        $urlRouterProvider.otherwise('/')
+        //$urlRouterProvider.otherwise('/')
     }
 })();

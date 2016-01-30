@@ -2,9 +2,9 @@ from authentication.serializers import AccountSerializer
 from rest_framework import serializers
 from team.models import Team
 
-
 class TeamSerializer(serializers.ModelSerializer):
     team_leader = AccountSerializer(read_only=True, required=False)
+    team_members = AccountSerializer(read_only=True, required=False, many=True)
 
     def get_validation_exclusions(self, *args, **kwargs):
         exclusions = super(TeamSerializer, self).get_validation_exclusions()
