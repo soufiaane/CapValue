@@ -1,5 +1,6 @@
 from rest_framework import viewsets, permissions, generics, status
 from rest_framework.response import Response
+from seed.serializers import SeedSerializer
 from job.serializers import JobSerializer
 from job.permissions import IsOwnerOfJob
 from job.tasks import reportHotmail
@@ -21,21 +22,15 @@ class JobView(generics.ListCreateAPIView):
         serialized = self.serializer_class(data={'keywords': keywords, 'actions': actions})
         if serialized.is_valid():
             job = Job.objects.create(keywords=keywords, actions=actions, user=user)
-            for seed in seed_list:
-                pk = int(seed['id'])
-                seed = Seed.objects.get(pk=pk)
-                job.seed_list.add(seed)
-
-            seeds = job.seed_list.all()
-            for seed in seeds:
-                emails = seed.emails.all()
-                for email in emails:
-                    reportHotmail.apply_async((job.id, job.actions, email.email, email.password), queue='Hotmail')
+            [job.seed_list.add(Seed.objects.get(pk=seed['id'])) for seed in seed_list]
+            job.save()
+            [seed.jobs.add(job) for seed in job.seed_list.all()]
+            job_ser = self.serializer_class(instance=job)
+            seed_ser = SeedSerializer(instance=job.seed_list.all(), many=True)
+            [[reportHotmail.apply_async((job_ser.data, email), queue='Hotmail') for email in seed['emails']] for seed in seed_ser.data]
             job.status = "RN"
             job.save()
-
-            serialized = self.serializer_class(instance=job)
-            return Response(serialized.data, status=status.HTTP_201_CREATED)
+            return Response(job_ser.data, status=status.HTTP_201_CREATED)
 
         return Response({
             'status' : 'Bad request',

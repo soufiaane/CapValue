@@ -1,10 +1,11 @@
 from rest_framework import serializers
 from job.models import Job
 from authentication.serializers import AccountSerializer
-
+from seed.serializers import SeedSerializer
 
 class JobSerializer(serializers.ModelSerializer):
     user = AccountSerializer(read_only=True, required=False)
+    # seed_list = SeedSerializer(read_only=True, required=False)
 
     def get_validation_exclusions(self, *args, **kwargs):
         exclusions = super(JobSerializer, self).get_validation_exclusions()
