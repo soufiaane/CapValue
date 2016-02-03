@@ -12,14 +12,14 @@
                             <td style="border: none;">
                                 <span class="pull-left">Keyword :</span>
                             </td>
-                            <td style="border: none;">
-                                <input id="seedlist_name" type="text" class="form-control" placeholder="Keyword..."
+                            <td style="border: none;"  id="job_keyword">
+                                <input type="text" class="form-control" placeholder="Keyword..."
                                        aria-describedby="sizing-addon1" ng-model="vm.job.keyword"
                                        name="seedList.name">
                             </td>
                         </tr>
                     </table>
-                    <div class="box-body" style="padding-left: 100px;">
+                    <div class="box-body" style="padding-left: 100px;" id="job_actions">
                         <table class="table table-responsive table-condensed">
                             <tr style="width: 100px">
                                 <td style="border: none; padding: 0; width: 50%;" class="pull-left">
@@ -83,7 +83,7 @@
                     <div class="box-body">
                         <div class="col-sm-12">
                             <table class="table table-bordered table-hover dataTable" style="width: 100%;"
-                                   ng-table="vm.tableParams" show-filter="true">
+                                   ng-table="vm.tableParams" show-filter="true" id="job_seed_list" ng-cloak>
                                 <tbody>
                                 <tr role="row" class="odd" ng-repeat="seed in $data" style="width: 100px;">
                                     <td>
@@ -98,19 +98,21 @@
                                         {$ seed.list_name $}
                                     </td>
                                     <td title="'Count'">
-                                        50
+                                        {$ seed.emails.length $}
                                     </td>
                                 </tr>
                                 </tbody>
                             </table>
+                            <div ng-show="loading" class="text-center">
+                                <img id="mySpinner" src="/static/templates/dist/img/ajax-loader.gif"/>
+                            </div>
                         </div>
                     </div>
-
-
                     <hr style="margin: 0;">
                     <hr style="margin: 0;">
                     <hr style="margin: 0;">
                     <hr style="margin: 0;">
+                    <div id="formErrors" class="col-xs-8 col-sm-offset-2"></div>
                     <div class="text-center">
                         <button type="submit" class="btn btn-danger btn-block">Submit</button>
                     </div>

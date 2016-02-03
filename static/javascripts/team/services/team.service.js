@@ -23,11 +23,8 @@
             return $http.get('/api/v1/isps/');
         }
 
-        function get(username, page) {
-            if (!page) {
-                return $http.get('/api/v1/emails/' + username + '/');
-            }
-            return $http.get('/api/v1/emails/' + username + '/?page=' + page);
+        function get(username) {
+            return $http.get('/api/v1/emails/' + username + '/');
         }
 
 

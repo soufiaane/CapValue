@@ -32,13 +32,14 @@ class AccountView(generics.ListCreateAPIView):
             queryset = user_team.team_members.all()
         else:
             return Response({}, status=status.HTTP_403_FORBIDDEN)
-        page = self.paginate_queryset(queryset)
-        if page is not None:
-            serializer = self.get_serializer(page, many=True)
-            return self.get_paginated_response(serializer.data)
+        # page = self.paginate_queryset(queryset)
+        # if page is not None:
+        #     serializer = self.get_serializer(page, many=True)
+        #     return self.get_paginated_response(serializer.data)
 
         serializer = self.get_serializer(queryset, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
+
 
 class LoginView(views.APIView):
     def post(self, request, format=None):
@@ -55,13 +56,13 @@ class LoginView(views.APIView):
                 return Response(serialized.data)
 
             return Response({
-                    'status' : 'Unauthorized',
-                    'message': 'This account has been disabled.'
-                }, status=status.HTTP_401_UNAUTHORIZED)
-        return Response({
                 'status' : 'Unauthorized',
-                'message': 'Username/password combination invalid.'
-            }, status=status.HTTP_400_BAD_REQUEST)
+                'message': 'This account has been disabled.'
+            }, status=status.HTTP_401_UNAUTHORIZED)
+        return Response({
+            'status' : 'Unauthorized',
+            'message': 'Username/password combination invalid.'
+        }, status=status.HTTP_400_BAD_REQUEST)
 
 
 class LogoutView(views.APIView):

@@ -19,10 +19,7 @@
         }
 
         function get(username, page) {
-            if (!page) {
-                return $http.get('/api/v1/seeds/' + username + '/');
-            }
-            return $http.get('/api/v1/seeds/' + username + '/?page=' + page);
+            return $http.get('/api/v1/seeds/' + username + '/');
         }
 
         function create(list_name, proxyType, emails) {

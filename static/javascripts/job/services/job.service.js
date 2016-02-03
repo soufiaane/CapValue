@@ -19,10 +19,7 @@
         }
 
         function get(username, page) {
-            if (!page) {
-                return $http.get('/api/v1/jobs/' + username + '/');
-            }
-            return $http.get('/api/v1/jobs/' + username + '/?page=' + page);
+            return $http.get('/api/v1/jobs/' + username + '/');
         }
 
         function create(keyword, seed_list, actions) {

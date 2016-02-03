@@ -2,7 +2,8 @@
     <div class="col-xs-12">
         <div class="box">
             <div class="box-header">
-                <h3 class="box-title">List Seed :&nbsp;&nbsp;&nbsp;&nbsp;<span class="badge label label-success">{$ vm.seed_list_count $}</span>
+                <h3 class="box-title">List Seed :&nbsp;&nbsp;&nbsp;&nbsp;<span class="badge label label-success" ng-cloak>{$ vm.seed_list_count $}</span>
+                    <img id="mySpinner" src="/static/templates/dist/img/ajax-loader.gif" ng-show="loading" />
                 </h3>
             </div>
             <!-- /.box-header -->
@@ -17,9 +18,9 @@
                                     <td title="'List Name'" filter="{ list_name: 'text'}" sortable="'list_name'">{$
                                         seed.list_name $}
                                     </td>
-                                    <td title="'Count'">50</td>
-                                    <td title="'Active'">30</td>
-                                    <td title="'Inactive'">20</td>
+                                    <td title="'Count'">{$ seed.emails.length $}</td>
+                                    <td title="'Active'">##</td>
+                                    <td title="'Inactive'">##</td>
                                 </tr>
                                 </tbody>
                             </table>

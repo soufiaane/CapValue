@@ -24,7 +24,7 @@
             };
             if (Authentication.isAuthenticated()) {
                 vm.user = Authentication.getAuthenticatedAccount();
-                if (vm.user.role != 'Manager') {
+                if ((vm.user.role != 'Manager') && vm.user && vm.user.teams[0]) {
                     ISP.get_isp_team(vm.user.teams[0]).then(function (results) {
                         vm.isp = results.data[0];
                         $rootScope.isp_name = {

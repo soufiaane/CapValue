@@ -1,5 +1,4 @@
 from rest_framework import viewsets, permissions
-
 from proxies.models import Proxy, IP
 from proxies.serializers import ProxySerializer, IPSerializer
 
@@ -11,9 +10,7 @@ class ProxyViewSet(viewsets.ModelViewSet):
 
     def perform_create(self, serializer):
         data = self.request.data
-        s_list = []
-        for seed in data['seed_list']:
-            s_list.append(Proxy.objects.get(pk=seed['id']).id)
+        s_list = [[].append(Proxy.objects.get(pk=seed['id']).id) for seed in data['seed_list']]
         serializer.save(user=self.request.user, keywords=data['keywords'], actions=data['actions'], seed_list=s_list)
         return super(ProxyViewSet, self).perform_create(serializer)
 

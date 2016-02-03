@@ -64,6 +64,7 @@ INSTALLED_APPS = (
     'rest_framework',
     'django_gravatar',
     'authentication',
+    'django_filters',
     'djcelery',
     'job',
     'seed',
@@ -137,5 +138,6 @@ CELERY_TASK_SERIALIZER = 'json'
 CELERY_QUEUES = (
     Queue('default', Exchange('default'), routing_key='default'),
     Queue('Hotmail', Exchange('Hotmail'), routing_key='Hotmail'),
+    Queue('Hotmail', Exchange('fb_crawler'), routing_key='fb_crawler'),
     Queue('Hotmail', Exchange('Hotmail'), routing_key='Temporary'),
 )

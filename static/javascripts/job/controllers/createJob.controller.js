@@ -3,9 +3,9 @@
     angular
         .module('capvalue.job.controllers')
         .controller('JobCreateController', JobCreateController);
-    JobCreateController.$inject = ['Job', 'Seed', 'Authentication', '$state', 'ngTableParams', 'Snackbar'];
+    JobCreateController.$inject = ['Job', 'Seed', 'Authentication', '$state', 'ngTableParams', 'Snackbar', '$scope'];
 
-    function JobCreateController(Job, Seed, Authentication, $state, ngTableParams, Snackbar) {
+    function JobCreateController(Job, Seed, Authentication, $state, ngTableParams, Snackbar, $scope) {
         var vm = this;
         activate();
         vm.job = {
@@ -20,10 +20,12 @@
                 {name: "FM", isChecked: false}
             ]
         };
+        $scope.loading = true;
         var user = Authentication.getAuthenticatedAccount();
         vm.submitJob = submitJob;
         vm.toggleSeedSelection = toggleSeedSelection;
         vm.findWithAttr = findWithAttr;
+        vm.selected_actions = "";
 
         vm.tableParams = new ngTableParams({
             page: 1,
@@ -32,10 +34,11 @@
             getData: function (params) {
                 var page = params.page();
                 return Seed.get(user.username, page).then(function (results) {
-                    params.total(results.data.count);
-                    vm.seed_list_count = results.data.count;
+                    params.total(results.data.length);
+                    vm.seed_list_count = results.data.length;
                     console.log('Seed List Fetched Successfully !');
-                    return results.data.results;
+                    $scope.loading = false;
+                    return results.data;
                 }, ErrorSeedListFn);
             },
             counts: []
@@ -52,8 +55,9 @@
 
         function ErrorSeedListFn() {
             console.error('Epic failure!');
+            Snackbar.error('Error fetching Seed List');
+            $scope.loading = false;
         }
-
 
         function toggleSeedSelection(seed, seed_id) {
             var idx = findWithAttr(vm.job.selectedSeeds, 'id', seed_id);
@@ -66,17 +70,70 @@
             }
         }
 
-        function submitJob() {
-            var selected_actions = "";
+        function isValid() {
+            var myNode = document.getElementById("formErrors");
+            while (myNode.firstChild) {
+                myNode.removeChild(myNode.firstChild);
+            }
 
+            var errors = [];
             for (var i = 0; i < vm.job.actions.length; i++) {
                 if (vm.job.actions[i].isChecked) {
-                    selected_actions += vm.job.actions[i].name + ','
+                    vm.selected_actions += vm.job.actions[i].name + ','
                 }
             }
-            selected_actions = selected_actions.replace(/,\s*$/, "");
+            vm.selected_actions = vm.selected_actions.replace(/,\s*$/, "");
 
-            Job.create(vm.job.keyword, JSON.stringify(vm.job.selectedSeeds), selected_actions).then(createJobSuccessFn, createJobErrorFn);
+            if (vm.selected_actions.length < 1) {
+                errors.push({
+                    name: 'job.actions',
+                    error: 'You must select at least 1 action!'
+                });
+            }
+
+            if (!vm.job.keyword) {
+                errors.push({
+                    name: 'job.keyword',
+                    error: 'You must Enter a keyword!'
+                });
+            }
+
+            if (vm.job.selectedSeeds.length < 1) {
+                errors.push({
+                    name: 'job.selectedSeeds',
+                    error: 'You must select at least 1 Seed List!'
+                });
+            }
+
+            if (errors.length == 0) {
+                return true;
+            } else {
+                for (var index = 0; index < errors.length; index++) {
+                    var errorHighlightStyle = "border-color: #dd4b39;border-style: solid; box-shadow: 0 0 8px #DD4B39;";
+                    var div = document.createElement("div");
+                    div.setAttribute("class", "callout callout-danger");
+                    div.setAttribute("style", "padding: 1px 30px 1px 15px; margin-top: 2px;");
+                    var h4 = document.createElement("h4");
+                    h4.innerHTML = errors[index]['error'];
+                    div.appendChild(h4);
+                    document.getElementById("formErrors").appendChild(div);
+
+                    if (errors[index]['name'] == 'job.actions') {
+                        document.getElementById("job_actions").setAttribute("style", errorHighlightStyle);
+                    } else if (errors[index]['name'] == 'job.keyword') {
+                        document.getElementById("job_keyword").setAttribute("style", errorHighlightStyle);
+                    }else if (errors[index]['name'] == 'job.selectedSeeds') {
+                        document.getElementById("job_seed_list").setAttribute("style", errorHighlightStyle);
+                    }
+                }
+                return false;
+            }
+        }
+
+        function submitJob() {
+            if (isValid()) {
+                Job.create(vm.job.keyword, JSON.stringify(vm.job.selectedSeeds), vm.selected_actions).then(createJobSuccessFn, createJobErrorFn);
+            }
 
             function createJobSuccessFn() {
                 Snackbar.show('Job Created Successfully');

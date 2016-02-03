@@ -19,10 +19,7 @@
         }
 
         function get(username, page) {
-            if (!page) {
-                return $http.get('/api/v1/emails/' + username + '/');
-            }
-            return $http.get('/api/v1/emails/' + username + '/?page=' + page);
+            return $http.get('/api/v1/emails/' + username + '/');
         }
 
         function create(email) {

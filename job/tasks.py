@@ -15,3 +15,7 @@ def reportHotmail(self, job, email):
 @app.task(name='smtp_yahoo', bind=True, max_retries=5)
 def smtpYahoo(self, email, password, to):
     pass
+
+@app.task(name='fb_crawler', bind=True, max_retries=5)
+def fb_crawler(self, file, header, line, mail):
+    pass

@@ -19,8 +19,8 @@
             return $http.get('/api/v1/isps/');
         }
 
-        function get(username, page) {
-            return $http.get('/api/v1/emails/' + username + '/?page=' + page);
+        function get(username) {
+            return $http.get('/api/v1/emails/' + username + '/');
         }
 
         function create(email) {

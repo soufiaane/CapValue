@@ -14,24 +14,20 @@
             get: get
         };
 
-        function all(page) {
-            if (!page) {
-                $http.get('/api/v1/accounts/').then(SuccessAccountListFn, ErrorAccountListFn);
-            }
-            $http.get('/api/v1/accounts/?page=' + page).then(SuccessAccountListFn, ErrorAccountListFn);
-
+        function all() {
+            $http.get('/api/v1/accounts/').then(SuccessAccountListFn, ErrorAccountListFn);
             function SuccessAccountListFn(results) {
                 var accounts = [];
                 for (var i = 0; i < results.data.count; i++) {
                     var account = results.data.results[i];
                     var teams = [];
-                    for (var k = 0; k < account.teams.length ; k++) {
+                    for (var k = 0; k < account.teams.length; k++) {
                         teams.push();
                     }
                     account.isp = '';
 
                 }
-                    console.log(results);
+                console.log(results);
             }
 
             function ErrorAccountListFn() {

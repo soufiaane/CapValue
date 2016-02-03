@@ -5,7 +5,7 @@
         .module('capvalue.job', [
             'capvalue.job.controllers',
             'capvalue.job.services',
-            'capvalue.job.directives'
+            'capvalue.job.filters'
         ]);
 
     angular
@@ -15,5 +15,5 @@
         .module('capvalue.job.services', []);
 
     angular
-        .module('capvalue.job.directives', []);
+        .module('capvalue.job.filters', []);
 })();
