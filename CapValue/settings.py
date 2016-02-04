@@ -64,7 +64,6 @@ INSTALLED_APPS = (
     'rest_framework',
     'django_gravatar',
     'authentication',
-    'django_filters',
     'djcelery',
     'job',
     'seed',
