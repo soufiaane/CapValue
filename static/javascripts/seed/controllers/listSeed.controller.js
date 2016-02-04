@@ -7,9 +7,9 @@
 
     function SeedListController(Seed, Authentication, NgTableParams, Snackbar, $state, $scope, ngDialog) {
         var vm = this;
+        activate();
         var user = Authentication.getAuthenticatedAccount();
         vm.openSeedDetails = openSeedDetails;
-        activate();
         $scope.loading = true;
 
         Seed.get(user.username).then(function (results) {

@@ -11,12 +11,18 @@
         return Job = {
             all: all,
             create: create,
-            get: get
+            get: get,
+            get_job: get_job
         };
 
         function all() {
             return $http.get('/api/v1/jobs/');
         }
+
+        function get_job(job_id) {
+            return $http.get('/api/v1/jobs/');
+        }
+
 
         function get(username, page) {
             return $http.get('/api/v1/jobs/' + username + '/');

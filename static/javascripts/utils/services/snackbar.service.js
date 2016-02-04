@@ -44,8 +44,6 @@
         /**
          * @name error
          * @desc Display an error snackbar
-         * @param {string} content The content of the snackbar
-         * @param {Object} options Options for displaying the snackbar
          * @memberOf capvalue.utils.services.Snackbar
          */
         function error(content, options) {
