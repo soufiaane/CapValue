@@ -83,7 +83,7 @@
                     <div class="box-body">
                         <div class="col-sm-12">
                             <table class="table table-bordered table-hover dataTable" style="width: 100%;"
-                                   ng-table="vm.tableParams" show-filter="true" id="job_seed_list" ng-cloak>
+                                   ng-table="vm.tableParams" show-filter="true" id="job_seed_list" ng-hide="loading" ng-cloak>
                                 <tbody>
                                 <tr role="row" class="odd" ng-repeat="seed in $data" style="width: 100px;">
                                     <td>

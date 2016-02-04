@@ -3,9 +3,9 @@
     angular
         .module('capvalue.job.controllers')
         .controller('JobCreateController', JobCreateController);
-    JobCreateController.$inject = ['Job', 'Seed', 'Authentication', '$state', 'ngTableParams', 'Snackbar', '$scope'];
+    JobCreateController.$inject = ['Job', 'Seed', 'Authentication', '$state', 'NgTableParams', 'Snackbar', '$scope'];
 
-    function JobCreateController(Job, Seed, Authentication, $state, ngTableParams, Snackbar, $scope) {
+    function JobCreateController(Job, Seed, Authentication, $state, NgTableParams, Snackbar, $scope) {
         var vm = this;
         activate();
         vm.job = {
@@ -27,22 +27,18 @@
         vm.findWithAttr = findWithAttr;
         vm.selected_actions = "";
 
-        vm.tableParams = new ngTableParams({
-            page: 1,
-            count: 10
-        }, {
-            getData: function (params) {
-                var page = params.page();
-                return Seed.get(user.username, page).then(function (results) {
-                    params.total(results.data.length);
-                    vm.seed_list_count = results.data.length;
-                    console.log('Seed List Fetched Successfully !');
-                    $scope.loading = false;
-                    return results.data;
-                }, ErrorSeedListFn);
-            },
-            counts: []
-        });
+        Seed.get(user.username).then(function (results) {
+            vm.seed_list_count = results.data.length;
+            vm.tableParams = new NgTableParams({
+                page: 1,
+                count: 10
+            }, {
+                total: results.data.length,
+                counts: [],
+                data: results.data
+            });
+            $scope.loading = false;
+        }, ErrorSeedListFn);
 
         function findWithAttr(array, attr, value) {
             for (var i = 0; i < array.length; i += 1) {

@@ -11,7 +11,7 @@
                 <div class="form-inline dt-bootstrap">
                     <div class="row">
                         <div class="col-sm-12">
-                            <table ng-table="vm.tableParams" class="table" show-filter="true">
+                            <table ng-table="vm.tableParams" class="table" show-filter="true" ng-hide="loading">
                                 <tbody>
                                 <tr role="row" class="odd" ng-repeat="job in $data">
                                     <td title="'Id'" filter="{ id: 'number'}" sortable="'id'">{$ job.id $}</td>

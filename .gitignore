@@ -1,6 +1,4 @@
 /celerybeat*
-*/migrations/*
-*/migrations/
 /db.sqlite3
 __pycache__/
 *.py[cod]

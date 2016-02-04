@@ -11,15 +11,20 @@
         return Seed = {
             all: all,
             create: create,
-            get: get
+            get: get,
+            get_seed: get_seed
         };
 
         function all() {
             return $http.get('/api/v1/seeds/');
         }
 
-        function get(username, page) {
+        function get(username) {
             return $http.get('/api/v1/seeds/' + username + '/');
+        }
+
+        function get_seed(seed_id) {
+            return $http.get('/api/v1/seeds/');
         }
 
         function create(list_name, proxyType, emails) {
