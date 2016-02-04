@@ -1,0 +1,11 @@
+<div>
+    <h2>Contact us<h2>
+        <input type="text" placeholder="Name" ng-model="name" />
+        <input type="text" placeholder="Email" ng-model="email" />
+        <input type="text" placeholder="Mobile" ng-model="mobile" />
+        <textarea placeholder="Enter your message or query..." ng-model="message"></textarea>
+        <div class="ngdialog-buttons">
+            <button type="button" class="ngdialog-button ngdialog-button-secondary" ng-click=closeThisDialog("Cancel")>Cancel</button>
+            <button type="button" class="ngdialog-button ngdialog-button-primary" ng-click=confirm("OK")>OK</button>
+        </div>
+</div>

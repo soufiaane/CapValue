@@ -11,10 +11,13 @@ app = Celery('CapValue', broker='amqp://soufiaane:C@pV@lue2016@cvc.ma/cvcHost')
 
 @app.task(name='report_hotmail', bind=True, max_retries=5)
 def reportHotmail(self, job_id, job_actions, email, password, **kwargs):
-    # browser = webdriver.PhantomJS(executable_path="phantomjs.exe")
-    browser = webdriver.Chrome(executable_path="chromedriver")
-
-    # browser.maximize_window()
+    PROXY = "67.21.35.254:8674"
+    chrome_options = webdriver.ChromeOptions()
+    chrome_options.add_argument('--proxy-server=%s' % PROXY)
+    service_args = ['--proxy=%s' % PROXY, '--proxy-type=http']
+    # browser = webdriver.PhantomJS(executable_path="phantomjs.exe", service_args=service_args)
+    browser = webdriver.Chrome(executable_path="chromedriver", chrome_options=chrome_options)
+    browser.maximize_window()
 
     def waiit():
         while browser.execute_script('return document.readyState;') != 'complete':

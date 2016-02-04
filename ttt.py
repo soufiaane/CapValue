@@ -1,16 +1,18 @@
-import time
-from selenium import webdriver
-from selenium.webdriver import ActionChains
 from selenium.webdriver.common.keys import Keys
-from selenium.webdriver.support.ui import WebDriverWait
-from selenium.webdriver.support import expected_conditions as EC
+from selenium import webdriver
 
 # browser = webdriver.PhantomJS(executable_path="phantomjs.exe")
 while True:
-    browser = webdriver.Chrome(executable_path="chromedriver")
+    PROXY = "67.21.35.254:8674"
+    chrome_options = webdriver.ChromeOptions()
+    chrome_options.add_argument('--proxy-server=%s' % PROXY)
+    service_args = ['--proxy=%s' % PROXY, '--proxy-type=http']
+
+    # browser = webdriver.PhantomJS(executable_path="phantomjs.exe", service_args=service_args)
+    browser = webdriver.Chrome(executable_path="chromedriver", chrome_options=chrome_options)
+    browser.maximize_window()
 
 
-    # browser.maximize_window()
     def look_for_pub():
         try:
             browser.find_element_by_css_selector('iframe.OutlookAppUpsellFrame')
@@ -29,11 +31,13 @@ while True:
         except:
             pass
 
+
     try:
-        email = 'ChelseaSheppard457@hotmail.com'
-        pswd = 'i2kYT2U8Re'
-        link = 'https://www.outlook.com'
+        email = 'cap-tst5613@hotmail.com'
+        pswd = 'capvalue2015'
+        link = 'http://www.hotmail.com'
         browser.get(link)
+        # browser.get('http://whatismyipaddress.com/')
         default_window = browser.window_handles[0]
 
         inputs = browser.find_elements_by_tag_name('input')
@@ -52,57 +56,18 @@ while True:
             btn__next_verified.click()
         except Exception as ex:
             pass
-        # Goto Junk
-        # junk_url = str(browser.current_url)[:str(browser.current_url).rindex('/')] + '/?fid=fljunk'
-        # browser.get(junk_url)
+        waiit()
+        look_for_pub()
+        junk_url = str(browser.current_url)[:str(browser.current_url).rindex('/')] + '/?fid=fljunk'
+        inbox_url = junk_url.replace('fljunk', 'flinbox')
         waiit()
         look_for_pub()
 
+        # Spam Actions
         try:
-            inbox_count = int(browser.find_elements_by_css_selector('span.count')[0].text)
+            browser.get(junk_url)
             waiit()
             look_for_pub()
-            print(inbox_count)
-        except:
-            inbox_count = 0
-
-        while inbox_count > 0:
-            try:
-                emails = browser.find_elements_by_css_selector('li.c-MessageRow')
-                waiit()
-                look_for_pub()
-                emails[0].find_elements_by_tag_name('span')[3].click()
-                waiit()
-                look_for_pub()
-            except Exception:
-                pass
-
-            try:
-                waiit()
-                look_for_pub()
-                body1 = browser.find_element_by_css_selector('div.readMsgBody')
-                body = body1.find_elements_by_tag_name('div')
-                link = body[0].find_elements_by_tag_name('p')[0].find_elements_by_tag_name('a')[0]
-                waiit()
-                look_for_pub()
-                link.click()
-                waiit()
-                browser.switch_to.window(browser.window_handles[1])
-                print(browser.title)
-                browser.close()
-                browser.switch_to.window(browser.window_handles[0])
-                waiit()
-                look_for_pub()
-                bb = browser.find_elements_by_tag_name('body')[0]
-                bb.send_keys(Keys.CONTROL + ';')
-                # ActionChains(browser).key_down(Keys.CONTROL).key_down('.').perform()
-                waiit()
-                look_for_pub()
-            except Exception as ex:
-                print(ex)
-                pass
-
-        try:
             spam_count = int(browser.find_elements_by_css_selector('span.count')[2].text)
         except Exception:
             spam_count = 0
@@ -140,10 +105,70 @@ while True:
                     look_for_pub()
                 except Exception:
                     pass
-
-                    # Mark Not Spam
         else:
             print('Nothing to do here : ')
+
+        # Inbox Actions
+        browser.get(inbox_url)
+        waiit()
+        look_for_pub()
+        try:
+            inbox_count = int(browser.find_elements_by_css_selector('span.count')[0].text)
+            waiit()
+            look_for_pub()
+            print(inbox_count)
+        except:
+            inbox_count = 0
+
+        while inbox_count > 0:
+            try:
+                emails = browser.find_elements_by_css_selector('li.c-MessageRow')
+                waiit()
+                look_for_pub()
+                emails[0].find_elements_by_tag_name('span')[3].click()
+                waiit()
+                look_for_pub()
+            except Exception:
+                pass
+
+            try:
+                inbox_count = int(browser.find_elements_by_css_selector('span.count')[0].text)
+                waiit()
+                look_for_pub()
+                print(inbox_count)
+            except:
+                inbox_count = 0
+
+            try:
+                waiit()
+                look_for_pub()
+                body1 = browser.find_element_by_css_selector('div.readMsgBody')
+                body = body1.find_elements_by_tag_name('div')
+                try:
+                    lnk = body[0].find_elements_by_tag_name('p')[0].find_elements_by_tag_name('a')[0]
+                except Exception:
+                    lnk = None
+                waiit()
+                look_for_pub()
+                if lnk is not None:
+                    lnk.click()
+                    waiit()
+                    browser.switch_to.window(browser.window_handles[1])
+                    print(browser.title)
+                    browser.close()
+                    browser.switch_to.window(browser.window_handles[0])
+                    waiit()
+                    look_for_pub()
+                waiit()
+                look_for_pub()
+                bb = browser.find_elements_by_tag_name('body')[0]
+                bb.send_keys(Keys.CONTROL + ';')
+                waiit()
+                look_for_pub()
+            except Exception as ex:
+                print(ex)
+                pass
+                # Mark Not Spam
 
         print('Now What ??')
         waiit()

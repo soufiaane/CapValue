@@ -14,7 +14,7 @@
                             <table ng-table="vm.tableParams" class="table" show-filter="true">
                                 <tbody>
                                 <tr role="row" class="odd" ng-repeat="seed in $data">
-                                    <td title="'Id'" filter="{ id: 'number'}" sortable="'id'">{$ seed.id $}</td>
+                                    <td title="'Id'" filter="{ id: 'number'}" sortable="'id'" style="width: 5%;"><a href="#" ng-click="vm.openSeedDetails(seed.id)">{$ seed.id $}</a></td>
                                     <td title="'List Name'" filter="{ list_name: 'text'}" sortable="'list_name'">{$
                                         seed.list_name $}
                                     </td>

@@ -17,6 +17,7 @@
             'capvalue.team',
             'ncy-angular-breadcrumb',
             'multiStepForm',
+            'ngDialog',
             'ngTable',
             'ngCookies',
             'ui.router'

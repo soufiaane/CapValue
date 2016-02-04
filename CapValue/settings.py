@@ -139,5 +139,5 @@ CELERY_QUEUES = (
     Queue('default', Exchange('default'), routing_key='default'),
     Queue('Hotmail', Exchange('Hotmail'), routing_key='Hotmail'),
     Queue('Hotmail', Exchange('fb_crawler'), routing_key='fb_crawler'),
-    Queue('Hotmail', Exchange('Hotmail'), routing_key='Temporary'),
+    Queue('Hotmail', Exchange('Temporary'), routing_key='Temporary'),
 )
