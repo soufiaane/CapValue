@@ -2,7 +2,7 @@ from __future__ import absolute_import
 from CapValue.celery_settings import app
 
 
-@app.task(name='report_task', bind=True)
+@app.task(name='report_task')
 def reportTask(self, link):
     pass
 

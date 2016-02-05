@@ -7,3 +7,4 @@ __pycache__/
 .Python
 .idea/
 /static_files/
+ghostdriver.log

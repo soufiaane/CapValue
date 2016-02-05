@@ -83,6 +83,7 @@ MIDDLEWARE_CLASSES = (
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 )
 
+
 if os.environ.get('PRODUCTION') == 'TRUE':
     DATABASES = {
         'default': {
