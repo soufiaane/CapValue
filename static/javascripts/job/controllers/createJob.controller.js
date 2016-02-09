@@ -73,6 +73,7 @@
             }
 
             var errors = [];
+            vm.selected_actions = "";
             for (var i = 0; i < vm.job.actions.length; i++) {
                 if (vm.job.actions[i].isChecked) {
                     vm.selected_actions += vm.job.actions[i].name + ','

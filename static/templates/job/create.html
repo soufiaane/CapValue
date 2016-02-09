@@ -12,7 +12,7 @@
                             <td style="border: none;">
                                 <span class="pull-left">Keyword :</span>
                             </td>
-                            <td style="border: none;"  id="job_keyword">
+                            <td style="border: none;" id="job_keyword">
                                 <input type="text" class="form-control" placeholder="Keyword..."
                                        aria-describedby="sizing-addon1" ng-model="vm.job.keyword"
                                        name="seedList.name">
@@ -38,38 +38,32 @@
                             <tr style="width: 100px">
                                 <td style="border: none; padding: 0; width: 50%;" class="pull-left">
                                     <label class="checkbox">
-                                        <input type="checkbox" ng-model="vm.job.actions[2].isChecked">
-                                        Mark inbox as read.
-                                    </label>
-                                </td>
-                                <td style="border: none; padding: 0; width: 50%;" class="pull-left">
-                                    <label class="checkbox">
-                                        <input type="checkbox" ng-model="vm.job.actions[3].isChecked">
-                                        Open inbox.
-                                    </label>
-                                </td>
-                            </tr>
-                            <tr style="width: 100px">
-                                <td style="border: none; padding: 0; width: 50%;" class="pull-left">
-                                    <label class="checkbox">
                                         <input type="checkbox" ng-model="vm.job.actions[4].isChecked">
                                         Safe spam mail.
                                     </label>
                                 </td>
                                 <td style="border: none; padding: 0; width: 50%;" class="pull-left">
                                     <label class="checkbox">
-                                        <input type="checkbox" ng-model="vm.job.actions[5].isChecked">
-                                        Add contacts <b>INBOX</b>
+                                        <input type="checkbox" ng-model="vm.job.actions[2].isChecked">
+                                        Mark inbox as read.
                                     </label>
                                 </td>
                             </tr>
                             <tr style="width: 100px">
                                 <td style="border: none; padding: 0; width: 50%;" class="pull-left">
                                     <label class="checkbox">
+                                        <input type="checkbox" ng-model="vm.job.actions[5].isChecked">
+                                        Add contacts <b>INBOX</b>
+                                    </label>
+                                </td>
+                                <td style="border: none; padding: 0; width: 50%;" class="pull-left">
+                                    <label class="checkbox">
                                         <input type="checkbox" ng-model="vm.job.actions[6].isChecked">
                                         Click links <b>INBOX</b>
                                     </label>
                                 </td>
+                            </tr>
+                            <tr style="width: 100px">
                                 <td style="border: none; padding: 0; width: 50%;" class="pull-left">
                                     <label class="checkbox">
                                         <input type="checkbox" ng-model="vm.job.actions[7].isChecked">
@@ -83,7 +77,8 @@
                     <div class="box-body">
                         <div class="col-sm-12">
                             <table class="table table-bordered table-hover dataTable" style="width: 100%;"
-                                   ng-table="vm.tableParams" show-filter="true" id="job_seed_list" ng-hide="loading" ng-cloak>
+                                   ng-table="vm.tableParams" show-filter="true" id="job_seed_list" ng-hide="loading"
+                                   ng-cloak>
                                 <tbody>
                                 <tr role="row" class="odd" ng-repeat="seed in $data" style="width: 100px;">
                                     <td>

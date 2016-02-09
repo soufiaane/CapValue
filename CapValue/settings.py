@@ -1,4 +1,3 @@
-
 from kombu import Exchange, Queue
 import os
 
@@ -83,7 +82,6 @@ MIDDLEWARE_CLASSES = (
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 )
 
-
 if os.environ.get('PRODUCTION') == 'TRUE':
     DATABASES = {
         'default': {
@@ -132,7 +130,7 @@ AMQP_PORT = 5672
 AMQP_USER = "soufiaane"
 AMQP_PASSWORD = "C@pV@lue2016"
 AMQP_VHOST = "/cvcHost"
-CELERY_RESULT_SERIALIZER = 'json' #json pickle msgpack
+CELERY_RESULT_SERIALIZER = 'json'  # json pickle msgpack
 CELERY_TASK_SERIALIZER = 'json'
 
 CELERY_QUEUES = (
