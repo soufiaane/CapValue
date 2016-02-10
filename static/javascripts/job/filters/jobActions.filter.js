@@ -10,7 +10,7 @@
             var splitted = input.split(',');
             var results = "";
             for(var i =0; i<splitted.length;i++){
-                results += "<span class=\"badge label\" >" + splitted[i] + '</span>&nbsp;'
+                results += "<span class=\"badge label label-info\" >" + splitted[i] + '</span>&nbsp;'
             }
             return $sce.trustAsHtml(results);
         };

@@ -27,7 +27,7 @@ while True:
             var element3 = document.getElementsByClassName("OutlookAppUpsellFrame")[0];element3.parentNode.removeChild(element3);'
             browser.execute_script(script)
         except Exception:
-            logger.error('')
+            print('')
 
 
     def look_for_unblock():
@@ -36,7 +36,7 @@ while True:
             handles_before = browser.window_handles
             btn_unblock.click()
             WebDriverWait(browser, 1).until(lambda browser: len(handles_before) != len(browser.window_handles))
-            logger.error('# Unblock Clicked')
+            print('# Unblock Clicked')
         except NoSuchElementException:
             pass
 
@@ -62,7 +62,7 @@ while True:
         link = 'http://www.hotmail.com'
         browser.get(link)
         if 'ERR_PROXY_CONNECTION_FAILED' in str(browser.page_source):
-            logger.error('problem PROXY')
+            print('problem PROXY')
             break
         default_window = browser.window_handles[0]
 
@@ -98,7 +98,7 @@ while True:
             spam_count = int(browser.find_elements_by_css_selector('span.count')[2].text)
         except Exception:
             spam_count = 0
-        logger.error('Total Spam: ' + str(spam_count))
+        print('Total Spam: ' + str(spam_count))
 
         if spam_count > 0:
             browser.get(junk_url)
@@ -133,7 +133,7 @@ while True:
                     try:
                         waiit()
                         spam_count = int(browser.find_elements_by_css_selector('span.count')[2].text)
-                        logger.error('Total Spam: ' + str(spam_count))
+                        print('Total Spam: ' + str(spam_count))
                     except Exception:
                         spam_count = 0
             if ('NS' in ACTIONS) and ('RS' not in ACTIONS):  # Not SPAM
@@ -148,7 +148,7 @@ while True:
                     waiit()
                     try:
                         spam_count = int(browser.find_elements_by_css_selector('span.count')[2].text)
-                        logger.error('Total Spam: ' + str(spam_count))
+                        print('Total Spam: ' + str(spam_count))
                     except Exception:
                         spam_count = 0
             elif ('SS' in ACTIONS) and ('RS' not in ACTIONS) and ('NS' not in ACTIONS):  # Mark SPAM as Safe
@@ -159,7 +159,7 @@ while True:
                     emails[0].click()
                     waiit()
                 except Exception as ex:
-                    logger.error(type(ex))
+                    print(type(ex))
                     pass
                 while spam_count > 0:
                     # Mark Safe
@@ -169,13 +169,13 @@ while True:
                         safe_link.click()
                         waiit()
                     except Exception as ex:
-                        logger.error(type(ex))
+                        print(type(ex))
                         pass
 
                     try:
                         waiit()
                         spam_count = int(browser.find_elements_by_css_selector('span.count')[2].text)
-                        logger.error('Total Spam: ' + str(spam_count))
+                        print('Total Spam: ' + str(spam_count))
                     except Exception:
                         spam_count = 0
 
@@ -186,9 +186,9 @@ while True:
                         emails[0].click()
                         waiit()
                     except Exception as ex:
-                        logger.error(type(ex))
+                        print(type(ex))
         else:
-            logger.error('Nothing to do here : ')
+            print('Nothing to do here : ')
         # endregion
 
         # region Inbox Actions
@@ -267,9 +267,9 @@ while True:
                                     add_contact_link.click()
                                     time.sleep(1)
                                     waiit()
-                                    logger.error('Contact Added')
+                                    print('Contact Added')
                                 except NoSuchElementException:
-                                    logger.error('Contact Already Exist')
+                                    print('Contact Already Exist')
                                     pass
                             # endregion
 
@@ -333,10 +333,10 @@ while True:
                             time.sleep(1)
                             waiit()
                         except NoSuchElementException as ex:
-                            logger.error(type(ex))
+                            print(type(ex))
                             continue
                         except StaleElementReferenceException as ex:
-                            logger.error(type(ex))
+                            print(type(ex))
                             continue
                         finally:
                             time.sleep(1)
@@ -344,26 +344,26 @@ while True:
                             try:
                                 next_btn = browser.find_element_by_css_selector('a.rmNext').find_element_by_tag_name('img')
                             except Exception as ex:
-                                logger.error(type(ex))
+                                print(type(ex))
                                 next_btn = None
                             next_btn_attributes = next_btn.get_attribute('class') if next_btn else ''
                             last_msg = True if str(next_btn_attributes).endswith('_d') else False
 
                 except NoSuchElementException as ex:
-                    logger.error(type(ex))
+                    print(type(ex))
                     continue
                 except StaleElementReferenceException as ex:
-                    logger.error(type(ex))
+                    print(type(ex))
                     continue
 
             except NoSuchElementException as ex:
-                logger.error(type(ex))
+                print(type(ex))
                 continue
             except StaleElementReferenceException as ex:
-                logger.error(type(ex))
+                print(type(ex))
                 continue
             except Exception as ex:
-                logger.error(type(ex))
+                print(type(ex))
                 continue
         # endregion
 
@@ -397,10 +397,10 @@ while True:
 
         # endregion
 
-        logger.error('Now What ??')
+        print('Now What ??')
         waiit()
         look_for_pub()
     except Exception as ex:
-        logger.error(type(ex))
+        print(type(ex))
     finally:
         browser.quit()

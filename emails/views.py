@@ -59,6 +59,7 @@ class AccountEmailList(viewsets.GenericViewSet):
         serializer = self.get_serializer(queryset, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
 
+
 class SeedEmailList(viewsets.GenericViewSet):
     serializer_class = EmailSerializer
     permission_classes = (permissions.AllowAny,)

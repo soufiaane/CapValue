@@ -1,10 +1,51 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Title</title>
-</head>
-<body>
+<div class="row">
+    <div class="col-sm-8 col-sm-offset-2">
+        <div id="form-container">
+            <div class="page-header text-center" style="padding: 1px;">
+                <h2 style="color: #ffffff;">New Proxy :</h2>
+            </div>
+            <div class="jumbotron job-create">
+                <form id="seedCreate_form" ng-submit="vm.submitProxy()"
+                      style="min-height: 100px; padding-bottom: 0" novalidate>
+                    <table class="table table-responsive">
+                        <tr style="width: 100px">
+                            <td style="border: none;">
+                                <span class="pull-left">Name :</span>
+                            </td>
+                            <td style="border: none;" id="job_keyword">
+                                <input type="text" class="form-control" placeholder="Name..."
+                                       aria-describedby="sizing-addon1" ng-model="vm.proxy.name"
+                                       name="proxy.name">
+                            </td>
+                        </tr>
+                    </table>
+                    <table class="table table-responsive">
+                        <tr>
+                            <td>IPs / Logins</td>
+                            <td>
+                                <span><small>(Format: proxy,port,login,password)</small></span>
+                         <textarea class="form-control" placeholder="... ." rows="5" ng-model="vm.proxy.textarea_Input"
+                                   ng-change="vm.proxyListInputBind('textarea')"></textarea>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                File Upload
+                            </td>
+                            <td>
+                                <input id="seedfile_import" type="file" file-model="vm.selectedFile"/>
+                                <span ng-click="vm.seedListInputBind('file')" class="pull-right btn btn-info disabled">Upload</span>
+                            </td>
+                        </tr>
+                    </table>
+                    <div id="formErrors" class="col-xs-8 col-sm-offset-2"></div>
+                    <div class="text-center">
+                        <button type="submit" class="btn btn-danger btn-block">Submit</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
 
-</body>
-</html>
+
