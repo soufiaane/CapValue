@@ -18,7 +18,7 @@
                                     <td title="'List Name'" filter="{ list_name: 'text'}" sortable="'list_name'">{$
                                         seed.list_name $}
                                     </td>
-                                    <td title="'Count'">{$ seed.emails.length $}</td>
+                                    <td title="'Count'"><a href="#"  ng-click="vm.openEmailDetails(seed.id)">{$ seed.emails.length $}</a></td>
                                     <td title="'Active'">##</td>
                                     <td title="'Inactive'">##</td>
                                 </tr>

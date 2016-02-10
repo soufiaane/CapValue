@@ -1,8 +1,9 @@
-from rest_framework import viewsets, permissions, status, generics
+from rest_framework import viewsets, status, generics
 from emails.permissions import *
 from rest_framework.response import Response
 from emails.serializers import EmailSerializer
 from emails.models import Email
+from seed.models import Seed
 
 
 class EmailView(generics.ListCreateAPIView):
@@ -51,6 +52,21 @@ class AccountEmailList(viewsets.GenericViewSet):
     def list(self, request, **kwargs):
         username = kwargs.get('username')
         queryset = self.queryset.filter(user__username=username)
+        # page = self.paginate_queryset(queryset)
+        # if page is not None:
+        #     serializer = self.get_serializer(page, many=True)
+        #     return self.get_paginated_response(serializer.data)
+        serializer = self.get_serializer(queryset, many=True)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+
+class SeedEmailList(viewsets.GenericViewSet):
+    serializer_class = EmailSerializer
+    permission_classes = (permissions.AllowAny,)
+
+    def list(self, request, **kwargs):
+        seed_id = kwargs.get('seed_id')
+        seed = Seed.objects.get(pk=seed_id)
+        queryset = seed.emails.all()
         # page = self.paginate_queryset(queryset)
         # if page is not None:
         #     serializer = self.get_serializer(page, many=True)

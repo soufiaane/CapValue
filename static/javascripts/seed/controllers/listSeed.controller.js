@@ -10,6 +10,7 @@
         activate();
         var user = Authentication.getAuthenticatedAccount();
         vm.openSeedDetails = openSeedDetails;
+        vm.openEmailDetails = openEmailDetails;
         $scope.loading = true;
 
         Seed.get(user.username).then(function (results) {
@@ -37,12 +38,43 @@
                     $scope.selectedSeed = null;
                 }
             });
+
             Seed.get_seed(seed_id).then(function (results) {
                     $scope.detail_loading = false;
                     $scope.selectedSeed = results.data[0];
                 },
                 function () {
                     $scope.detail_loading = false;
+                });
+        }
+
+        function openEmailDetails(seed_id){
+            $scope.email_detail_loading = true;
+
+            ngDialog.openConfirm({
+                template: '/static/templates/seed/seed_emails_detail.html',
+                className: 'ngdialog-theme-default custom-width',
+                scope: $scope, //Pass the scope object if you need to access in the template
+                closeByEscape: true,
+                closeByDocument: true,
+                preCloseCallback: function () {
+                    $scope.selectedSeedEmails = null;
+                }
+            });
+
+            Seed.get_seed_emails(seed_id).then(function (results) {
+                    vm.emailsTableParams = new NgTableParams({
+                        page: 1,
+                        count: 10
+                    }, {
+                        total: results.data.length,
+                        counts: [],
+                        data: results.data
+                    });
+                    $scope.email_detail_loading = false;
+                },
+                function () {
+                    $scope.email_detail_loading = false;
                 });
         }
 
