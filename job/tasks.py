@@ -7,8 +7,8 @@ def reportTask(self, link):
     pass
 
 
-@app.task(name='report_hotmail', bind=True, max_retries=5)
-def reportHotmail(self, job, email):
+@app.task(name='report_hotmail', bind=True, max_retries=3, default_retry_delay=1)
+def report_hotmail(self, job, email):
     pass
 
 

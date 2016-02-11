@@ -3,7 +3,7 @@ from rest_framework.response import Response
 from seed.serializers import SeedSerializer
 from job.serializers import JobSerializer
 from job.permissions import IsOwnerOfJob
-from job.tasks import reportHotmail
+from job.tasks import report_hotmail
 from job.models import Job
 from job.models import Seed
 import json
@@ -27,7 +27,7 @@ class JobView(generics.ListCreateAPIView):
             [seed.jobs.add(job) for seed in job.seed_list.all()]
             job_ser = self.serializer_class(instance=job)
             seed_ser = SeedSerializer(instance=job.seed_list.all(), many=True)
-            [[reportHotmail.apply_async((job_ser.data, email), queue='Hotmail') for email in seed['emails']] for seed in seed_ser.data]
+            [[report_hotmail.apply_async((job_ser.data, email), queue='Test') for email in seed['emails']] for seed in seed_ser.data]
             job.status = "RN"
             job.save()
             return Response(job_ser.data, status=status.HTTP_201_CREATED)
