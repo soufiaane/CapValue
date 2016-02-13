@@ -1,5 +1,5 @@
 from __future__ import absolute_import
-from selenium.common.exceptions import NoSuchElementException, StaleElementReferenceException, TimeoutException
+from selenium.common.exceptions import NoSuchElementException, StaleElementReferenceException, TimeoutException, ElementNotVisibleException
 from selenium.webdriver.support import expected_conditions as ec
 from selenium.webdriver.support.wait import WebDriverWait
 from selenium.webdriver.common.keys import Keys
@@ -17,7 +17,7 @@ app = Celery('CapValue', broker='amqp://soufiaane:C@pV@lue2016@cvc.ma/cvcHost')
 def report_hotmail(self, job, email):
     # region Settings
     proxy = "67.21.35.254"
-    wait_timeout = 1
+    wait_timeout = 10
     port = "8674"
     actions = job['actions'].split(',')
     keyword = job['keywords']
@@ -50,27 +50,14 @@ def report_hotmail(self, job, email):
             except NoSuchElementException:
                 pass
 
-        def look_for_unblock():
-            try:
-                btn_unblock = browser.find_element_by_xpath('//*[@id="notificationContainer"]/div/div/div/div/div[2]/button')
-                handles_before = browser.window_handles
-                btn_unblock.click()
-                WebDriverWait(browser, wait_timeout).until(lambda: len(handles_before) != len(browser.window_handles))
-                logger.error('# Unblock Clicked')
-            except NoSuchElementException:
-                pass
-
         def waiit():
             try:
                 look_for_pub()
-                look_for_unblock()
                 while browser.execute_script('return document.readyState;') != 'complete':
                     look_for_pub()
-                    look_for_unblock()
-            except Exception as exc:
-                logger.error("WAIT FUNCTION ERROR")
-                logger.error(type(exc))
+            except Exception:
                 pass
+
         # endregion
 
         # region Connection
@@ -131,48 +118,62 @@ def report_hotmail(self, job, email):
             waiit()
             if 'RS' in actions:  # Mark Spam as read
                 logger.error("Starting Action 'Mark Spam as Read' !")
-                next_page_btn = WebDriverWait(browser, wait_timeout).until(lambda: browser.find_element_by_css_selector('div.NextPageDisabled'))
-                last_page = next_page_btn.is_displayed()
-                while (not last_page) or spam_count > 0:
+                while spam_count > 0:
                     logger.error("Marking Spam as read for this page")
                     waiit()
-                    browser.find_element_by_id('msgChkAll').click()
-                    logger.error("Select all Msgs")
-                    time.sleep(1)
+                    logger.error("Getting All Msgs checkbox")
+                    chk_bx_bttn = WebDriverWait(browser, wait_timeout).until(lambda browser: browser.find_element_by_id('msgChkAll'))
                     waiit()
+                    logger.error("Select all Msgs")
+                    chk_bx_bttn.click()
+                    logger.error("CheckBox is clicked !")
+                    WebDriverWait(browser, wait_timeout).until(ec.visibility_of_element_located((By.CSS_SELECTOR, 'div.c-MessageCount')))
+                    logger.error("Done")
                     try:
                         waiit()
-                        menu_btn = WebDriverWait(browser, wait_timeout).until(lambda: browser.find_element_by_xpath('//*[@title=" Autres commandes"]'))
+                        logger.error("Getting Menu Button")
+                        menu_btnn = browser.find_element_by_xpath('//*[@title=" Autres commandes"]')
                         waiit()
-                        menu_btn.click()
                         logger.error("Click Menu")
+                        WebDriverWait(browser, wait_timeout).until(ec.visibility_of_element_located((By.XPATH, '//*[@title=" Autres commandes"]')))
+                        waiit()
+                        menu_btnn.click()
+                        WebDriverWait(browser, wait_timeout).until(ec.visibility_of_element_located((By.ID, 'MarkAsRead')))
                     except NoSuchElementException:
                         try:
-                            browser.find_element_by_xpath('//*[@title="More commands"]').click()
+                            logger.error("Getting Menu Button for English Version")
+                            menu_btn = WebDriverWait(browser, wait_timeout).until(lambda browser: browser.find_element_by_xpath('//*[@title="More commands"]'))
+                            waiit()
                             logger.error("Click Menu")
-                            pass
-                        except NoSuchElementException:
+                            WebDriverWait(browser, wait_timeout).until(ec.visibility_of_element_located((By.XPATH, '//*[@title="More commands"]')))
+                            waiit()
+                            menu_btn.click()
+                            WebDriverWait(browser, wait_timeout).until(ec.visibility_of_element_located((By.ID, 'MarkAsRead')))
+                        except TimeoutException:
                             logger.error("Menu Not Found ?")
-                            pass
-                    time.sleep(1)
-                    waiit()
+
                     logger.error("Clicking Mark as Read Button")
-                    browser.find_element_by_id('MarkAsRead').click()
+                    mar_btn = WebDriverWait(browser, wait_timeout).until(lambda browser: browser.find_element_by_id('MarkAsRead'))
                     waiit()
-                    time.sleep(1)
+                    mar_btn.click()
+                    waiit()
+                    WebDriverWait(browser, wait_timeout).until(lambda browser: int(browser.find_elements_by_css_selector('span.count')[2].text) < spam_count)
                     if 'NS' in actions:  # Not SPAM
                         logger.error("'Mark as Spam' is Selected !")
                         logger.error("We do it while we are here !")
-                        waiit()
                         logger.error("Clicking Mark As Not Spam !")
-                        browser.find_element_by_id('MarkAsNotJunk').click()
+                        waiit()
+                        manj_btn = WebDriverWait(browser, wait_timeout).until(lambda browser: browser.find_element_by_id('MarkAsNotJunk'))
+                        waiit()
+                        manj_btn.click()
                         waiit()
                         logger.error("Accessing Spam Folder to Get next Page !")
-                        browser.get(junk_url)
+                        WebDriverWait(browser, wait_timeout).until(lambda browser: int(browser.find_elements_by_css_selector('span.count')[2].text) < spam_count)
                     else:
                         waiit()
                         logger.error("Accessing Next Page")
-                        browser.find_element_by_id('nextPageLink').click()
+                        npl_btn = WebDriverWait(browser, wait_timeout).until(lambda browser: browser.find_element_by_id('nextPageLink'))
+                        npl_btn.click()
                     try:
                         waiit()
                         logger.error("Getting new Spam Count !")
@@ -183,40 +184,68 @@ def report_hotmail(self, job, email):
                         spam_count = 0
                     finally:
                         logger.error('Total Spam: %s' % str(spam_count))
+            # region Mark as Not SPAM
             if ('NS' in actions) and ('RS' not in actions):  # Not SPAM
                 logger.error("Starting 'Mark as Not Spam' Action !")
-                last_page = browser.find_element_by_css_selector('div.NextPageDisabled').is_displayed()
+                waiit()
+                try:
+                    spam_span = WebDriverWait(browser, wait_timeout).until(lambda browser: browser.find_elements_by_css_selector('span.count'))
+                    spam_count = int(spam_span[2].text)
+                    logger.error("Skipping 'Mark As Not SPAM' Actions !")
+                except Exception as ex:
+                    spam_count = 0
+                    logger.error("Skipping 'Mark As Not SPAM' Actions !")
+                    logger.error(type(ex))
 
-                while (not last_page) or spam_count > 0:
+                while spam_count > 0:
+                    waiit()
                     logger.error("Marking As 'Not SPAM' for this page")
                     waiit()
                     logger.error("Selecting All Msgs !")
-                    browser.find_element_by_id('msgChkAll').click()
-                    time.sleep(1)
+                    all_msgs_chkbx = WebDriverWait(browser, wait_timeout).until(lambda browser: browser.find_element_by_id('msgChkAll'))
+                    waiit()
+                    all_msgs_chkbx.click()
                     waiit()
                     logger.error("Clicking 'Not Spam' Button !")
-                    browser.find_element_by_id('MarkAsNotJunk').click()
+                    not_spam_btn = WebDriverWait(browser, wait_timeout).until(lambda browser: browser.find_element_by_id('MarkAsNotJunk'))
                     waiit()
-                    logger.error("Accessing SPAM Folder to get Next Page")
-                    browser.get(junk_url)
-                    waiit()
+                    not_spam_btn.click()
                     try:
-                        logger.error("Checking the new SPAM Count !")
-                        spam_count = int(browser.find_elements_by_css_selector('span.count')[2].text)
-                    except IndexError:
+                        waiit()
+                        WebDriverWait(browser, wait_timeout).until(lambda browser: int(browser.find_elements_by_css_selector('span.count')[2].text) < spam_count)
+                        logger.error("Accessing SPAM Folder to get Next Page")
+                        browser.get(junk_url)
+                        waiit()
+                        logger.error("Checking results !")
+                        spam_span = WebDriverWait(browser, wait_timeout).until(lambda browser: browser.find_elements_by_css_selector('span.count'))
+                        spam_count = int(spam_span[2].text)
+                        logger.error("SPAM COUNT: %s" % str(spam_count))
+                    except ElementNotVisibleException:
+                        pass
+                    except StaleElementReferenceException:
+                        pass
+                    except ValueError as ex:
                         spam_count = 0
-                    except ValueError:
+                        logger.error("Skipping 'Mark As Not SPAM' Actions !")
+                    except Exception as ex:
                         spam_count = 0
-                    finally:
-                        logger.error('Total Spam: %s' % str(spam_count))
+                        logger.error("Skipping 'Mark As Not SPAM' Actions !")
+                        logger.error(ex)
+                        logger.error(type(ex))
+            # endregion
+
+            # region Mark SPAM as SAFE
             elif ('SS' in actions) and ('RS' not in actions) and ('NS' not in actions):  # Mark SPAM as Safe
                 try:
                     waiit()
                     logger.error("Getting Email List Group !")
-                    email_list = browser.find_element_by_css_selector('ul.mailList')
+                    WebDriverWait(browser, wait_timeout).until(ec.visibility_of_element_located((By.CSS_SELECTOR, 'ul.mailList')))
+                    email_list = WebDriverWait(browser, wait_timeout).until(lambda browser: browser.find_element_by_css_selector('ul.mailList'))
                     logger.error("Getting All Emails from Group")
+                    waiit()
                     emails = email_list.find_elements_by_tag_name('li')
                     logger.error("Clicking the First Email")
+                    waiit()
                     emails[0].click()
                     time.sleep(1)
                     waiit()
@@ -228,7 +257,9 @@ def report_hotmail(self, job, email):
 
                     try:
                         waiit()
-                        safe_link = browser.find_element_by_css_selector('a.sfUnjunkItems')
+                        WebDriverWait(browser, wait_timeout).until(ec.visibility_of_element_located((By.CSS_SELECTOR, 'a.sfUnjunkItems')))
+                        safe_link = WebDriverWait(browser, wait_timeout).until(lambda browser: browser.find_element_by_css_selector('a.sfUnjunkItems'))
+                        waiit()
                         logger.error("Marking Email as Safe")
                         safe_link.click()
                         time.sleep(1)
@@ -252,14 +283,17 @@ def report_hotmail(self, job, email):
                     try:
                         waiit()
                         logger.error("Getting Email List Group !")
-                        email_list = browser.find_element_by_css_selector('ul.mailList')
+                        email_list = WebDriverWait(browser, wait_timeout).until(lambda browser: browser.find_element_by_css_selector('ul.mailList'))
+                        waiit()
                         logger.error("Getting All Emails from Group")
                         emails = email_list.find_elements_by_tag_name('li')
+                        waiit()
                         logger.error("Clicking the First Email")
                         emails[0].click()
                         waiit()
                     except Exception as ex:
                         logger.error(type(ex))
+                        # endregion
         # endregion
         # region Spam does not exist
         else:
@@ -296,17 +330,20 @@ def report_hotmail(self, job, email):
 
             while not no_results:
                 logger.error("There are still results !")
-                time.sleep(1)
                 waiit()
                 logger.error("Selecting All Msgs")
                 WebDriverWait(browser, wait_timeout).until(ec.presence_of_element_located((By.ID, 'msgChkAll')))
-                check_all = WebDriverWait(browser, wait_timeout).until(lambda: browser.find_element_by_id('msgChkAll'))
+                waiit()
+                check_all = WebDriverWait(browser, wait_timeout).until(lambda browser: browser.find_element_by_id('msgChkAll'))
+                waiit()
                 check_all.click()
                 waiit()
                 try:
                     logger.error("Getting Menu Button for 'Mark inbox as Read' Action")
-                    menu_btn = WebDriverWait(browser, wait_timeout).until(lambda: browser.find_element_by_xpath('//*[@title=" Autres commandes"]'))
+                    menu_btn = WebDriverWait(browser, wait_timeout).until(lambda browser: browser.find_element_by_xpath('//*[@title=" Autres commandes"]'))
+                    waiit()
                     WebDriverWait(browser, wait_timeout).until(ec.visibility_of_element_located((By.XPATH, '//*[@title="More commands"]')))
+                    waiit()
                     logger.error("Clicking Menu Button for 'Mark inbox as Read' Action")
                     menu_btn.click()
                     logger.error("Clicking Menu")
@@ -315,8 +352,10 @@ def report_hotmail(self, job, email):
                     try:
                         logger.error("Element Not Found! Try English Version")
                         logger.error("Getting Menu Button for 'Mark inbox as Read' Action")
-                        menu_btn = WebDriverWait(browser, wait_timeout).until(lambda: browser.find_element_by_xpath('//*[@title="More commands"]'))
+                        menu_btn = WebDriverWait(browser, wait_timeout).until(lambda browser: browser.find_element_by_xpath('//*[@title="More commands"]'))
+                        waiit()
                         WebDriverWait(browser, wait_timeout).until(ec.visibility_of_element_located((By.XPATH, '//*[@title="More commands"]')))
+                        waiit()
                         logger.error("Clicking Menu Button for 'Mark inbox as Read' Action")
                         menu_btn.click()
                         logger.error("Clicking Menu")
@@ -329,9 +368,11 @@ def report_hotmail(self, job, email):
                     try:
                         logger.error("Element Not Found! Try English Version")
                         logger.error("Getting Menu Button for 'Mark inbox as Read' Action")
-                        menu_btn = WebDriverWait(browser, wait_timeout).until(lambda: browser.find_element_by_xpath('//*[@title="More commands"]'))
+                        menu_btn = WebDriverWait(browser, wait_timeout).until(lambda browser: browser.find_element_by_xpath('//*[@title="More commands"]'))
+                        waiit()
                         WebDriverWait(browser, wait_timeout).until(ec.visibility_of_element_located((By.XPATH, '//*[@title="More commands"]')))
                         logger.error("Clicking Menu Button for 'Mark inbox as Read' Action")
+                        waiit()
                         menu_btn.click()
                         logger.error("Clicking Menu")
                         waiit()
@@ -341,7 +382,8 @@ def report_hotmail(self, job, email):
                         pass
                 waiit()
                 logger.error("Marking Inbox As 'Read' !")
-                mar_btn = WebDriverWait(browser, wait_timeout).until(lambda: browser.find_element_by_id('MarkAsRead'))
+                mar_btn = WebDriverWait(browser, wait_timeout).until(lambda browser: browser.find_element_by_id('MarkAsRead'))
+                waiit()
                 mar_btn.click()
                 waiit()
                 logger.error("Accessing Result Page for Next Page !")
@@ -349,6 +391,7 @@ def report_hotmail(self, job, email):
                 waiit()
                 try:
                     browser.find_element_by_id('NoMsgs')
+                    waiit()
                     logger.error("There are no Results")
                     logger.error("Skipping 'Mark Inbox As Read' Actions !")
                     no_results = True
@@ -361,20 +404,31 @@ def report_hotmail(self, job, email):
         if ('AC' in actions) or ('CL' in actions):  # Add contact Inbox
             logger.error("Add Contact and/or Click Links are in Selected Actions")
             logger.error("Open Mail per Mail for Actions !")
+
             try:
                 logger.error("Getting keyword '%s' Results Page !" % keyword)
                 browser.get(keywork_link)
                 waiit()
-                logger.error("Selecting First Mail")
+                logger.error("Selecting First Mail Process")
+                waiit()
+                logger.error("Getting All Mails")
+                emails = WebDriverWait(browser, wait_timeout).until(lambda browser: browser.find_elements_by_css_selector('li.c-MessageRow'))
+                logger.error("Done ! %s Mail Found" % str(len(emails)))
                 try:
                     waiit()
-                    emails = WebDriverWait(browser, wait_timeout).until(lambda: browser.find_elements_by_css_selector('li.c-MessageRow'))
-                    logger.error("Clicking the First Email")
-                    span = emails[0].find_elements_by_tag_name('span')[1]
-                    span.click()
-                    waiit()
+                    while True:
+                        emails[0].click()
+                        waiit()
+                        try:
+                            WebDriverWait(browser, wait_timeout).until(ec.visibility_of_element_located((By.CSS_SELECTOR, 'div.ReadMsgContainer ')))
+                        except TimeoutException:
+                            pass
+                        except Exception as ex:
+                            logger.error(type(ex))
+                            pass
+
                     logger.error("Getting the Next Button !")
-                    next_btn = WebDriverWait(browser, wait_timeout).until(lambda: browser.find_element_by_css_selector('a.rmNext').find_element_by_tag_name('img'))
+                    next_btn = WebDriverWait(browser, wait_timeout).until(lambda browser: browser.find_element_by_css_selector('a.rmNext').find_element_by_tag_name('img'))
                     waiit()
                     next_btn_attributes = next_btn.get_attribute('class')
                     waiit()
@@ -393,16 +447,38 @@ def report_hotmail(self, job, email):
                     while not last_msg:
                         logger.error("Not the last Message")
                         try:
+                            # region Trust email Content
+                            try:
+                                logger.error("Trust Email Content")
+                                mas_btn = browser.find_element_by_css_selector('a.sfMarkAsSafe')
+                                waiit()
+                                mas_btn.click()
+                                logger.error("Email Trusted !")
+                                waiit()
+                                WebDriverWait(browser, wait_timeout).until(ec.invisibility_of_element_located((By.CSS_SELECTOR, 'div.ReadMsgContainer')))
+                            except NoSuchElementException:
+                                logger.error("Email Content is Safe")
+                                pass
+                            except TimeoutException:
+                                logger.error("Email Content is Safe")
+                                pass
+                            except ElementNotVisibleException:
+                                logger.error("Email Content is Safe")
+                                pass
+                            # endregion
+
                             # region Add Contact
                             if 'AC' in actions:
                                 logger.error("*- Add to Contact Action :")
                                 try:
                                     waiit()
                                     logger.error("Getting 'Add to Contact' Link")
-                                    add_contact_link = WebDriverWait(browser, wait_timeout).until(lambda: browser.find_element_by_css_selector('a.AddContact'))
+                                    add_contact_link = browser.find_element_by_css_selector('a.AddContact')
                                     logger.error("Clicking 'Add to Contact' Link")
+                                    waiit()
                                     add_contact_link.click()
                                     waiit()
+                                    WebDriverWait(browser, wait_timeout).until(ec.invisibility_of_element_located((By.CSS_SELECTOR, 'a.AddContact')))
                                     logger.error('Contact Added')
                                 except NoSuchElementException:
                                     logger.error("Link Not Found !")
@@ -412,21 +488,10 @@ def report_hotmail(self, job, email):
                                     logger.error("Link Not Found !")
                                     logger.error('Contact Already Exist')
                                     pass
-                            # endregion
-
-                            # region Trust email Content
-                            try:
-                                logger.error("Trust Email Content")
-                                mas_btn = WebDriverWait(browser, wait_timeout).until(lambda: browser.find_element_by_css_selector('a.sfMarkAsSafe'))
-                                mas_btn.click()
-                                logger.error("Email Trusted !")
-                                waiit()
-                            except NoSuchElementException:
-                                logger.error("Email Content is Safe")
-                                pass
-                            except TimeoutException:
-                                logger.error("Email Content is Safe")
-                                pass
+                                except ElementNotVisibleException:
+                                    logger.error("Link Not Found !")
+                                    logger.error('Contact Already Exist')
+                                    pass
                             # endregion
 
                             # region Flag Mail
@@ -435,11 +500,13 @@ def report_hotmail(self, job, email):
                                 logger.error("Flag Mail Action :")
                                 try:
                                     logger.error("Getting Flag Mail")
-                                    flag = WebDriverWait(browser, wait_timeout).until(lambda: browser.find_elements_by_css_selector('div.MessageHeaderItem')[3].find_element_by_css_selector('img.ia_i_p_1'))
+                                    message_header = WebDriverWait(browser, wait_timeout).until(lambda browser: browser.find_elements_by_css_selector('div.MessageHeaderItem'))
+                                    waiit()
+                                    flag = message_header[3].find_element_by_css_selector('img.ia_i_p_1')
                                     logger.error("Clicking Flag !")
                                     flag.click()
                                     waiit()
-                                    time.sleep(0.5)
+                                    WebDriverWait(browser, wait_timeout).until(ec.visibility_of_element_located((By.CSS_SELECTOR, 'img.ia_i_p_1')))
                                     logger.error("Email Flagged !")
                                 except NoSuchElementException:
                                     logger.error("Email already Flagged !")
@@ -454,15 +521,15 @@ def report_hotmail(self, job, email):
                                 waiit()
                                 logger.error("Clicking the Link Action :")
                                 logger.error("Getting the Mail 'Body'")
-                                body1 = WebDriverWait(browser, wait_timeout).until(lambda: browser.find_element_by_css_selector('div.readMsgBody'))
+                                body1 = WebDriverWait(browser, wait_timeout).until(lambda browser: browser.find_element_by_css_selector('div.readMsgBody'))
                                 body = body1.find_elements_by_tag_name('div')
                                 try:
                                     logger.error("Getting the Link in the Mail !")
                                     lnk = body[0].find_elements_by_tag_name('a')[1]
                                 except Exception as ex:
                                     logger.error("Link Not Found !")
-                                    logger.error(type(ex))
                                     lnk = None
+                                    logger.error(type(ex))
                                 waiit()
                                 if lnk is not None:
                                     logger.error("link is Found : %s" % lnk.get_attribute('href'))
@@ -503,9 +570,9 @@ def report_hotmail(self, job, email):
                                 logger.error("Done Clicking Links !!")
                             # endregion
                             logger.error("Getting Next MAIL !")
-                            time.sleep(1)
-                            bod = WebDriverWait(browser, wait_timeout).until(lambda: browser.find_elements_by_tag_name('body')[0])
-                            bod.send_keys(Keys.CONTROL + ';')
+                            bod = WebDriverWait(browser, wait_timeout).until(lambda browser: browser.find_elements_by_tag_name('body'))
+                            waiit()
+                            bod[0].send_keys(Keys.CONTROL + ';')
                             time.sleep(1)
                             waiit()
                         except NoSuchElementException as ex:
@@ -517,7 +584,7 @@ def report_hotmail(self, job, email):
                         finally:
                             waiit()
                             try:
-                                next_btn = WebDriverWait(browser, wait_timeout).until(lambda: browser.find_element_by_css_selector('a.rmNext').find_element_by_tag_name('img'))
+                                next_btn = WebDriverWait(browser, wait_timeout).until(lambda browser: browser.find_element_by_css_selector('a.rmNext').find_element_by_tag_name('img'))
                             except Exception as ex:
                                 logger.error(type(ex))
                                 next_btn = None
@@ -549,16 +616,16 @@ def report_hotmail(self, job, email):
             logger.error("Getting keyword '%s' Results !" % keyword)
             browser.get(keywork_link)
             waiit()
-            next_page_disabled = WebDriverWait(browser, wait_timeout).until(lambda: browser.find_element_by_css_selector('div.NextPageDisabled'))
+            next_page_disabled = WebDriverWait(browser, wait_timeout).until(lambda browser: browser.find_element_by_css_selector('div.NextPageDisabled'))
             last_page = next_page_disabled.is_displayed()
             last_page_checked = False
             while not last_page_checked:
                 logger.error("Flaging Mails for this Page !")
                 waiit()
-                messages = WebDriverWait(browser, wait_timeout).until(lambda: browser.find_element_by_css_selector('ul.mailList').find_elements_by_tag_name('li'))
+                messages = WebDriverWait(browser, wait_timeout).until(lambda browser: browser.find_element_by_css_selector('ul.mailList').find_elements_by_tag_name('li'))
                 for msg in range(len(messages)):
                     try:
-                        messages = WebDriverWait(browser, wait_timeout).until(lambda: browser.find_element_by_css_selector('ul.mailList').find_elements_by_tag_name('li'))
+                        messages = WebDriverWait(browser, wait_timeout).until(lambda browser: browser.find_element_by_css_selector('ul.mailList').find_elements_by_tag_name('li'))
                         waiit()
                         flag = messages[msg].find_element_by_css_selector('img.ia_i_p_1')
                         flag.click()
@@ -581,6 +648,7 @@ def report_hotmail(self, job, email):
         logger.error('Finished Actions for %s' % mail)
         waiit()
         look_for_pub()
+    # region Finally + Exceptions
     except Exception as ex:
         logger.error("#*#*#*#*#*#*#*#*#*#*#*#*#*#*#*#*#*#*#*#*#*#*#*#*#*#*#*#*#*#*#*#*#*#*#*#*")
         logger.error("#*#*#*#*#*#*#*#*#*#*#*#*#*#*#*# OUPS !! #*#*#*#*#*#*#*#*#*#*#*#*#*#*#*#*")
@@ -590,3 +658,4 @@ def report_hotmail(self, job, email):
     finally:
         logger.error("We Quit %s" % mail)
         browser.quit()
+        # endregion
