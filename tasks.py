@@ -1,5 +1,5 @@
 from __future__ import absolute_import
-from selenium.common.exceptions import NoSuchElementException, StaleElementReferenceException, TimeoutException, ElementNotVisibleException
+from selenium.common.exceptions import NoSuchElementException, StaleElementReferenceException, TimeoutException
 from selenium.webdriver.support import expected_conditions as ec
 from selenium.webdriver.support.wait import WebDriverWait
 from selenium.webdriver.common.keys import Keys
@@ -15,10 +15,11 @@ app = Celery('CapValue', broker='amqp://soufiaane:C@pV@lue2016@cvc.ma/cvcHost')
 
 @app.task(name='report_hotmail', bind=True, max_retries=3, default_retry_delay=1)
 def report_hotmail(self, job, email):
+
     # region Settings
-    proxy = "67.21.35.254"
+    proxy = "192.154.210.119"
     wait_timeout = 10
-    port = "8674"
+    port = "29954"
     actions = job['actions'].split(',')
     keyword = job['keywords']
     logger.error('Job Started :')
@@ -29,6 +30,8 @@ def report_hotmail(self, job, email):
     print(service_args)
     browser = webdriver.Chrome(executable_path="chromedriver")
     # browser = webdriver.PhantomJS(executable_path="phantomjs.exe")
+    # browser = webdriver.PhantomJS(executable_path="phantomjs.exe", service_args=service_args)
+    # browser = webdriver.Chrome(executable_path="chromedriver", chrome_options=chrome_options)
     browser.maximize_window()
 
     mail = email['email']
@@ -573,29 +576,48 @@ def report_hotmail(self, job, email):
             while not last_page_checked_ac:
                 try:
 
+                    # region Flag Mail
+                    if 'FM' in actions:
+                        try:
+                            logger.error("Flag Mail Action :")
+                            logger.error("Getting Flag Mail")
+                            waiit()
+                            message_header = WebDriverWait(browser, wait_timeout).until(lambda driver: browser.find_elements_by_css_selector('div.MessageHeaderItem'))
+                            waiit()
+                            flag = message_header[3].find_element_by_css_selector('img.ia_i_p_1')
+                            logger.error("Clicking Flag !")
+                            flag.click()
+                            time.sleep(0.75)
+                            waiit()
+                            logger.error("Email Flagged !")
+                        except NoSuchElementException:
+                            logger.error("Email already Flagged !")
+                            pass
+                        except Exception as ex:
+                            logger.error(" /!\ - Flag mail Error !")
+                            logger.error(type(ex))
+                    # endregion
+
                     # region Trust email Content
                     try:
                         logger.error("Trust Email Content")
-                        mas_btn = browser.find_element_by_css_selector('a.sfMarkAsSafe')
+                        safe_btn = browser.find_element_by_css_selector('a.sfMarkAsSafe')
                         waiit()
-                        mas_btn.click()
+                        safe_btn.click()
                         logger.error("Email Trusted !")
                         waiit()
-                        WebDriverWait(browser, wait_timeout).until(ec.invisibility_of_element_located((By.CSS_SELECTOR, 'div.ReadMsgContainer')))
+                        WebDriverWait(browser, wait_timeout).until(ec.invisibility_of_element_located((By.CSS_SELECTOR, 'a.sfMarkAsSafe')))
                     except NoSuchElementException:
                         logger.error("Email Content is Safe")
                         pass
-                    except TimeoutException:
-                        logger.error("Email Content is Safe")
-                        pass
-                    except ElementNotVisibleException:
-                        logger.error("Email Content is Safe")
-                        pass
+                    except Exception as ex:
+                        logger.error(" /!\ - Trust Email Error !")
+                        logger.error(type(ex))
                     # endregion
 
                     # region Add Contact
                     if 'AC' in actions:
-                        logger.error("*- Add to Contact Action :")
+                        logger.error("Add to Contact Action :")
                         try:
                             waiit()
                             logger.error("Getting 'Add to Contact' Link")
@@ -610,36 +632,9 @@ def report_hotmail(self, job, email):
                             logger.error("Link Not Found !")
                             logger.error('Contact Already Exist')
                             pass
-                        except TimeoutException:
-                            logger.error("Link Not Found !")
-                            logger.error('Contact Already Exist')
-                            pass
-                        except ElementNotVisibleException:
-                            logger.error("Link Not Found !")
-                            logger.error('Contact Already Exist')
-                            pass
-                    # endregion
-
-                    # region Flag Mail
-                    if 'FM' in actions:
-                        waiit()
-                        logger.error("Flag Mail Action :")
-                        try:
-                            logger.error("Getting Flag Mail")
-                            message_header = WebDriverWait(browser, wait_timeout).until(lambda driver: browser.find_elements_by_css_selector('div.MessageHeaderItem'))
-                            waiit()
-                            flag = message_header[3].find_element_by_css_selector('img.ia_i_p_1')
-                            logger.error("Clicking Flag !")
-                            flag.click()
-                            waiit()
-                            WebDriverWait(browser, wait_timeout).until(ec.visibility_of_element_located((By.CSS_SELECTOR, 'img.ia_i_p_1')))
-                            logger.error("Email Flagged !")
-                        except NoSuchElementException:
-                            logger.error("Email already Flagged !")
-                            pass
-                        except TimeoutException:
-                            logger.error("Email already Flagged !")
-                            pass
+                        except Exception as ex:
+                            logger.error(" /!\ - Add Contact Error !")
+                            logger.error(type(ex))
                     # endregion
 
                     # region Click Links
@@ -663,9 +658,8 @@ def report_hotmail(self, job, email):
                                 waiit()
                                 logger.error("Clicking the Link")
                                 lnk.click()
-                                time.sleep(1)
                                 logger.error("Link clicked !")
-                                WebDriverWait(browser, wait_timeout).until(lambda driver: len(browser.window_handles) > 0)
+                                WebDriverWait(browser, wait_timeout).until(lambda driver: len(browser.window_handles) > 1)
                                 logger.error("New Tab Opened !")
                                 waiit()
                                 logger.error("Switching to the new Tab !")
@@ -698,14 +692,15 @@ def report_hotmail(self, job, email):
                         bod = WebDriverWait(browser, wait_timeout).until(lambda driver: browser.find_elements_by_tag_name('body'))
                         waiit()
                         bod[0].send_keys(Keys.CONTROL + ';')
-                        time.sleep(1)  # TODO-CVC
                         waiit()
-                        # endregion
+                        time.sleep(1)
+                    logger.error("Last page : %s" % str(last_page_ac))
+                    # endregion
 
                 except StaleElementReferenceException:
                     pass
                 except TimeoutException:
-                    logger.error("/!\ - Add Contact and/or Click Links Error Timed Oult")
+                    logger.error("/!\ - Add Contact and/or Click Links Error Timed Out")
                     break
                 except Exception as ex:
                     logger.error(" /!\ - Add Contact and/or Click Links Error !")
