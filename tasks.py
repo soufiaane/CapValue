@@ -54,7 +54,8 @@ def report_hotmail(self, job, email):
                 look_for_pub()
                 while browser.execute_script('return document.readyState;') != 'complete':
                     look_for_pub()
-            except Exception:
+            except Exception as exc:
+                print(type(exc))
                 pass
 
         # endregion
@@ -105,7 +106,7 @@ def report_hotmail(self, job, email):
             waiit()
 
             try:
-                nav_list = WebDriverWait(browser, wait_timeout).until(lambda browser: browser.find_element_by_css_selector("ul.indentedleftnavlist"))
+                nav_list = WebDriverWait(browser, wait_timeout).until(lambda driver: browser.find_element_by_css_selector("ul.indentedleftnavlist"))
                 waiit()
                 spam_list = nav_list.find_elements_by_tag_name("li")[3]
                 waiit()
@@ -122,7 +123,7 @@ def report_hotmail(self, job, email):
                 logger.error("Skipping read SPAM actions!")
             except NoSuchElementException:
                 waiit()
-                next_page_disabled = WebDriverWait(browser, wait_timeout).until(lambda browser: browser.find_element_by_css_selector('div.NextPageDisabled'))
+                next_page_disabled = WebDriverWait(browser, wait_timeout).until(lambda driver: browser.find_element_by_css_selector('div.NextPageDisabled'))
                 last_page = next_page_disabled.is_displayed()
                 last_page_checked = False
             # endregion
@@ -137,7 +138,7 @@ def report_hotmail(self, job, email):
                     WebDriverWait(browser, wait_timeout).until(ec.visibility_of_element_located((By.CSS_SELECTOR, 'li.FilterSelector')))
                     logger.error("Getting All Msgs checkbox")
                     waiit()
-                    chk_bx_bttn = WebDriverWait(browser, wait_timeout).until(lambda browser: browser.find_element_by_id('msgChkAll'))
+                    chk_bx_bttn = WebDriverWait(browser, wait_timeout).until(lambda driver: browser.find_element_by_id('msgChkAll'))
                     waiit()
                     logger.error("Select all Msgs")
                     chk_bx_bttn.click()
@@ -147,7 +148,7 @@ def report_hotmail(self, job, email):
 
                     # region Clicking menu
                     logger.error("Getting Menu Button")
-                    menu_btn = WebDriverWait(browser, wait_timeout).until(lambda browser: browser.find_element_by_xpath('//*[@title="More commands"]'))
+                    menu_btn = WebDriverWait(browser, wait_timeout).until(lambda driver: browser.find_element_by_xpath('//*[@title="More commands"]'))
                     waiit()
                     logger.error("Click Menu")
                     WebDriverWait(browser, wait_timeout).until(ec.visibility_of_element_located((By.XPATH, '//*[@title="More commands"]')))
@@ -158,7 +159,7 @@ def report_hotmail(self, job, email):
 
                     # region Clicking MAR button
                     logger.error("Clicking Mark as Read Button")
-                    mar_btn = WebDriverWait(browser, wait_timeout).until(lambda browser: browser.find_element_by_id('MarkAsRead'))
+                    mar_btn = WebDriverWait(browser, wait_timeout).until(lambda driver: browser.find_element_by_id('MarkAsRead'))
                     waiit()
                     mar_btn.click()
                     try:
@@ -171,7 +172,7 @@ def report_hotmail(self, job, email):
 
                     # region Checking if it was the last page
                     last_page_checked = last_page if last_page else False
-                    next_page_link = WebDriverWait(browser, wait_timeout).until(lambda browser: browser.find_element_by_id('nextPageLink'))
+                    next_page_link = WebDriverWait(browser, wait_timeout).until(lambda driver: browser.find_element_by_id('nextPageLink'))
                     if next_page_link.is_displayed():
                         logger.error("Accessing Next Page")
                         waiit()
@@ -206,7 +207,7 @@ def report_hotmail(self, job, email):
             waiit()
 
             try:
-                nav_list = WebDriverWait(browser, wait_timeout).until(lambda browser: browser.find_element_by_css_selector("ul.indentedleftnavlist"))
+                nav_list = WebDriverWait(browser, wait_timeout).until(lambda driver: browser.find_element_by_css_selector("ul.indentedleftnavlist"))
                 waiit()
                 spam_list = nav_list.find_elements_by_tag_name("li")[3]
                 waiit()
@@ -234,7 +235,7 @@ def report_hotmail(self, job, email):
                     WebDriverWait(browser, wait_timeout).until(ec.visibility_of_element_located((By.CSS_SELECTOR, 'li.FilterSelector')))
                     logger.error("Getting All Msgs checkbox")
                     waiit()
-                    chk_bx_bttn = WebDriverWait(browser, wait_timeout).until(lambda browser: browser.find_element_by_id('msgChkAll'))
+                    chk_bx_bttn = WebDriverWait(browser, wait_timeout).until(lambda driver: browser.find_element_by_id('msgChkAll'))
                     waiit()
                     logger.error("Select all Msgs")
                     chk_bx_bttn.click()
@@ -246,7 +247,7 @@ def report_hotmail(self, job, email):
                     logger.error("Clicking 'Not Spam' Button !")
                     WebDriverWait(browser, wait_timeout).until(ec.visibility_of_element_located((By.ID, 'MarkAsNotJunk')))
                     waiit()
-                    not_spam_btn = WebDriverWait(browser, wait_timeout).until(lambda browser: browser.find_element_by_id('MarkAsNotJunk'))
+                    not_spam_btn = WebDriverWait(browser, wait_timeout).until(lambda driver: browser.find_element_by_id('MarkAsNotJunk'))
                     waiit()
                     not_spam_btn.click()
                     try:
@@ -262,7 +263,7 @@ def report_hotmail(self, job, email):
                         still_results = False
                     except NoSuchElementException:
                         still_results = True
-                    logger.error("last page : %s" % str(not (still_results)))
+                    logger.error("last page : %s" % str(not still_results))
                     # endregion
 
                 except StaleElementReferenceException:
@@ -288,7 +289,7 @@ def report_hotmail(self, job, email):
             waiit()
 
             try:
-                nav_list = WebDriverWait(browser, wait_timeout).until(lambda browser: browser.find_element_by_css_selector("ul.indentedleftnavlist"))
+                nav_list = WebDriverWait(browser, wait_timeout).until(lambda driver: browser.find_element_by_css_selector("ul.indentedleftnavlist"))
                 waiit()
                 spam_list = nav_list.find_elements_by_tag_name("li")[3]
                 waiit()
@@ -314,7 +315,7 @@ def report_hotmail(self, job, email):
                     waiit()
                     logger.error("Getting Email List Group !")
                     WebDriverWait(browser, wait_timeout).until(ec.visibility_of_element_located((By.CSS_SELECTOR, 'ul.mailList')))
-                    email_list = WebDriverWait(browser, wait_timeout).until(lambda browser: browser.find_element_by_css_selector('ul.mailList'))
+                    email_list = WebDriverWait(browser, wait_timeout).until(lambda driver: browser.find_element_by_css_selector('ul.mailList'))
                     logger.error("Getting All Emails from Group")
                     waiit()
                     emails = email_list.find_elements_by_tag_name('li')
@@ -328,7 +329,7 @@ def report_hotmail(self, job, email):
                     # region Clicking SS button
                     waiit()
                     WebDriverWait(browser, wait_timeout).until(ec.visibility_of_element_located((By.CSS_SELECTOR, 'a.sfUnjunkItems')))
-                    safe_link = WebDriverWait(browser, wait_timeout).until(lambda browser: browser.find_element_by_css_selector('a.sfUnjunkItems'))
+                    safe_link = WebDriverWait(browser, wait_timeout).until(lambda driver: browser.find_element_by_css_selector('a.sfUnjunkItems'))
                     waiit()
                     logger.error("Marking Email as Safe")
                     safe_link.click()
@@ -343,7 +344,7 @@ def report_hotmail(self, job, email):
                         still_results = False
                     except NoSuchElementException:
                         still_results = True
-                    logger.error("last page : %s" % str(not (still_results)))
+                    logger.error("last page : %s" % str(not still_results))
                     # endregion
 
                 except StaleElementReferenceException:
@@ -394,7 +395,7 @@ def report_hotmail(self, job, email):
                     WebDriverWait(browser, wait_timeout).until(ec.visibility_of_element_located((By.CSS_SELECTOR, 'li.FilterSelector')))
                     logger.error("Getting All Msgs checkbox")
                     waiit()
-                    chk_bx_bttn = WebDriverWait(browser, wait_timeout).until(lambda browser: browser.find_element_by_id('msgChkAll'))
+                    chk_bx_bttn = WebDriverWait(browser, wait_timeout).until(lambda driver: browser.find_element_by_id('msgChkAll'))
                     waiit()
                     logger.error("Select all Msgs")
                     chk_bx_bttn.click()
@@ -404,7 +405,7 @@ def report_hotmail(self, job, email):
 
                     # region Clicking menu
                     logger.error("Getting Menu Button")
-                    menu_btn = WebDriverWait(browser, wait_timeout).until(lambda browser: browser.find_element_by_xpath('//*[@title="More commands"]'))
+                    menu_btn = WebDriverWait(browser, wait_timeout).until(lambda driver: browser.find_element_by_xpath('//*[@title="More commands"]'))
                     waiit()
                     logger.error("Click Menu")
                     WebDriverWait(browser, wait_timeout).until(ec.visibility_of_element_located((By.XPATH, '//*[@title="More commands"]')))
@@ -415,7 +416,7 @@ def report_hotmail(self, job, email):
 
                     # region Clicking MAR button
                     logger.error("Clicking Mark as Read Button")
-                    mar_btn = WebDriverWait(browser, wait_timeout).until(lambda browser: browser.find_element_by_id('MarkAsRead'))
+                    mar_btn = WebDriverWait(browser, wait_timeout).until(lambda driver: browser.find_element_by_id('MarkAsRead'))
                     waiit()
                     mar_btn.click()
                     try:
@@ -432,7 +433,7 @@ def report_hotmail(self, job, email):
                         still_results = False
                     except NoSuchElementException:
                         still_results = True
-                    logger.error("last page : %s" % str(not (still_results)))
+                    logger.error("last page : %s" % str(not still_results))
                     # endregion
 
                 except StaleElementReferenceException:
@@ -457,8 +458,7 @@ def report_hotmail(self, job, email):
             logger.error("- Getting result for Keyword : %s" % keyword)
             waiit()
 
-            keyword_link_flag = WebDriverWait(browser, wait_timeout).until(lambda browser: str(browser.current_url)[:str(browser.current_url).index('.com')] +\
-                                                                                           '.com/?fid=flsearch&srch=1&skws=' + keyword + '&sdr=4&satt=0')
+            keyword_link_flag = WebDriverWait(browser, wait_timeout).until(lambda driver: str(browser.current_url)[:str(browser.current_url).index('.com')] + '.com/?fid=flsearch&srch=1&skws=' + keyword + '&sdr=4&satt=0')
             browser.get(keyword_link_flag)
 
             try:
@@ -468,7 +468,7 @@ def report_hotmail(self, job, email):
                 logger.error("Skipping read SPAM actions!")
             except NoSuchElementException:
                 waiit()
-                next_page_disabled_flag = WebDriverWait(browser, wait_timeout).until(lambda browser: browser.find_element_by_css_selector('div.NextPageDisabled'))
+                next_page_disabled_flag = WebDriverWait(browser, wait_timeout).until(lambda driver: browser.find_element_by_css_selector('div.NextPageDisabled'))
                 last_page_flag = next_page_disabled_flag.is_displayed()
                 last_page_checked_flag = False
             # endregion
@@ -480,7 +480,7 @@ def report_hotmail(self, job, email):
                     # region Selecting alls messages
                     logger.error("Flaging Mails for this Page !")
                     waiit()
-                    messages_ul = WebDriverWait(browser, wait_timeout).until(lambda browser: browser.find_element_by_css_selector('ul.mailList'))
+                    messages_ul = WebDriverWait(browser, wait_timeout).until(lambda driver: browser.find_element_by_css_selector('ul.mailList'))
                     waiit()
                     messages = messages_ul.find_elements_by_tag_name('li')
                     # endregion
@@ -499,7 +499,7 @@ def report_hotmail(self, job, email):
 
                     # region Checking if it was the last page
                     last_page_checked_flag = last_page_flag if last_page_flag else False
-                    next_page_link = WebDriverWait(browser, wait_timeout).until(lambda browser: browser.find_element_by_id('nextPageLink'))
+                    next_page_link = WebDriverWait(browser, wait_timeout).until(lambda driver: browser.find_element_by_id('nextPageLink'))
                     if next_page_link.is_displayed():
                         logger.error("Accessing Next Page")
                         waiit()
@@ -538,8 +538,7 @@ def report_hotmail(self, job, email):
             logger.error("- Getting result for Keyword : %s" % keyword)
             waiit()
 
-            keyword_link_ac = WebDriverWait(browser, wait_timeout).until(lambda browser: str(browser.current_url)[:str(browser.current_url).index('.com')] +\
-                                                                                           '.com/?fid=flsearch&srch=1&skws=' + keyword + '&sdr=4&satt=0')
+            keyword_link_ac = WebDriverWait(browser, wait_timeout).until(lambda driver: str(browser.current_url)[:str(browser.current_url).index('.com')] + '.com/?fid=flsearch&srch=1&skws=' + keyword + '&sdr=4&satt=0')
             browser.get(keyword_link_ac)
 
             try:
@@ -550,7 +549,7 @@ def report_hotmail(self, job, email):
                 logger.error("Skipping Add Contact and/or Click Links actions!")
             except NoSuchElementException:
                 waiit()
-                next_page_disabled_ac = WebDriverWait(browser, wait_timeout).until(lambda browser: browser.find_element_by_css_selector('div.NextPageDisabled'))
+                next_page_disabled_ac = WebDriverWait(browser, wait_timeout).until(lambda driver: browser.find_element_by_css_selector('div.NextPageDisabled'))
                 last_page_ac = next_page_disabled_ac.is_displayed()
                 last_page_checked_ac = False
             # endregion
@@ -559,7 +558,7 @@ def report_hotmail(self, job, email):
             waiit()
             logger.error("Getting Email List Group !")
             WebDriverWait(browser, wait_timeout).until(ec.visibility_of_element_located((By.CSS_SELECTOR, 'ul.mailList')))
-            email_list = WebDriverWait(browser, wait_timeout).until(lambda browser: browser.find_element_by_css_selector('ul.mailList'))
+            email_list = WebDriverWait(browser, wait_timeout).until(lambda driver: browser.find_element_by_css_selector('ul.mailList'))
             logger.error("Getting All Emails from Group")
             waiit()
             emails = email_list.find_elements_by_tag_name('li')
@@ -627,7 +626,7 @@ def report_hotmail(self, job, email):
                         logger.error("Flag Mail Action :")
                         try:
                             logger.error("Getting Flag Mail")
-                            message_header = WebDriverWait(browser, wait_timeout).until(lambda browser: browser.find_elements_by_css_selector('div.MessageHeaderItem'))
+                            message_header = WebDriverWait(browser, wait_timeout).until(lambda driver: browser.find_elements_by_css_selector('div.MessageHeaderItem'))
                             waiit()
                             flag = message_header[3].find_element_by_css_selector('img.ia_i_p_1')
                             logger.error("Clicking Flag !")
@@ -648,7 +647,7 @@ def report_hotmail(self, job, email):
                         waiit()
                         logger.error("Clicking the Link Action :")
                         logger.error("Getting the Mail 'Body'")
-                        body1 = WebDriverWait(browser, wait_timeout).until(lambda browser: browser.find_element_by_css_selector('div.readMsgBody'))
+                        body1 = WebDriverWait(browser, wait_timeout).until(lambda driver: browser.find_element_by_css_selector('div.readMsgBody'))
                         body = body1.find_elements_by_tag_name('div')
                         try:
                             logger.error("Getting the Link in the Mail !")
@@ -666,7 +665,7 @@ def report_hotmail(self, job, email):
                                 lnk.click()
                                 time.sleep(1)
                                 logger.error("Link clicked !")
-                                WebDriverWait(browser, wait_timeout).until(lambda browser: len(browser.window_handles) > 0)
+                                WebDriverWait(browser, wait_timeout).until(lambda driver: len(browser.window_handles) > 0)
                                 logger.error("New Tab Opened !")
                                 waiit()
                                 logger.error("Switching to the new Tab !")
@@ -685,14 +684,23 @@ def report_hotmail(self, job, email):
                     # endregion
 
                     # region Checking if it was the last page
-                    logger.error("Getting the Next Button !")
-                    next_btn = WebDriverWait(browser, wait_timeout).until(lambda browser: browser.find_element_by_css_selector('a.rmNext').find_element_by_tag_name('img'))
+                    last_page_checked_ac = last_page_ac if last_page_ac else False
+                    next_btn = WebDriverWait(browser, wait_timeout).until(lambda driver: browser.find_element_by_css_selector('a.rmNext'))
                     waiit()
-                    next_btn_attributes = next_btn.get_attribute('class')
+                    next_btn_img = next_btn.find_element_by_tag_name('img')
                     waiit()
-                    last_msg = True if str(next_btn_attributes).endswith('_d') else False
+                    next_btn_attributes = next_btn_img.get_attribute('class')
                     waiit()
-                    # endregion
+                    last_page_ac = True if str(next_btn_attributes).endswith('_d') else False
+                    waiit()
+                    if not last_page_ac:
+                        logger.error("Getting Next MAIL !")
+                        bod = WebDriverWait(browser, wait_timeout).until(lambda driver: browser.find_elements_by_tag_name('body'))
+                        waiit()
+                        bod[0].send_keys(Keys.CONTROL + ';')
+                        time.sleep(1)  # TODO-CVC
+                        waiit()
+                        # endregion
 
                 except StaleElementReferenceException:
                     pass
