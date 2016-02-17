@@ -31,7 +31,6 @@ class JobView(generics.ListCreateAPIView):
             job.status = "RN"
             job.save()
             return Response(job_ser.data, status=status.HTTP_201_CREATED)
-
         return Response({
             'status' : 'Bad request',
             'message': 'Job could not be created with received data.'

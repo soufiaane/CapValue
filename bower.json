@@ -1,4 +1,4 @@
- {
+{
   "name": "Capvalue Consulting",
   "version": "1.0.0",
   "homepage": "https://github.com/soufiaane/capvalue",
@@ -26,6 +26,7 @@
     "angular-bootstrap": "0.14.3",
     "angular-multi-step-form": "1.2.7",
     "ng-dialog": "0.5.6",
-    "angular-spinners": "~3.1.2"
+    "angular-spinners": "~3.1.2",
+    "angular-socket-io": "^0.7.0"
   }
 }
