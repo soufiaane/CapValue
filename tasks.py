@@ -1,6 +1,7 @@
 # region Imports
 from __future__ import absolute_import
 from selenium.common.exceptions import NoSuchElementException, StaleElementReferenceException, TimeoutException
+from selenium.webdriver.common.action_chains import ActionChains
 from selenium.webdriver.support import expected_conditions as ec
 from selenium.webdriver.support.wait import WebDriverWait
 from selenium.webdriver.common.keys import Keys
@@ -13,6 +14,8 @@ import time
 # endregion
 
 # region Setup
+from ttt import inbox_url
+
 logger = get_task_logger(__name__)
 app = Celery('CapValue', broker='amqp://soufiaane:C@pV@lue2016@cvc.ma/cvcHost')
 
@@ -29,7 +32,7 @@ def report_hotmail(self, job, email):
     actions = str(job['actions'].split(',')).strip()
     keyword = job['keywords']
     logger.error('Job Started :')
-    logger.error('Actions: ' + job['actions'])
+    logger.error('Actions: %s\n' % job['actions'])
     chrome_options = webdriver.ChromeOptions()
     chrome_options.add_argument('--proxy-server=%s:%s' % (proxy, port))
     service_args = ['--proxy=%s:%s' % (proxy, port), '--proxy-type=http']
@@ -805,99 +808,124 @@ def report_hotmail(self, job, email):
             # region Spam Actions
 
             # region Mark Spam as read
-
-            if ('RS' in actions) and ('SS' not in actions):  #
-                # region Controllers Settings
+            if ('RS' in actions) and ('SS' not in actions):
                 logger.error("(*) Read SPAM Actions")
-                logger.error("- Getting SPAM Folder")
-                waiit()
+                logger.error("- Mark SPAM as read are disabled for new version of mailboxes !")
+                logger.error("- Skipping marking SPAM as read !\n")
+            # endregion
 
+            # region Mark as Not SPAM
+            if ('NS' in actions) and ('SS' not in actions):  # Not SPAM
+
+                # region Controllers Settings
+                logger.error("(*) Mark as not SPAM Actions")
+                waiit()
+                spam_link = str(browser.current_url)[:str(browser.current_url).index('.com')] + '.com/owa/#path=/mail/junkemail'
+                inbox_link = spam_link.replace("/junkemail", "/inbox")
+
+                # region Accessing SPAM folder
                 try:
+                    logger.error("- Getting SPAM folder")
                     waiit()
-                    spam_link = str(browser.current_url)[:str(browser.current_url).index('.com')] + '.com/owa/#path=/mail/junkemail'
                     logger.error("Accessink SPAM folder : %s" % spam_link)
                     browser.get(spam_link)
                     waiit()
                 except Exception as ex:
                     logger.error(" /!\ - Getting SPAM list Error")
                     logger.error(type(ex))
+                # endregion
 
+                # region Checking results
+                spam_count = 0
                 try:
                     waiit()
-                    browser.find_element_by_id("NoMsgs")
-                    last_page_checked = True
-                    logger.error("SPAM folder is empty !")
-                    logger.error("Skipping read SPAM actions!")
-                except NoSuchElementException:
-                    waiit()
-                    logger.error("getting email controller")
-                    emails_controller = WebDriverWait(browser, wait_timeout).until(lambda driver: browser.find_element_by_css_selector('div.scrollContainer'))
-                    logger.error("Done getting email controller")
-                    logger.error("getting email container")
-                    emails_container = emails_controller.find_element_by_tag_name("div").find_element_by_tag_name("div").find_elements_by_tag_name("div")[0]
-                    logger.error("Done getting email container")
-                    logger.error("getting Emails")
-                    emails =  emails_container.find_elements_by_tag_name("div")
-                    logger.error("Done getting Emails")
-                    logger.error("Found %s mails" % str(len(emails)))
-                    last_page = emails_container.is_displayed()
-                    last_page_checked = False
+                    logger.error("Getting spam Count")
+                    logger.error("Getting Junk span")
+                    junk_span = browser.find_element_by_xpath('//span[@title="Junk Email"]')
+                    logger.error("%s" % junk_span.text)
+                    spam_count = int(junk_span.find_element_by_xpath('../div[2]/span').text)
+                except ValueError:
+                    pass
+                except Exception as ex:
+                    logger.error(" /!\ - Getting SPAM Count Error")
+                    logger.error(type(ex))
+                    spam_count = 0
+                finally:
+                    logger.error("SPAM count is : %s" % str(spam_count))
+                # endregion
+
                 # endregion
 
                 # region looping through pages
-                while not last_page_checked:
+                while spam_count > 0:
                     try:
 
                         # region Selecting alls messages
                         logger.error("Marking SPAM as read for this page")
                         waiit()
-                        WebDriverWait(browser, wait_timeout).until(ec.visibility_of_element_located((By.CSS_SELECTOR, 'li.FilterSelector')))
+                        WebDriverWait(browser, wait_timeout).until(ec.presence_of_all_elements_located((By.XPATH, '//*[@id="primaryContainer"]/div[4]/div/div[1]/div[2]/div[5]/div[2]/div[1]/div/div/div[3]/button')))
                         logger.error("Getting All Msgs checkbox")
                         waiit()
-                        chk_bx_bttn = WebDriverWait(browser, wait_timeout).until(lambda driver: browser.find_element_by_id('msgChkAll'))
+                        chk_bx_bttn = WebDriverWait(browser, wait_timeout).until(lambda driver: browser.find_element_by_xpath('//*[@id="primaryContainer"]/div[4]/div/div[1]/div[2]/div[5]/div[2]/div[1]/div/div/div[3]'))
                         waiit()
                         logger.error("Select all Msgs")
-                        chk_bx_bttn.click()
+                        logger.error("Defining hover action")
+                        hover = ActionChains(browser).move_to_element(chk_bx_bttn)
+                        logger.error("Hover over the checkbox")
+                        hover.perform()
+                        logger.error("Hover Done")
+                        logger.error("Waiting for visibility")
+                        WebDriverWait(browser, wait_timeout).until(ec.visibility_of_element_located((By.XPATH, '//*[@id="primaryContainer"]/div[4]/div/div[1]/div[2]/div[5]/div[2]/div[1]/div/div/div[3]/button')))
+                        logger.error("Element is visible")
+                        logger.error("Clicking Checkbox")
+                        chk_bx_bttn.find_element_by_tag_name("button").click()
                         waiit()
-                        logger.error("CheckBox is clicked !")
-                        # endregion
-
-                        # region Clicking menu
-                        logger.error("Getting Menu Button")
-                        menu_btn = WebDriverWait(browser, wait_timeout).until(lambda driver: browser.find_element_by_xpath('//*[@title="More commands"]'))
-                        waiit()
-                        logger.error("Click Menu")
-                        WebDriverWait(browser, wait_timeout).until(ec.visibility_of_element_located((By.XPATH, '//*[@title="More commands"]')))
-                        waiit()
-                        menu_btn.click()
-                        WebDriverWait(browser, wait_timeout).until(ec.visibility_of_element_located((By.ID, 'MarkAsRead')))
                         # endregion
 
                         # region Clicking MAR button
-                        logger.error("Clicking Mark as Read Button")
-                        mar_btn = WebDriverWait(browser, wait_timeout).until(lambda driver: browser.find_element_by_id('MarkAsRead'))
-                        waiit()
-                        mar_btn.click()
                         try:
-                            WebDriverWait(browser, wait_timeout).until(ec.visibility_of_element_located((By.CSS_SELECTOR, 'div.c_h_flyingDots')))
-                            WebDriverWait(browser, wait_timeout).until(ec.invisibility_of_element_located((By.CSS_SELECTOR, 'div.c_h_flyingDots')))
+                            logger.error("Clicking Mark as not SPAM Button")
+                            # WebDriverWait(browser, wait_timeout).until(ec.visibility_of_element_located((By.XPATH, '//button[@title="Move a message that isn\'t Junk to the Inbox"]')))
+                            logger.error("Getting MANS button")
+                            mans_btn = WebDriverWait(browser, wait_timeout).until(lambda driver: browser.find_element_by_xpath('//button[@title="Move a message that isn\'t Junk to the Inbox"]'))
+                            waiit()
+                            logger.error("Waiting for MANS button")
+                            WebDriverWait(browser, wait_timeout).until(ec.visibility_of_element_located((By.XPATH, '//button[@title="Move a message that isn\'t Junk to the Inbox"]')))
+                            logger.error("Clicking MANS button")
+                            mans_btn.click()
+                            logger.error("Mark as not SPAM Button is Clicked")
+                            logger.error("Waiting for action to be performed")
+                            WebDriverWait(browser, wait_timeout).until(lambda driver: browser.find_element_by_xpath('//*[@id="primaryContainer"]/div[4]/div/div[1]/div[2]/div[5]/div[2]/div[1]/div/div/div[3]/div/div[2]/div[1]/span').text == "Junk Email")
+                            logger.error("Sending ESC key")
+                            ActionChains(browser).send_keys(Keys.ESCAPE).perform()
+                            logger.error("Waiting for invisibility of element !")
+                            WebDriverWait(browser, wait_timeout).until(ec.invisibility_of_element_located((By.XPATH, '//*[@title="More commands"]')))
                         except TimeoutException:
                             pass
                         logger.error("Done !")
                         # endregion
 
                         # region Checking if it was the last page
-                        last_page_checked = last_page if last_page else False
-                        next_page_link = WebDriverWait(browser, wait_timeout).until(lambda driver: browser.find_element_by_id('nextPageLink'))
-                        if next_page_link.is_displayed():
-                            logger.error("Accessing Next Page")
+                        try:
                             waiit()
-                            next_page_link.click()
+                            logger.error("Getting spam Count")
+                            logger.error("Getting Junk span")
+                            junk_span = browser.find_element_by_xpath('//span[@title="Junk Email"]')
+                            logger.error("%s" % junk_span.text)
+                            spam_count = int(junk_span.find_element_by_xpath('../div[2]/span').text)
+                        except ValueError:
+                            pass
+                        except Exception as ex:
+                            logger.error(" /!\ - Getting SPAM Count Error")
+                            logger.error(type(ex))
+                            spam_count = 0
+                        finally:
+                            logger.error("New SPAM count is : %s" % str(spam_count))
+                            browser.get(inbox_url)
                             waiit()
-                            WebDriverWait(browser, wait_timeout).until(ec.invisibility_of_element_located((By.CSS_SELECTOR, 'div.SelPrompt')))
-                        next_page_disabled = browser.find_element_by_css_selector('div.NextPageDisabled')
-                        last_page = next_page_disabled.is_displayed()
-                        # endregion
+                            browser.get(spam_link)
+                            waiit()
+                            # endregion
 
                     except StaleElementReferenceException:
                         pass
@@ -910,13 +938,9 @@ def report_hotmail(self, job, email):
                         break
                 # endregion
 
-                logger.error("- Done marking SPAM as read !\n")
+                logger.error("- Done marking as not SPAM !")
 
-            logger.error("")
-            # endregion
-
-            # region Mark as Not SPAM
-            # TODO-CVC
+            logger.error("\n")
             # endregion
 
             # region Mark SPAM as Safe
