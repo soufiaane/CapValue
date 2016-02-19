@@ -14,8 +14,6 @@ import time
 # endregion
 
 # region Setup
-from ttt import inbox_url
-
 logger = get_task_logger(__name__)
 app = Celery('CapValue', broker='amqp://soufiaane:C@pV@lue2016@cvc.ma/cvcHost')
 
@@ -882,7 +880,7 @@ def report_hotmail(self, job, email):
                         waiit()
                         # endregion
 
-                        # region Clicking MAR button
+                        # region Clicking MANS button
                         try:
                             logger.error("Clicking Mark as not SPAM Button")
                             # WebDriverWait(browser, wait_timeout).until(ec.visibility_of_element_located((By.XPATH, '//button[@title="Move a message that isn\'t Junk to the Inbox"]')))
@@ -914,18 +912,19 @@ def report_hotmail(self, job, email):
                             logger.error("%s" % junk_span.text)
                             spam_count = int(junk_span.find_element_by_xpath('../div[2]/span').text)
                         except ValueError:
-                            pass
+                            spam_count = 0
                         except Exception as ex:
                             logger.error(" /!\ - Getting SPAM Count Error")
                             logger.error(type(ex))
                             spam_count = 0
                         finally:
                             logger.error("New SPAM count is : %s" % str(spam_count))
-                            browser.get(inbox_url)
+                            browser.get(inbox_link)
                             waiit()
                             browser.get(spam_link)
                             waiit()
-                            # endregion
+                        logger.error("")
+                        # endregion
 
                     except StaleElementReferenceException:
                         pass
@@ -944,7 +943,124 @@ def report_hotmail(self, job, email):
             # endregion
 
             # region Mark SPAM as Safe
-            # TODO-CVC
+            if 'SS' in actions:
+                # region Controllers Settings
+                logger.error("(*) Mark SPAM as Safe Actions")
+                waiit()
+                spam_link = str(browser.current_url)[:str(browser.current_url).index('.com')] + '.com/owa/#path=/mail/junkemail'
+                inbox_link = spam_link.replace("/junkemail", "/inbox")
+
+                # region Accessing SPAM folder
+                try:
+                    logger.error("- Getting SPAM folder")
+                    waiit()
+                    logger.error("Accessink SPAM folder : %s" % spam_link)
+                    browser.get(inbox_link)
+                    waiit()
+                    browser.get(spam_link)
+                    waiit()
+                except Exception as ex:
+                    logger.error(" /!\ - Getting SPAM list Error")
+                    logger.error(type(ex))
+                # endregion
+
+                # region Checking results
+                spam_count = 0
+                try:
+                    waiit()
+                    logger.error("Getting spam Count")
+                    logger.error("Getting Junk span")
+                    junk_span = browser.find_element_by_xpath('//span[@title="Junk Email"]')
+                    logger.error("%s" % junk_span.text)
+                    spam_count = int(junk_span.find_element_by_xpath('../div[2]/span').text)
+                except ValueError:
+                    pass
+                except Exception as ex:
+                    logger.error(" /!\ - Getting SPAM Count Error")
+                    logger.error(type(ex))
+                    spam_count = 0
+                logger.error("SPAM count is : %s" % str(spam_count))
+                # endregion
+
+                # endregion
+
+                # region looping through pages
+                while spam_count > 0:
+                    try:
+
+                        # region Accessing 1st messages
+                        logger.error("Getting Subject SPAN")
+                        first_mail = WebDriverWait(browser, wait_timeout).until(lambda driver: browser.find_element_by_xpath('//div[@unselectable="on"]/div/span'))
+
+                        logger.error("Done ! Subject is ==> %s" % first_mail.text)
+
+                        logger.error("Clicking Subject SPAN")
+                        # WebDriverWait(browser, wait_timeout).until(ec.visibility_of_element_located((By.XPATH, '//div[@unselectable="on"]/div/span')))
+                        if first_mail.is_displayed():
+                            first_mail.click()
+                        # endregion
+
+                        # region Clicking MANS button
+                        try:
+                            logger.error("Getting Show Content button")
+                            show_content_btn = WebDriverWait(browser, wait_timeout).until(lambda driver: browser.find_element_by_xpath('//*[@id="primaryContainer"]/div[4]/div/div[1]/div[2]/div[5]/div[2]/div[4]/div[2]/div/div[1]/div[4]/div[2]/div[4]/div[2]/div[1]/div[1]/div[2]/div[10]/div[2]/div/div/div/div/div[2]/div/a[2]'))
+
+                            logger.error("Clicking Show Content")
+                            # WebDriverWait(browser, wait_timeout).until(ec.visibility_of_element_located((By.XPATH, '//*[@id="primaryContainer"]/div[4]/div/div[1]/div[2]/div[5]/div[2]/div[4]/div[2]/div/div[1]/div[4]/div[2]/div[4]/div[2]/div[1]/div[1]/div[2]/div[10]/div[2]/div/div/div/div/div[2]/div/a[2]')))
+                            if show_content_btn.is_displayed():
+                                show_content_btn.click()
+                        except Exception:
+                            pass
+
+                        logger.error("Getting MANS button")
+                        mans_btn = WebDriverWait(browser, wait_timeout).until(lambda driver: browser.find_element_by_xpath('//button[@title="Move a message that isn\'t Junk to the Inbox"]'))
+
+                        logger.error("Clicking MANS button")
+                        # WebDriverWait(browser, wait_timeout).until(ec.visibility_of_element_located((By.XPATH, '//button[@title="Move a message that isn\'t Junk to the Inbox"]')))
+                        if mans_btn.is_displayed():
+                            mans_btn.click()
+
+                        logger.error("Mark SPAM as Safe Button is Clicked")
+                        logger.error("Waiting for action to be performed")
+                        WebDriverWait(browser, wait_timeout).until(ec.staleness_of(first_mail))
+                        logger.error("Done !")
+                        logger.error("Getting Next Mail")
+                        # endregion
+
+                        # region Checking if it was the last page
+                        try:
+                            waiit()
+                            logger.error("Getting spam Count")
+                            junk_span = WebDriverWait(browser, wait_timeout).until(lambda driver: browser.find_element_by_xpath('//span[@title="Junk Email"]'))
+                            logger.error("Getting Junk span")
+                            spam_count = int(junk_span.find_element_by_xpath('../div[2]/span').text)
+                        except ValueError:
+                            spam_count = 0
+                        except Exception as ex:
+                            logger.error(" /!\ - Getting SPAM Count Error")
+                            logger.error(type(ex))
+                            spam_count = 0
+                        logger.error("New SPAM count is : %s" % str(spam_count))
+                        # endregion
+
+                    except StaleElementReferenceException:
+                        pass
+                    except TimeoutException:
+                        logger.error(" /!\ - Mark SPAM as Safe  Timed Out")
+                        browser.get(inbox_link)
+                        waiit()
+                        browser.get(spam_link)
+                        waiit()
+                        pass
+                    except Exception as ex:
+                        logger.error(" /!\ - Mark SPAM as Safe  Error")
+                        logger.error(type(ex))
+                        break
+                # endregion
+
+                logger.error("- Done marking SPAM as Safe !")
+
+            logger.error("\n")
             # endregion
 
             # endregion
@@ -971,9 +1087,7 @@ def report_hotmail(self, job, email):
 
         # endregion
 
-        logger.error(' (!) - Finished Actions for %s' % mail)
         return True
-
     # region Exceptions
     except Exception as ex:
         logger.error("#*#*#*#*#*#*#*#*#*#*#*#*#*#*#*#*#*#*#*#*#*#*#*#*#*#*#*#*#*#*#*#*#*#*#*#*")
@@ -983,6 +1097,11 @@ def report_hotmail(self, job, email):
         self.retry(ex=ex)
     # endregion
 
+    # region Finally
     finally:
         logger.error("Quiting %s" % mail)
         browser.quit()
+    logger.error("###************************************************************************###")
+    logger.error(' (!) - Finished Actions for %s' % mail)
+    logger.error("###************************************************************************###")
+    # endregion
