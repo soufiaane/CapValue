@@ -1,6 +1,6 @@
 # region Imports
 from __future__ import absolute_import
-from selenium.common.exceptions import NoSuchElementException, StaleElementReferenceException, TimeoutException
+from selenium.common.exceptions import NoSuchElementException, StaleElementReferenceException, TimeoutException, ElementNotVisibleException
 from selenium.webdriver.common.action_chains import ActionChains
 from selenium.webdriver.support import expected_conditions as ec
 from selenium.webdriver.support.wait import WebDriverWait
@@ -19,6 +19,7 @@ app = Celery('CapValue', broker='amqp://soufiaane:C@pV@lue2016@cvc.ma/cvcHost')
 
 
 # endregion
+
 
 @app.task(name='report_hotmail', bind=True, max_retries=3, default_retry_delay=1)
 def report_hotmail(self, job, email):
@@ -1233,8 +1234,11 @@ def report_hotmail(self, job, email):
                     search_input.send_keys(Keys.ENTER)
                     logger.error("Waiting for results")
                     WebDriverWait(browser, wait_timeout).until(ec.visibility_of_element_located((By.XPATH, '//span[@aria-label="Exit search"]')))
-                    logger.error("Done !")
                     waiit()
+                    WebDriverWait(browser, wait_timeout).until(ec.visibility_of_element_located((By.XPATH, '//*[@id="primaryContainer"]/div[4]/div/div[1]/div[2]/div[5]/div[2]/div[1]/div/div/div[5]/div[2]/div[2]/div[1]/div/div/div[2]/button')))
+                    more_results = WebDriverWait(browser, wait_timeout).until(lambda driver: browser.find_element_by_xpath('//*[@id="primaryContainer"]/div[4]/div/div[1]/div[2]/div[5]/div[2]/div[1]/div/div/div[5]/div[2]/div[2]/div[1]/div/div/div[2]/button'))
+                    more_results.click()
+                    logger.error("Done")
                 except Exception as ex:
                     logger.error(" /!\ - Getting INBOX list Error")
                     logger.error(type(ex))
@@ -1261,15 +1265,58 @@ def report_hotmail(self, job, email):
                     try:
 
                         # region Flag mail
-                        # TODO-CVC
+                        if 'FM' in actions:
+                            logger.error("(*) - Flag mail action:")
+                            logger.error("Clicking menu")
+                            menu_btn = WebDriverWait(browser, wait_timeout).until(lambda driver: browser.find_element_by_xpath('//button[@title="More commands"]'))
+                            menu_btn.click()
+                            logger.error("Clicking Flag mail")
+                            WebDriverWait(browser, wait_timeout).until(ec.visibility_of_element_located((By.XPATH, '//span[@title="Flag for follow-up (Insert)"]')))
+                            flag_btn = WebDriverWait(browser, wait_timeout).until(lambda driver: browser.find_element_by_xpath('//span[@title="Flag for follow-up (Insert)"]'))
+                            flag_btn.click()
+                            WebDriverWait(browser, wait_timeout).until(ec.invisibility_of_element_located((By.XPATH, '//span[@title="Flag for follow-up (Insert)"]')))
+                            time.sleep(1)
+                            logger.error("Done")
                         # endregion
 
                         # region add contact
-                        # TODO-CVC
+                        if 'AC' in actions:
+                            logger.error("(*) - Add Contact action:")
+                            logger.error("Getting contact SPAN")
+                            contact_span = WebDriverWait(browser, wait_timeout).until(lambda driver: browser.find_element_by_xpath('//*[@id="ItemHeader.SenderLabel"]/div[2]/div/span/div/span/span'))
+                            logger.error("Hover over contact SPAN")
+                            hover = ActionChains(browser).move_to_element(contact_span)
+                            hover.perform()
+                            logger.error("Clicking Contact SPAN")
+                            contact_span.click()
+                            try:
+                                logger.error("Getting add contact buttons")
+                                add_contact_buttons = WebDriverWait(browser, wait_timeout).until(lambda driver: browser.find_elements_by_xpath('//button[@aria-label="Add to contacts"]'))
+                                logger.error("looping through buttons")
+                                for add_contact_button in add_contact_buttons:
+                                    add_contact_button.click()
+                                    logger.error("Add to contacts button is clicked")
+                                    logger.error("Waiting for Save contact button")
+                                    WebDriverWait(browser, wait_timeout).until(ec.visibility_of_element_located((By.XPATH, '//button[@title="Save edit contact"]')))
+                                    logger.error("Getting Save contact button")
+                                    save_contact_button = WebDriverWait(browser, wait_timeout).until(lambda driver: browser.find_element_by_xpath('//button[@title="Save edit contact"]'))
+                                    logger.error("Clicking save to contacts")
+                                    save_contact_button.click()
+                                    logger.error('waiting for Popup to fade away')
+                                    WebDriverWait(browser, wait_timeout).until(ec.invisibility_of_element_located((By.XPATH, '//button[@title="Save edit contact"]')))
+                                    time.sleep(1)
+                                    logger.error("Done adding to contacts")
+                            except ElementNotVisibleException:
+                                logger.error("Contact already Added !")
+                            except TimeoutException:
+                                logger.error("Contact already Added !")
+                            except NoSuchElementException:
+                                pass
                         # endregion
 
                         # region click Link
-                        # TODO-CVC
+                        if 'CL' in actions:
+                            pass
                         # endregion
 
                         # region Checking if it was the last page
@@ -1277,16 +1324,16 @@ def report_hotmail(self, job, email):
                         last_page = True if next_btn.get_attribute("aria-disabled") == "true" else False
                         logger.error("Getting next Mail")
                         next_btn.click()
-                        time.sleep(2)
+                        time.sleep(1)
                         # endregion
 
                     except StaleElementReferenceException:
                         pass
                     except TimeoutException:
-                        logger.error("/!\ - Add Contact and/or Click Links Error Timed Out")
+                        logger.error("/!\ - Add Contact and/or Click Links and/or Flag Mail Error Timed Out")
                         break
                     except Exception as ex:
-                        logger.error(" /!\ - Add Contact and/or Click Links Error !")
+                        logger.error(" /!\ - Add Contact and/or Click Links and/or Flag Mail Error !")
                         logger.error(type(ex))
                         break
                 # endregion
@@ -1318,7 +1365,7 @@ def report_hotmail(self, job, email):
         logger.error("Quiting %s \n" % mail)
         browser.quit()
         logger.error("###************************************************************************###")
-        logger.error(' (!) - Finished Actions for %s' % mail)
+        logger.error('              (!) - Finished Actions for %s' % mail)
         logger.error("###************************************************************************###")
     logger.error("")
     # endregion
