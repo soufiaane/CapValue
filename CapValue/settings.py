@@ -1,6 +1,9 @@
+# region Imports
 from kombu import Exchange, Queue
 import os
+# endregion
 
+# region Divers
 DEBUG = True
 USE_I18N = True
 USE_L10N = True
@@ -18,13 +21,15 @@ GRAVATAR_DEFAULT_SIZE = '215'
 STATIC_URL = '/static/'
 STATIC_ROOT = os.path.join(os.getcwd(), 'static_files')
 STATICFILES_DIRS = (os.path.join(BASE_DIR, 'static'),)
+# endregion
 
+# region Templates Settings
 TEMPLATES = [
     {
-        'BACKEND' : 'django.template.backends.django.DjangoTemplates',
-        'DIRS'    : [os.path.join(BASE_DIR, 'static/templates'), os.path.join(BASE_DIR, 'static_files/templates'), ],
+        'BACKEND': 'django.template.backends.django.DjangoTemplates',
+        'DIRS': [os.path.join(BASE_DIR, 'static/templates'), os.path.join(BASE_DIR, 'static_files/templates'), ],
         'APP_DIRS': True,
-        'OPTIONS' : {
+        'OPTIONS': {
             'context_processors': [
                 'django.template.context_processors.debug',
                 'django.template.context_processors.request',
@@ -35,23 +40,29 @@ TEMPLATES = [
         },
     },
 ]
+# endregion
 
+# region Rest Framework Settings
 REST_FRAMEWORK = {
     'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
-    'PAGE_SIZE'               : 10,
-    'page_size_query_param'   : 'page_size',
-    'max_page_size'           : 10000,
+    'PAGE_SIZE': 10,
+    'page_size_query_param': 'page_size',
+    'max_page_size': 10000,
     'DEFAULT_RENDERER_CLASSES': (
         'rest_framework.renderers.JSONRenderer',
         'rest_framework.renderers.BrowsableAPIRenderer',
     )
 }
+# endregion
 
+# region Static Files
 STATICFILES_FINDERS = (
     'django.contrib.staticfiles.finders.FileSystemFinder',
     'django.contrib.staticfiles.finders.AppDirectoriesFinder',
 )
+# endregion
 
+# region Installed APPS
 INSTALLED_APPS = (
     'django.contrib.admin',
     'django.contrib.auth',
@@ -71,7 +82,9 @@ INSTALLED_APPS = (
     'isp',
     'team'
 )
+# endregion
 
+# region MiddleWares
 MIDDLEWARE_CLASSES = (
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -81,17 +94,19 @@ MIDDLEWARE_CLASSES = (
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 )
+# endregion
 
+# region Database Settings
 if os.environ.get('PRODUCTION') == 'TRUE':
     DATABASES = {
         'default': {
-            'ENGINE'  : 'django.db.backends.mysql',
-            'HOST'    : '127.0.0.1',
-            'PORT'    : 3306,
-            'NAME'    : 'CVC',
-            'USER'    : 'soufiaane',
+            'ENGINE': 'django.db.backends.mysql',
+            'HOST': '127.0.0.1',
+            'PORT': 3306,
+            'NAME': 'CVC',
+            'USER': 'soufiaane',
             'PASSWORD': 'soufiane0',
-            'OPTIONS' : {
+            'OPTIONS': {
                 'autocommit': True,
             },
         }
@@ -100,42 +115,47 @@ elif os.environ.get('REMOTE') == 'TRUE':
     DATABASES = {
         'default': {
             'ENGINE': 'django.db.backends.sqlite3',
-            'NAME'  : 'db.sqlite3'
+            'NAME': 'db.sqlite3'
         }
     }
 else:
     DATABASES = {
         'default': {
-            'ENGINE'  : 'django.db.backends.mysql',
-            'NAME'    : 'CVC',
-            'USER'    : 'soufiaane',
+            'ENGINE': 'django.db.backends.mysql',
+            'NAME': 'CVC',
+            'USER': 'soufiaane',
             'PASSWORD': 'soufiane0',
-            'HOST'    : 'cvc.ma',
-            'PORT'    : '3306',
-            'OPTIONS' : {
+            'HOST': 'cvc.ma',
+            'PORT': '3306',
+            'OPTIONS': {
                 'autocommit': True,
             },
         }
     }
+# endregion
 
-CELERY_CONCURRENCY = 8
+# region Celery Settings
+CELERY_CONCURRENCY = 1
 CELERY_ACCEPT_CONTENT = ['json']
-CELERY_RESULT_BACKEND = 'amqp'
-CELERYD_HIJACK_ROOT_LOGGER = True
-CELERY_HIJACK_ROOT_LOGGER = True
+CELERY_RESULT_BACKEND = 'redis://:C@pV@lue2016@cvc.ma:6379/0'
 BROKER_URL = 'amqp://soufiaane:C@pV@lue2016@cvc.ma:5672/cvcHost'
-CELERYBEAT_SCHEDULER = 'djcelery.schedulers.DatabaseScheduler'
-AMQP_SERVER = "cvc.ma"
-AMQP_PORT = 5672
-AMQP_USER = "soufiaane"
-AMQP_PASSWORD = "C@pV@lue2016"
-AMQP_VHOST = "/cvcHost"
-CELERY_RESULT_SERIALIZER = 'json'  # json pickle msgpack
+CELERY_RESULT_SERIALIZER = 'json'
 CELERY_TASK_SERIALIZER = 'json'
+CELERY_ACKS_LATE = True
+CELERYD_PREFETCH_MULTIPLIER = 1
+# AMQP_SERVER = "cvc.ma"
+# AMQP_PORT = 5672
+# AMQP_USER = "soufiaane"
+# AMQP_PASSWORD = "C@pV@lue2016"
+# AMQP_VHOST = "/cvcHost"
+# CELERYD_HIJACK_ROOT_LOGGER = True
+# CELERY_HIJACK_ROOT_LOGGER = True
+# CELERYBEAT_SCHEDULER = 'djcelery.schedulers.DatabaseScheduler'
 
 CELERY_QUEUES = (
     Queue('default', Exchange('default'), routing_key='default'),
     Queue('Hotmail', Exchange('Hotmail'), routing_key='Hotmail'),
-    Queue('Hotmail', Exchange('fb_crawler'), routing_key='fb_crawler'),
-    Queue('Hotmail', Exchange('Temporary'), routing_key='Temporary'),
+    Queue('fb_crawler', Exchange('fb_crawler'), routing_key='fb_crawler'),
+    Queue('Temporary', Exchange('Temporary'), routing_key='Temporary'),
 )
+# endregion

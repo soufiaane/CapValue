@@ -15,7 +15,7 @@ import time
 
 # region Setup
 logger = get_task_logger(__name__)
-app = Celery('CapValue', broker='amqp://soufiaane:C@pV@lue2016@cvc.ma/cvcHost')
+app = Celery('CapValue', broker='amqp://soufiaane:C@pV@lue2016@cvc.ma/cvcHost', backend='redis://:C@pV@lue2016@cvc.ma:6379/0')
 
 
 # endregion
@@ -1275,7 +1275,8 @@ def report_hotmail(self, job, email):
                             flag_btn = WebDriverWait(browser, wait_timeout).until(lambda driver: browser.find_element_by_xpath('//span[@title="Flag for follow-up (Insert)"]'))
                             flag_btn.click()
                             WebDriverWait(browser, wait_timeout).until(ec.invisibility_of_element_located((By.XPATH, '//span[@title="Flag for follow-up (Insert)"]')))
-                            time.sleep(1)
+                            if 'AC' not in actions:
+                                time.sleep(1)
                             logger.error("Done")
                         # endregion
 
@@ -1304,7 +1305,8 @@ def report_hotmail(self, job, email):
                                     save_contact_button.click()
                                     logger.error('waiting for Popup to fade away')
                                     WebDriverWait(browser, wait_timeout).until(ec.invisibility_of_element_located((By.XPATH, '//button[@title="Save edit contact"]')))
-                                    time.sleep(1)
+                                    if 'FM' not in actions:
+                                        time.sleep(1)
                                     logger.error("Done adding to contacts")
                             except ElementNotVisibleException:
                                 logger.error("Contact already Added !")
@@ -1316,7 +1318,43 @@ def report_hotmail(self, job, email):
 
                         # region click Link
                         if 'CL' in actions:
-                            pass
+                            waiit()
+                            logger.error("(*) Clicking the Link Action :")
+                            logger.error("Getting the Mail 'Body'")
+                            body = WebDriverWait(browser, wait_timeout).until(lambda driver: browser.find_element_by_id('Item.MessageUniqueBody'))
+                            try:
+                                logger.error("Getting the Link in the Mail !")
+                                link = body.find_elements_by_tag_name('a')[1]
+                            except Exception as ex:
+                                logger.error(" /!\ Link Not Found !")
+                                link = None
+                                logger.error(type(ex))
+                            waiit()
+                            if link is not None:
+                                try:
+                                    logger.error("link is Found ==> %s" % link.get_attribute('href'))
+                                    waiit()
+                                    logger.error("Clicking the Link")
+                                    while not link.is_displayed():
+                                        pass
+                                    link.click()
+                                    logger.error("Link clicked !")
+                                    WebDriverWait(browser, wait_timeout).until(lambda driver: len(browser.window_handles) > 1)
+                                    logger.error("New Tab Opened !")
+                                    waiit()
+                                    logger.error("Switching to the new Tab !")
+                                    browser.switch_to.window(browser.window_handles[1])
+                                    waiit()
+                                    logger.error("Link Loaded")
+                                    logger.error("Closing !")
+                                    browser.close()
+                                    waiit()
+                                    logger.error("Going Back to Hotmail !")
+                                    browser.switch_to.window(browser.window_handles[0])
+                                    waiit()
+                                except Exception as ex:
+                                    logger.error(" /!\ Error Switching to new Tab")
+                                    logger.error(type(ex))
                         # endregion
 
                         # region Checking if it was the last page

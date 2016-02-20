@@ -9,7 +9,10 @@ def reportTask(self, link):
 
 @app.task(name='report_hotmail', bind=True, max_retries=3, default_retry_delay=1)
 def report_hotmail(self, job, email):
-    pass
+    try:
+        print("x")
+    except Exception:
+        self.retry(ex=ex)
 
 
 @app.task(name='smtp_yahoo', bind=True, max_retries=5)
