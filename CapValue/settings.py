@@ -1,5 +1,5 @@
 # region Imports
-from kombu import Exchange, Queue
+from kombu import Exchange, Queue, erialization
 import os
 # endregion
 
@@ -21,6 +21,7 @@ GRAVATAR_DEFAULT_SIZE = '215'
 STATIC_URL = '/static/'
 STATIC_ROOT = os.path.join(os.getcwd(), 'static_files')
 STATICFILES_DIRS = (os.path.join(BASE_DIR, 'static'),)
+serialization.registry._decoders.pop("application/x-python-serialize")
 # endregion
 
 # region Templates Settings

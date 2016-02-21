@@ -17,6 +17,8 @@ import time
 logger = get_task_logger(__name__)
 app = Celery('CapValue', broker='amqp://soufiaane:C@pV@lue2016@cvc.ma/cvcHost', backend='redis://:C@pV@lue2016@cvc.ma:6379/0')
 
+app.conf.update(CELERY_ACCEPT_CONTENT = ['json'])
+
 
 # endregion
 
