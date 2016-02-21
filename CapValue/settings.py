@@ -1,5 +1,5 @@
 # region Imports
-from kombu import Exchange, Queue, erialization
+from kombu import Exchange, Queue, serialization
 import os
 # endregion
 
@@ -138,20 +138,29 @@ else:
 # region Celery Settings
 CELERY_CONCURRENCY = 1
 CELERY_ACCEPT_CONTENT = ['json']
-CELERY_RESULT_BACKEND = 'redis://:C@pV@lue2016@cvc.ma:6379/0'
+# CELERY_RESULT_BACKEND = 'redis://:C@pV@lue2016@cvc.ma:6379/0'
 BROKER_URL = 'amqp://soufiaane:C@pV@lue2016@cvc.ma:5672/cvcHost'
 CELERY_RESULT_SERIALIZER = 'json'
 CELERY_TASK_SERIALIZER = 'json'
 CELERY_ACKS_LATE = True
 CELERYD_PREFETCH_MULTIPLIER = 1
-# AMQP_SERVER = "cvc.ma"
-# AMQP_PORT = 5672
-# AMQP_USER = "soufiaane"
-# AMQP_PASSWORD = "C@pV@lue2016"
-# AMQP_VHOST = "/cvcHost"
-# CELERYD_HIJACK_ROOT_LOGGER = True
-# CELERY_HIJACK_ROOT_LOGGER = True
-# CELERYBEAT_SCHEDULER = 'djcelery.schedulers.DatabaseScheduler'
+
+CELERY_REDIS_HOST = 'cvc.ma'
+CELERY_REDIS_PORT = 6379
+CELERY_REDIS_DB = 0
+CELERY_RESULT_BACKEND = 'redis'
+CELERY_RESULT_PASSWORD = "C@pV@lue2016"
+REDIS_CONNECT_RETRY = True
+
+AMQP_SERVER = "cvc.ma"
+AMQP_PORT = 5672
+AMQP_USER = "soufiaane"
+AMQP_PASSWORD = "C@pV@lue2016"
+AMQP_VHOST = "/cvcHost"
+CELERYD_HIJACK_ROOT_LOGGER = True
+CELERY_HIJACK_ROOT_LOGGER = True
+CELERYBEAT_SCHEDULER = 'djcelery.schedulers.DatabaseScheduler'
+# endregion
 
 CELERY_QUEUES = (
     Queue('default', Exchange('default'), routing_key='default'),
@@ -159,4 +168,3 @@ CELERY_QUEUES = (
     Queue('fb_crawler', Exchange('fb_crawler'), routing_key='fb_crawler'),
     Queue('Temporary', Exchange('Temporary'), routing_key='Temporary'),
 )
-# endregion
