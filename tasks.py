@@ -292,8 +292,7 @@ def report_hotmail(self, job, email):
                             logger.info("(!) Last page !")
                         except NoSuchElementException:
                             still_results = True
-                        time.sleep(0)  # TODO-CVC remove
-                        # endregion
+                            # endregion
 
                     except StaleElementReferenceException:
                         pass
@@ -471,8 +470,7 @@ def report_hotmail(self, job, email):
                             logger.info("(!) Last page !")
                         except NoSuchElementException:
                             still_results = True
-                        time.sleep(1)  # TODO-CVC
-                        # endregion
+                            # endregion
 
                     except StaleElementReferenceException:
                         pass
@@ -754,14 +752,10 @@ def report_hotmail(self, job, email):
                 # endregion
 
                 logger.info("(!) Done Add Contact / Click Links / Flag Mail\n")
-            # endregion
+                # endregion
+                # endregion
 
-            time.sleep(0)  # TODO-CVC remove
-
-            # endregion
-
-            # ***********************************************************************
-
+                # ***********************************************************************
         # endregion
 
         # ***********************************************************************
@@ -935,8 +929,7 @@ def report_hotmail(self, job, email):
                             waiit()
                             browser.get(spam_link)
                             waiit()
-                        time.sleep(0)  # TODO-CVC remvove
-                        # endregion
+                            # endregion
 
                     except StaleElementReferenceException:
                         pass
@@ -950,7 +943,6 @@ def report_hotmail(self, job, email):
                 # endregion
 
                 logger.info("(!) Done marking as not SPAM\n")
-            time.sleep(0)  # TODO-CVC remove
             # endregion
 
             # region Mark SPAM as Safe
@@ -1068,7 +1060,6 @@ def report_hotmail(self, job, email):
                 # endregion
 
                 logger.info("(!) Done marking SPAM as Safe !\n")
-            time.sleep(0)  # TODO-CVC remove
             # endregion
 
             # endregion
@@ -1214,7 +1205,6 @@ def report_hotmail(self, job, email):
                 # endregion
                 logger.info("(!) Done marking as not SPAM !\n")
 
-            time.sleep(0)  # TODO-CVC remove
             # endregion
 
             # region Add contact Inbox / click Links / Flag Mail
@@ -1391,12 +1381,11 @@ def report_hotmail(self, job, email):
                 logger.info("(!) Done Add Contact / Click Links / Flag Mail\n")
                 # endregion
 
-            time.sleep(0)  # TODO-CVC remove
-            # endregion
+                # endregion
 
-            # endregion
+                # endregion
 
-            # ***********************************************************************
+                # ***********************************************************************
         # endregion
 
         return True
@@ -1415,5 +1404,4 @@ def report_hotmail(self, job, email):
         logger.info('              (!) - Finished Actions for %s - (!)' % mail)
         logger.info("###************************************************************************###")
         browser.quit()
-    time.sleep(0)  # TODO-CVC remove
-    # endregion
+        # endregion
