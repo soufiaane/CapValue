@@ -1,26 +1,33 @@
 # region Imports
 from kombu import Exchange, Queue, serialization
 import os
+import dj_database_url
 # endregion
 
 # region Divers
-DEBUG = True
+DEBUG = False
+TEMPLATE_DEBUG = DEBUG
+STATIC_URL = '/static/'
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+STATIC_ROOT = os.path.join(os.getcwd(), 'static_files')
+STATICFILES_DIRS = (os.path.join(BASE_DIR, 'static'),)
+
+
 USE_I18N = True
 USE_L10N = True
 USE_TZ = True
 LANGUAGE_CODE = 'en-us'
 TIME_ZONE = 'UTC'
 ROOT_URLCONF = 'CapValue.urls'
-BASE_DIR = os.path.dirname(os.path.dirname(__file__))
+
 WSGI_APPLICATION = 'CapValue.wsgi.application'
 SECRET_KEY = 'u@nup3l^ofar)mja-h6khvar^%))*$9^j%9q-9hg0#(3xyel=k'
 ALLOWED_HOSTS = ['*']
 AUTH_USER_MODEL = 'authentication.Account'
 GRAVATAR_DEFAULT_IMAGE = 'identicon'
 GRAVATAR_DEFAULT_SIZE = '215'
-STATIC_URL = '/static/'
-STATIC_ROOT = os.path.join(os.getcwd(), 'static_files')
-STATICFILES_DIRS = (os.path.join(BASE_DIR, 'static'),)
+
+
 serialization.registry._decoders.pop("application/x-python-serialize")
 ROLEPERMISSIONS_MODULE = 'CapValue.roles'
 # endregion
@@ -135,6 +142,9 @@ else:
             },
         }
     }
+    # Update database configuration with $DATABASE_URL.
+db_from_env = dj_database_url.config(conn_max_age=500)
+DATABASES['default'].update(db_from_env)
 # endregion
 
 # region Celery Settings
@@ -170,3 +180,4 @@ CELERY_QUEUES = (
     Queue('fb_crawler', Exchange('fb_crawler'), routing_key='fb_crawler'),
     Queue('Temporary', Exchange('Temporary'), routing_key='Temporary'),
 )
+STATICFILES_STORAGE = 'whitenoise.django.GzipManifestStaticFilesStorage'
