@@ -15,8 +15,8 @@ class AccountTests(TestCase):
 
         """
 
-        admin = Account.objects.latest('created_at')
+        admin = None
 
         # Il n'y a pas besoin de remplir tous les champs, ni de sauvegarder
 
-        self.assertEqual(admin.first_name, False)
+        self.assertIsNone(admin)
