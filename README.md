@@ -2,6 +2,8 @@
 [![Travis CI](https://travis-ci.org/soufiaane/CapValue.svg)](https://travis-ci.org/soufiaane/CapValue)
 [![Circle CI](https://circleci.com/gh/soufiaane/CapValue.svg?style=shield)] (https://circleci.com/gh/soufiaane/CapValue)
 [![Code Climate](https://codeclimate.com/github/soufiaane/CapValue.png)](https://codeclimate.com/github/soufiaane/CapValue)
+[![Coverage Status](https://coveralls.io/repos/github/soufiaane/CapValue/badge.svg)](https://coveralls.io/github/soufiaane/CapValue)
+
 
 ------------------------------------------
 Requirements
