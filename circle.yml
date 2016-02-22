@@ -4,8 +4,3 @@ machine:
   hosts:
     cvc.ma: 127.0.0.1
     www.cvc.ma: 127.0.0.1
-
-## Customize test commands
-test:
-  override:
-    - python purge.py # use PHPunit for testing
