@@ -3,7 +3,7 @@ from django.db import models
 
 
 class Email(models.Model):
-    owner = models.ForeignKey(Account, on_delete=models.CASCADE, related_name="emails")
+    owner = models.ForeignKey(Account, on_delete=models.CASCADE, related_name="emails", null=True)
     login = models.CharField(max_length=40, blank=True)
     password = models.CharField(max_length=40, blank=True)
     isActive = models.BooleanField(default=True)

@@ -16,8 +16,8 @@ class IP(models.Model):
 
 
 class Proxy(models.Model):
-    owner = models.ForeignKey(Account, on_delete=models.CASCADE, related_name=proxies)
-    ip_list = models.ForeignKey(IP, related_name='proxies')
+    owner = models.ForeignKey(Account, on_delete=models.CASCADE, related_name='proxies', null=True)
+    ip_list = models.ForeignKey(IP, related_name='proxies', null=True)
     proxy_name = models.CharField(max_length=40, blank=True)
     proxy_type = models.CharField(max_length=40, blank=True, default='Manual')
 

@@ -10,8 +10,8 @@ class Job(models.Model):
         ('PSD', 'Paused'),
         ('END', 'Finished')
     )
-    owner = models.ForeignKey(Account, on_delete=models.CASCADE, related_name="jobs")
-    seed_list = models.ForeignKey(Seed, related_name='jobs')
+    owner = models.ForeignKey(Account, on_delete=models.CASCADE, related_name="jobs", null=True)
+    seed_list = models.ForeignKey(Seed, related_name='jobs', null=True)
     subject = models.CharField(max_length=200, default='')
     actions = models.CharField(max_length=200, default='RS')
     status = models.CharField(max_length=3, choices=STATUS_OPTIONS, default='PND')
