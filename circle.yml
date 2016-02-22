@@ -1,3 +1,11 @@
 machine:
-    python:
-        version: 3.4.2
+  python:
+    version: 3.4.2
+  hosts:
+    cvc.ma: 127.0.0.1
+    www.cvc.ma: 127.0.0.1
+
+## Customize test commands
+test:
+  override:
+    - python purge.py # use PHPunit for testing
