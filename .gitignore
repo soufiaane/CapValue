@@ -1,3 +1,5 @@
+/phantomjs.exe
+/chromedriver.exe
 /celerybeat*
 /db.sqlite3
 __pycache__/
