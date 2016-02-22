@@ -1,10 +1,12 @@
 # CapValue
-[![Build Status](https://travis-ci.org/soufiaane/CapValue.svg?branch=master)](https://travis-ci.org/soufiaane/CapValue)
-python version =3.4.4 x64
+==========
+[![Travis CI](https://travis-ci.org/soufiaane/CapValue.svg?branch=master)](https://travis-ci.org/soufiaane/CapValue)
+[![Circle CI](https://circleci.com/gh/soufiaane/CapValue.svg?style=svg)] (https://circleci.com/gh/soufiaane/CapValue)
 
 ------------------------------------------
 Requirements
 ------------------------------------------
+python version =3.4.4 x64<br><br><br>
 Django==1.7.1 <br>
 djangorestframework==3.0.0<br>
 django_compressor==1.4<br>
