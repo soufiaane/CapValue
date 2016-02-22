@@ -4,10 +4,10 @@ from django.db import models
 
 class ISP(models.Model):
     isp_name = models.CharField(max_length=40, blank=True)
-    members = models.ManyToManyField(Account, related_name='isp')
+    members = models.ForeignKey(Account, related_name='isp')
     logo = models.CharField(max_length=40, blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
-    def __unicode__(self):
-        return '{0}'.format(self.team_name)
+    def __str__(self):
+        return '%s' % isp_name

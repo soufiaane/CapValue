@@ -11,18 +11,18 @@ class IP(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
-    def __unicode__(self):
-        return '{0}'.format(self.ip_address)
+    def __str__(self):
+        return '%s,%s' % ip_address, ip_port
 
 
 class Proxy(models.Model):
-    user = models.ForeignKey(Account, on_delete=models.CASCADE)
-    ip_list = models.ManyToManyField(IP, related_name='proxies')
+    owner = models.ForeignKey(Account, on_delete=models.CASCADE, related_name=proxies)
+    ip_list = models.ForeignKey(IP, related_name='proxies')
     proxy_name = models.CharField(max_length=40, blank=True)
     proxy_type = models.CharField(max_length=40, blank=True, default='Manual')
 
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
-    def __unicode__(self):
-        return '{0}'.format(self.proxy_name)
+    def __str__(self):
+        return '%s' % proxy_name

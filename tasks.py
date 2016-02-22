@@ -14,12 +14,10 @@ import time
 
 # endregion
 
+
 # region Setup
 logger = get_task_logger(__name__)
 app = Celery('CapValue', broker='amqp://soufiaane:C@pV@lue2016@cvc.ma/cvcHost', backend='redis://:C@pV@lue2016@cvc.ma:6379/0')
-app.conf.update(CELERY_ACCEPT_CONTENT=['json'])
-
-
 # endregion
 
 
@@ -38,18 +36,12 @@ def report_hotmail(self, job, email):
     chrome_options.add_argument('--proxy-server=%s:%s' % (proxy, port))
     service_args = ['--proxy=%s:%s' % (proxy, port), '--proxy-type=http']
     print(service_args)
+    # TODO-CVC Detect Mailbox language to optimize Timeout Exceptions !!
+    # TODO-CVC Job option for browser
 
-    user_agent = (
-        "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_8_4) " +
-        "AppleWebKit/537.36 (KHTML, like Gecko) Chrome/29.0.1547.57 Safari/537.36"
-    )
-
-    dcap = dict(DesiredCapabilities.PHANTOMJS)
-    logger.debug("User Agent ==> %s" % dcap["phantomjs.page.settings.userAgent"])
-    dcap["phantomjs.page.settings.userAgent"] = user_agent
-    browser = webdriver.PhantomJS(executable_path="phantomjs.exe", desired_capabilities=dcap)
-
-    # browser = webdriver.Chrome(executable_path="chromedriver")
+    user_agent = "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_8_4) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/29.0.1547.57 Safari/537.36"
+    webdriver.DesiredCapabilities.PHANTOMJS["phantomjs.page.settings.userAgent"] = user_agent
+    browser = webdriver.Chrome(executable_path="chromedriver")
     # browser = webdriver.PhantomJS(executable_path="phantomjs.exe")
     # browser = webdriver.PhantomJS(executable_path="phantomjs.exe", service_args=service_args)
     # browser = webdriver.Chrome(executable_path="chromedriver", chrome_options=chrome_options)
@@ -748,7 +740,7 @@ def report_hotmail(self, job, email):
                             logger.info("(!) Getting next e-mail ...")
                             bod = WebDriverWait(browser, wait_timeout).until(lambda driver: browser.find_elements_by_tag_name('body'))
                             waiit()
-                            bod[0].send_keys(Keys.CONTROL + '.')
+                            bod[0].send_keys(Keys.CONTROL + Keys.DECIMAL)
                             waiit()
                         time.sleep(1)
                         # endregion
@@ -1224,6 +1216,8 @@ def report_hotmail(self, job, email):
             if ('AC' in actions) or ('CL' in actions) or ('FM' in actions):
 
                 # region Controllers Settings
+                spam_link = str(browser.current_url)[:str(browser.current_url).index('.com')] + '.com/owa/#path=/mail/junkemail'
+                inbox_link = spam_link.replace("/junkemail", "/inbox")
                 logger.info("(*) Add Contact / Click Links / Flag Mail Actions: ")
                 browser.get(spam_link)
                 waiit()

@@ -32,6 +32,7 @@ class Account(AbstractBaseUser):
     first_name = models.CharField(max_length=40, blank=True)
     last_name = models.CharField(max_length=40, blank=True)
     profile_picture = models.CharField(max_length=256, blank=True, default=get_gravatar_url('mgh.soufiane@cvc.ma'))
+
     role = models.CharField(max_length=256, blank=True, default='Mailer')
     is_admin = models.BooleanField(default=False)
     created_at = models.DateTimeField(auto_now_add=True)
@@ -40,7 +41,7 @@ class Account(AbstractBaseUser):
 
     USERNAME_FIELD = 'username'
 
-    def __unicode__(self):
+    def __str__(self):
         return self.username
 
     def get_full_name(self):
