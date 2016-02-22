@@ -22,6 +22,7 @@ STATIC_URL = '/static/'
 STATIC_ROOT = os.path.join(os.getcwd(), 'static_files')
 STATICFILES_DIRS = (os.path.join(BASE_DIR, 'static'),)
 serialization.registry._decoders.pop("application/x-python-serialize")
+ROLEPERMISSIONS_MODULE = 'CapValue.roles'
 # endregion
 
 # region Templates Settings
@@ -74,6 +75,7 @@ INSTALLED_APPS = (
     'django_extensions',
     'rest_framework',
     'django_gravatar',
+    'rolepermissions',
     'authentication',
     'djcelery',
     'job',

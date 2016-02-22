@@ -12,5 +12,5 @@ class Team(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
-    def __unicode__(self):
-        return '{0}'.format(self.team_name)
+    def __str__(self):
+        return '%s' % team_name
