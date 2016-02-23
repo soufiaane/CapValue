@@ -166,26 +166,13 @@ class Prod(Configuration):
     # endregion
 
     # region Static Files
-    BASE_DIR = os.path.dirname(os.path.abspath(__file__))
-    STATICFILES_FINDERS = (
-        'django.contrib.staticfiles.finders.FileSystemFinder',
-        'django.contrib.staticfiles.finders.AppDirectoriesFinder',
-    )
-    TEMPLATES = [{'BACKEND': 'django.template.backends.django.DjangoTemplates', 'DIRS': [os.path.join(BASE_DIR, 'static/templates'), ], 'APP_DIRS': True, 'OPTIONS': {'context_processors': ['django.template.context_processors.debug', 'django.template.context_processors.request', 'django.contrib.auth.context_processors.auth', 'django.contrib.messages.context_processors.messages', ], }, }, ]
-
-    PROJECT_ROOT = os.path.dirname(os.path.abspath(__file__))
-
-    # Static files (CSS, JavaScript, Images)
-    # https://docs.djangoproject.com/en/1.9/howto/static-files/
+    PROJECT_ROOT = BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+    STATICFILES_FINDERS = ('django.contrib.staticfiles.finders.FileSystemFinder', 'django.contrib.staticfiles.finders.AppDirectoriesFinder',)
     STATIC_ROOT = os.path.join(os.getcwd(), 'staticfiles')
     STATIC_URL = '/static/'
-
-    # Extra places for collectstatic to find static files.
-    STATICFILES_DIRS = (
-        os.path.join(PROJECT_ROOT, 'static'),
-    )
+    STATICFILES_DIRS = (os.path.join(PROJECT_ROOT, 'static'),)
     STATICFILES_STORAGE = 'whitenoise.django.GzipManifestStaticFilesStorage'
-
+    TEMPLATES = [{'BACKEND': 'django.template.backends.django.DjangoTemplates', 'DIRS': [os.path.join(STATIC_ROOT, 'templates'), ], 'APP_DIRS': True, 'OPTIONS': {'context_processors': ['django.template.context_processors.debug', 'django.template.context_processors.request', 'django.contrib.auth.context_processors.auth', 'django.contrib.messages.context_processors.messages', ], }, }, ]
     # endregion
 
     # region Celery Settings
