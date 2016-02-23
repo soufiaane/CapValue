@@ -6,7 +6,6 @@ env:
 install:
   - pip install -r requirements/test.txt
 script:
-  - flake8 scraper  --exclude=*/migrations/*,*test*
   - coverage run --source='./' --omit=*/migrations/*,*test* manage.py test
 after_success:
   - coveralls
