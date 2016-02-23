@@ -14,3 +14,4 @@ CapValue/env.py
 staticfiles
 .env
 /static_files/*
+.coverage
