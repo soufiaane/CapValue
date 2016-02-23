@@ -10,6 +10,6 @@ machine:
 
 deployment:
   staging:
-  branch: master
-  heroku:
-    appname: agile-journey-87664
+    branch: master
+    heroku:
+      appname: agile-journey-87664
