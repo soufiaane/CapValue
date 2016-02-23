@@ -4,6 +4,7 @@ machine:
   hosts:
     cvc.ma: 127.0.0.1
     www.cvc.ma: 127.0.0.1
+
 deployment:
   staging:
     branch: master

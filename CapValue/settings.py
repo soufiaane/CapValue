@@ -74,7 +74,6 @@ INSTALLED_APPS = (
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'django_extensions',
-    'flexisettings',
     'rest_framework',
     'django_gravatar',
     'rolepermissions',
@@ -175,7 +174,7 @@ class Test(Configuration):
 class Prod(Configuration):
     DEBUG = False
     TEMPLATE_DEBUG = DEBUG
-    SECRET_KEY = 'u@nup3l^ofar)mja-h6khvar^%))*$9^j%9q-9hg0#(3xyel=k'
+    SECRET_KEY = os.environ['SECRET_KEY']
 
     DATABASES = {'default': {}}
     db_from_env = dj_database_url.config(conn_max_age=500)
