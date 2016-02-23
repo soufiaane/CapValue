@@ -1,7 +1,8 @@
-from kombu import Exchange, Queue, serialization
-from configurations import Configuration
-import dj_database_url
 import os
+
+import dj_database_url
+from configurations import Configuration
+from kombu import Exchange, Queue, serialization
 
 
 class Dev(Configuration):
@@ -106,12 +107,6 @@ class Dev(Configuration):
     # endregion
 
 
-class Test(Configuration):
-    DEBUG = True
-    SECRET_KEY = os.environ['SECRET_KEY']
-    DATABASES = {'default': {'ENGINE': 'django.db.backends.sqlite3', 'NAME': 'db.sqlite3'}}
-
-
 class Prod(Configuration):
     DEBUG = False
     SECRET_KEY = os.environ['SECRET_KEY']
@@ -172,8 +167,9 @@ class Prod(Configuration):
     # endregion
 
     # region Static Files
-    BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+    STATICFILES_STORAGE = 'whitenoise.django.GzipManifestStaticFilesStorage'
     PROJECT_ROOT = os.path.dirname(os.path.abspath(__file__))
+    BASE_DIR = os.path.dirname(os.path.abspath(__file__))
     STATIC_ROOT = os.path.join(os.getcwd(), 'static_files')
     STATICFILES_DIRS = (os.path.join(BASE_DIR, 'static'),)
     STATIC_URL = '/static/'
@@ -181,7 +177,6 @@ class Prod(Configuration):
         'django.contrib.staticfiles.finders.FileSystemFinder',
         'django.contrib.staticfiles.finders.AppDirectoriesFinder',
     )
-    STATICFILES_STORAGE = 'whitenoise.django.GzipManifestStaticFilesStorage'
     TEMPLATES = [{'BACKEND': 'django.template.backends.django.DjangoTemplates', 'DIRS': [os.path.join(BASE_DIR, 'static/templates'), ], 'APP_DIRS': True, 'OPTIONS': {'context_processors': ['django.template.context_processors.debug', 'django.template.context_processors.request', 'django.contrib.auth.context_processors.auth', 'django.contrib.messages.context_processors.messages', ], }, }, ]
     # endregion
 
@@ -218,3 +213,9 @@ class Prod(Configuration):
         Queue('Temporary', Exchange('Temporary'), routing_key='Temporary'),
     )
     # endregion
+
+
+class Test(Configuration):
+    DEBUG = True
+    SECRET_KEY = os.environ['SECRET_KEY']
+    DATABASES = {'default': {'ENGINE': 'django.db.backends.sqlite3', 'NAME': 'db.sqlite3'}}
