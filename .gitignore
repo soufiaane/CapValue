@@ -7,3 +7,9 @@ ghostdriver.log
 /static/django_extensions
 /static/djcelery
 /static/rest_framework
+__pycache__/
+.idea/
+/celerybeat*
+/db.sqlite3
+/tasks.py
+/purge.py
