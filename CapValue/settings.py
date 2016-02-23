@@ -21,7 +21,6 @@ TIME_ZONE = 'UTC'
 ROOT_URLCONF = 'CapValue.urls'
 
 WSGI_APPLICATION = 'CapValue.wsgi.application'
-SECRET_KEY = 'u@nup3l^ofar)mja-h6khvar^%))*$9^j%9q-9hg0#(3xyel=k'
 ALLOWED_HOSTS = ['*']
 AUTH_USER_MODEL = 'authentication.Account'
 GRAVATAR_DEFAULT_IMAGE = 'identicon'
