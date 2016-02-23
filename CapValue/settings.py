@@ -40,7 +40,7 @@ ALLOWED_HOSTS = ['*']
 AUTH_USER_MODEL = 'authentication.Account'
 GRAVATAR_DEFAULT_IMAGE = 'identicon'
 GRAVATAR_DEFAULT_SIZE = '215'
-serialization.registry.decoders.pop("application/x-python-serialize")
+serialization.registry._decoders.pop("application/x-python-serialize")
 ROLEPERMISSIONS_MODULE = 'CapValue.roles'
 # endregion
 
