@@ -62,7 +62,7 @@ class Dev(Configuration):
     STATICFILES_STORAGE = 'whitenoise.django.GzipManifestStaticFilesStorage'
     PROJECT_ROOT = os.path.dirname(os.path.abspath(__file__))
     BASE_DIR = os.path.dirname(os.path.abspath(__file__))
-    STATIC_ROOT = os.path.join(os.getcwd(), 'static_files')
+    STATIC_ROOT = os.path.join(os.getcwd(), 'staticfiles')
     STATICFILES_DIRS = ('static',)
     STATIC_URL = '/static/'
     STATICFILES_FINDERS = (

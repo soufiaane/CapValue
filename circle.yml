@@ -12,4 +12,4 @@ deployment:
   staging:
     branch: master
     heroku:
-      appname: agile-journey-87664
+      appname: rocky-river-27939
