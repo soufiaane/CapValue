@@ -11,7 +11,6 @@ STATIC_URL = '/static/'
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 STATIC_ROOT = os.path.join(os.getcwd(), 'static_files')
 STATICFILES_DIRS = (os.path.join(BASE_DIR, 'static'),)
-SECRET_KEY = 'u@nup3l^ofar)mja-h6khvar^%))*$9^j%9q-9hg0#(3xyel=k'
 USE_I18N = True
 USE_L10N = True
 USE_TZ = True
@@ -143,6 +142,7 @@ STATICFILES_STORAGE = 'whitenoise.django.GzipManifestStaticFilesStorage'
 class Dev(Configuration):
     DEBUG = True
     TEMPLATE_DEBUG = DEBUG
+    SECRET_KEY = 'u@nup3l^ofar)mja-h6khvar^%))*$9^j%9q-9hg0#(3xyel=k'
 
     DATABASES = {
         'default': {
@@ -162,6 +162,7 @@ class Dev(Configuration):
 class Test(Configuration):
     DEBUG = True
     TEMPLATE_DEBUG = DEBUG
+    SECRET_KEY = 'u@nup3l^ofar)mja-h6khvar^%))*$9^j%9q-9hg0#(3xyel=k'
 
     DATABASES = {
         'default': {
@@ -174,6 +175,7 @@ class Test(Configuration):
 class Prod(Configuration):
     DEBUG = False
     TEMPLATE_DEBUG = DEBUG
+    SECRET_KEY = 'u@nup3l^ofar)mja-h6khvar^%))*$9^j%9q-9hg0#(3xyel=k'
 
     DATABASES = {'default': {}}
     db_from_env = dj_database_url.config(conn_max_age=500)
