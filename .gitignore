@@ -2,11 +2,6 @@
 /chromedriver.exe
 ghostdriver.log
 */migrations
-/static/libs
-/static/admin
-/static/django_extensions
-/static/djcelery
-/static/rest_framework
 __pycache__/
 .idea/
 /celerybeat*
