@@ -115,7 +115,6 @@ class Prod(Configuration):
     DATABASES['default'].update(db_from_env)
     REST_FRAMEWORK = {'UNAUTHENTICATED_USER': None, 'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination', 'PAGE_SIZE': 10, 'page_size_query_param': 'page_size', 'max_page_size': 10000, 'DEFAULT_RENDERER_CLASSES': ('rest_framework.renderers.JSONRenderer', 'rest_framework.renderers.BrowsableAPIRenderer',)}
 
-
     # region Installed Apps
     INSTALLED_APPS = (
         'django.contrib.admin',
@@ -137,7 +136,7 @@ class Prod(Configuration):
         'isp',
         'team'
     )
-    #endregion
+    # endregion
 
     # region MiddleWares
     MIDDLEWARE_CLASSES = (
