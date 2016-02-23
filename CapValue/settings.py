@@ -90,6 +90,7 @@ TEMPLATES = [
 
 # region Rest Framework Settings
 REST_FRAMEWORK = {
+    'UNAUTHENTICATED_USER': None,
     'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
     'PAGE_SIZE'               : 10,
     'page_size_query_param'   : 'page_size',
