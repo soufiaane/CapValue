@@ -9,7 +9,8 @@
 ------------------------------------------
 Requirements
 ------------------------------------------
-python version =3.4.4 x64<br><br><br>
+python version =3.5.1 x64<br>
+----------------
 Django==1.7.1 <br>
 djangorestframework==3.0.0<br>
 django_compressor==1.4<br>
