@@ -1,9 +1,9 @@
 language: python
 python:
-  - "3.5.0"
+  - "3.4"
 env:
-  - DJANGO_CONFIGURATION='Test'
   - SECRET_KEY='u@nup3l^ofar)mja-h6khvar^%))*$9^j%9q-9hg0#(3xyel=k'
+  - DJANGO_CONFIGURATION='Test'
 # command to install dependencies
 install: "pip install -r requirements/test.txt"
 # command to run tests
