@@ -9,7 +9,7 @@ import os
 class Dev(Configuration):
     DEBUG = True
     TEMPLATE_DEBUG = DEBUG
-    SECRET_KEY = os.environ['SECRET_KEY']
+
 
     DATABASES = {
         'default': {
@@ -29,7 +29,6 @@ class Dev(Configuration):
 class Test(Configuration):
     DEBUG = True
     TEMPLATE_DEBUG = DEBUG
-    SECRET_KEY = os.environ['SECRET_KEY']
 
     DATABASES = {
         'default': {
@@ -42,7 +41,6 @@ class Test(Configuration):
 class Prod(Configuration):
     DEBUG = False
     TEMPLATE_DEBUG = DEBUG
-    SECRET_KEY = os.environ['SECRET_KEY']
 
     DATABASES = {'default': {}}
     db_from_env = dj_database_url.config(conn_max_age=500)
@@ -51,6 +49,7 @@ class Prod(Configuration):
 
 # region Divers
 STATIC_URL = '/static/'
+SECRET_KEY = os.environ['SECRET_KEY']
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 STATIC_ROOT = os.path.join(os.getcwd(), 'static_files')
 STATICFILES_DIRS = (os.path.join(BASE_DIR, 'static'),)
