@@ -1,3 +1,6 @@
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
+
 from authentication.models import Account
 from django.test import TestCase
 
