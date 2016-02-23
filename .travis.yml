@@ -4,7 +4,6 @@ python:
 env:
   - SECRET_KEY='u@nup3l^ofar)mja-h6khvar^%))*$9^j%9q-9hg0#(3xyel=k' DJANGO_CONFIGURATION='Test' DJANGO=1.9 DJANGO_VERSION_MIN=1.9 DJANGO_VERSION_MAX=1.9
 install:
-  - pip install -q coverage
   - pip install -r requirements/test.txt
 script:
   - flake8 scraper  --exclude=*/migrations/*,*test*
