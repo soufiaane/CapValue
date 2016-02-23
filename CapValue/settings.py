@@ -1,32 +1,28 @@
 # region Imports
 from kombu import Exchange, Queue, serialization
-import os
+from configurations import Configuration
 import dj_database_url
+import os
+
 # endregion
 
 # region Divers
-DEBUG = False
-TEMPLATE_DEBUG = DEBUG
 STATIC_URL = '/static/'
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 STATIC_ROOT = os.path.join(os.getcwd(), 'static_files')
 STATICFILES_DIRS = (os.path.join(BASE_DIR, 'static'),)
-
-
+SECRET_KEY = 'u@nup3l^ofar)mja-h6khvar^%))*$9^j%9q-9hg0#(3xyel=k'
 USE_I18N = True
 USE_L10N = True
 USE_TZ = True
 LANGUAGE_CODE = 'en-us'
 TIME_ZONE = 'UTC'
 ROOT_URLCONF = 'CapValue.urls'
-
 WSGI_APPLICATION = 'CapValue.wsgi.application'
 ALLOWED_HOSTS = ['*']
 AUTH_USER_MODEL = 'authentication.Account'
 GRAVATAR_DEFAULT_IMAGE = 'identicon'
 GRAVATAR_DEFAULT_SIZE = '215'
-
-
 serialization.registry._decoders.pop("application/x-python-serialize")
 ROLEPERMISSIONS_MODULE = 'CapValue.roles'
 # endregion
@@ -34,10 +30,10 @@ ROLEPERMISSIONS_MODULE = 'CapValue.roles'
 # region Templates Settings
 TEMPLATES = [
     {
-        'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [os.path.join(BASE_DIR, 'static/templates'), os.path.join(BASE_DIR, 'static_files/templates'), ],
+        'BACKEND' : 'django.template.backends.django.DjangoTemplates',
+        'DIRS'    : [os.path.join(BASE_DIR, 'static/templates'), ],
         'APP_DIRS': True,
-        'OPTIONS': {
+        'OPTIONS' : {
             'context_processors': [
                 'django.template.context_processors.debug',
                 'django.template.context_processors.request',
@@ -53,9 +49,9 @@ TEMPLATES = [
 # region Rest Framework Settings
 REST_FRAMEWORK = {
     'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
-    'PAGE_SIZE': 10,
-    'page_size_query_param': 'page_size',
-    'max_page_size': 10000,
+    'PAGE_SIZE'               : 10,
+    'page_size_query_param'   : 'page_size',
+    'max_page_size'           : 10000,
     'DEFAULT_RENDERER_CLASSES': (
         'rest_framework.renderers.JSONRenderer',
         'rest_framework.renderers.BrowsableAPIRenderer',
@@ -79,6 +75,7 @@ INSTALLED_APPS = (
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'django_extensions',
+    'flexisettings',
     'rest_framework',
     'django_gravatar',
     'rolepermissions',
@@ -103,47 +100,6 @@ MIDDLEWARE_CLASSES = (
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 )
-# endregion
-
-# region Database Settings
-if os.environ.get('PRODUCTION') == 'TRUE':
-    DATABASES = {
-        'default': {
-            'ENGINE': 'django.db.backends.mysql',
-            'HOST': '127.0.0.1',
-            'PORT': 3306,
-            'NAME': 'CVC',
-            'USER': 'soufiaane',
-            'PASSWORD': 'soufiane0',
-            'OPTIONS': {
-                'autocommit': True,
-            },
-        }
-    }
-elif os.environ.get('REMOTE') == 'TRUE':
-    DATABASES = {
-        'default': {
-            'ENGINE': 'django.db.backends.sqlite3',
-            'NAME': 'db.sqlite3'
-        }
-    }
-else:
-    DATABASES = {
-        'default': {
-            'ENGINE': 'django.db.backends.mysql',
-            'NAME': 'CVC',
-            'USER': 'soufiaane',
-            'PASSWORD': 'soufiane0',
-            'HOST': 'cvc.ma',
-            'PORT': '3306',
-            'OPTIONS': {
-                'autocommit': True,
-            },
-        }
-    }
-    # Update database configuration with $DATABASE_URL.
-db_from_env = dj_database_url.config(conn_max_age=500)
-DATABASES['default'].update(db_from_env)
 # endregion
 
 # region Celery Settings
@@ -171,7 +127,6 @@ AMQP_VHOST = "/cvcHost"
 CELERYD_HIJACK_ROOT_LOGGER = True
 CELERY_HIJACK_ROOT_LOGGER = True
 CELERYBEAT_SCHEDULER = 'djcelery.schedulers.DatabaseScheduler'
-# endregion
 
 CELERY_QUEUES = (
     Queue('default', Exchange('default'), routing_key='default'),
@@ -180,3 +135,46 @@ CELERY_QUEUES = (
     Queue('Temporary', Exchange('Temporary'), routing_key='Temporary'),
 )
 STATICFILES_STORAGE = 'whitenoise.django.GzipManifestStaticFilesStorage'
+
+
+# endregion
+
+
+class Dev(Configuration):
+    DEBUG = True
+    TEMPLATE_DEBUG = DEBUG
+
+    DATABASES = {
+        'default': {
+            'ENGINE'  : 'django.db.backends.mysql',
+            'NAME'    : 'CVC',
+            'USER'    : 'soufiaane',
+            'PASSWORD': 'soufiane0',
+            'HOST'    : 'cvc.ma',
+            'PORT'    : '3306',
+            'OPTIONS' : {
+                'autocommit': True,
+            },
+        }
+    }
+
+
+class Test(Configuration):
+    DEBUG = True
+    TEMPLATE_DEBUG = DEBUG
+
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.sqlite3',
+            'NAME'  : 'db.sqlite3'
+        }
+    }
+
+
+class Prod(Configuration):
+    DEBUG = False
+    TEMPLATE_DEBUG = DEBUG
+
+    DATABASES = {'default': {}}
+    db_from_env = dj_database_url.config(conn_max_age=500)
+    DATABASES['default'].update(db_from_env)
