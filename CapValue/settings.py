@@ -141,7 +141,7 @@ STATICFILES_STORAGE = 'whitenoise.django.GzipManifestStaticFilesStorage'
 class Dev(Configuration):
     DEBUG = True
     TEMPLATE_DEBUG = DEBUG
-    SECRET_KEY = 'u@nup3l^ofar)mja-h6khvar^%))*$9^j%9q-9hg0#(3xyel=k'
+    SECRET_KEY = os.environ['SECRET_KEY']
 
     DATABASES = {
         'default': {
@@ -161,7 +161,7 @@ class Dev(Configuration):
 class Test(Configuration):
     DEBUG = True
     TEMPLATE_DEBUG = DEBUG
-    SECRET_KEY = 'u@nup3l^ofar)mja-h6khvar^%))*$9^j%9q-9hg0#(3xyel=k'
+    SECRET_KEY = os.environ['SECRET_KEY']
 
     DATABASES = {
         'default': {
