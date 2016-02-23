@@ -4,6 +4,6 @@ python:
 env:
   - FLEXI_RUN_ENV='test'
 # command to install dependencies
-install: "pip install -r requirements/common.txt"
+install: "pip install -r requirements/test.txt"
 # command to run tests
 script: "python manage.py test"

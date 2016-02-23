@@ -79,7 +79,6 @@ INSTALLED_APPS = (
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'django_extensions',
-    'flexisettings'
     'rest_framework',
     'django_gravatar',
     'rolepermissions',
