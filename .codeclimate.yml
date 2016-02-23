@@ -2,7 +2,19 @@ languages:
   JavaScript: true
   Python: true
 
+engines:
+  pep8:
+    enabled: true
+  eslint:
+    enabled: true
+
+ratings:
+  paths:
+    - "**.py"
+    - "**.js"
+
 exclude_paths:
-- "*/tests.py"
-- "*/tests/*"
-- "*/migrations/*"
+  - "*/tests.py"
+  - "*/tests/*"
+  - "*/migrations/*"
+  - "*/static/libs/*"
