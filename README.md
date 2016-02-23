@@ -4,7 +4,6 @@
 [![Code Climate](https://codeclimate.com/github/soufiaane/CapValue.png)](https://codeclimate.com/github/soufiaane/CapValue)
 [![Coverage Status](https://coveralls.io/repos/github/soufiaane/CapValue/badge.svg)](https://coveralls.io/github/soufiaane/CapValue)
 
-
 ------------------------------------------
 Requirements
 ------------------------------------------
