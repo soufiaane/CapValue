@@ -4,13 +4,15 @@ from configurations import Configuration
 import dj_database_url
 import os
 
+
 # endregion
+
+
 
 class Dev(Configuration):
     DEBUG = True
     TEMPLATE_DEBUG = DEBUG
-
-
+    SECRET_KEY = os.environ['SECRET_KEY']
     DATABASES = {
         'default': {
             'ENGINE'  : 'django.db.backends.mysql',
@@ -28,6 +30,7 @@ class Dev(Configuration):
 
 class Test(Configuration):
     DEBUG = True
+    SECRET_KEY = os.environ['SECRET_KEY']
     TEMPLATE_DEBUG = DEBUG
 
     DATABASES = {
@@ -41,7 +44,7 @@ class Test(Configuration):
 class Prod(Configuration):
     DEBUG = False
     TEMPLATE_DEBUG = DEBUG
-
+    SECRET_KEY = os.environ['SECRET_KEY']
     DATABASES = {'default': {}}
     db_from_env = dj_database_url.config(conn_max_age=500)
     DATABASES['default'].update(db_from_env)
@@ -49,7 +52,6 @@ class Prod(Configuration):
 
 # region Divers
 STATIC_URL = '/static/'
-SECRET_KEY = os.environ['SECRET_KEY']
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 STATIC_ROOT = os.path.join(os.getcwd(), 'static_files')
 STATICFILES_DIRS = (os.path.join(BASE_DIR, 'static'),)
@@ -89,7 +91,7 @@ TEMPLATES = [
 
 # region Rest Framework Settings
 REST_FRAMEWORK = {
-    'UNAUTHENTICATED_USER': None,
+    'UNAUTHENTICATED_USER'    : None,
     'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
     'PAGE_SIZE'               : 10,
     'page_size_query_param'   : 'page_size',
@@ -179,5 +181,3 @@ STATICFILES_STORAGE = 'whitenoise.django.GzipManifestStaticFilesStorage'
 
 
 # endregion
-
-
