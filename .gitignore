@@ -15,3 +15,6 @@ __pycache__/
 /purge.py
 CapValue/security*
 CapValue/env.py
+*.pyc
+staticfiles
+.env

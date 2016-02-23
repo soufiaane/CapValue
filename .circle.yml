@@ -1,6 +1,6 @@
 machine:
   python:
-    version: 3.4
+    version: 3.5.1
   hosts:
     cvc.ma: 127.0.0.1
     www.cvc.ma: 127.0.0.1
