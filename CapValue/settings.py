@@ -109,7 +109,6 @@ class Dev(Configuration):
 class Test(Configuration):
     DEBUG = True
     SECRET_KEY = os.environ['SECRET_KEY']
-
     DATABASES = {'default': {'ENGINE': 'django.db.backends.sqlite3', 'NAME': 'db.sqlite3'}}
 
 
@@ -185,7 +184,6 @@ class Prod(Configuration):
     STATICFILES_STORAGE = 'whitenoise.django.GzipManifestStaticFilesStorage'
     TEMPLATES = [{'BACKEND': 'django.template.backends.django.DjangoTemplates', 'DIRS': [os.path.join(BASE_DIR, 'static/templates'), ], 'APP_DIRS': True, 'OPTIONS': {'context_processors': ['django.template.context_processors.debug', 'django.template.context_processors.request', 'django.contrib.auth.context_processors.auth', 'django.contrib.messages.context_processors.messages', ], }, }, ]
     # endregion
-
 
     # region Celery Settings
     CELERY_CONCURRENCY = 1
