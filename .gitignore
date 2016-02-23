@@ -18,3 +18,4 @@ CapValue/env.py
 *.pyc
 staticfiles
 .env
+/static_files/*
