@@ -59,17 +59,15 @@ class Dev(Configuration):
     # endregion
 
     # region Static Files
-    STATICFILES_STORAGE = 'whitenoise.django.GzipManifestStaticFilesStorage'
-    PROJECT_ROOT = os.path.dirname(os.path.abspath(__file__))
-    BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+    PROJECT_ROOT = BASE_DIR = os.getcwd()
+    STATICFILES_DIRS = (os.path.join(PROJECT_ROOT, 'static'),)
+    STATICFILES_FINDERS = ('django.contrib.staticfiles.finders.FileSystemFinder', 'django.contrib.staticfiles.finders.AppDirectoriesFinder',)
     STATIC_ROOT = os.path.join(os.getcwd(), 'staticfiles')
-    STATICFILES_DIRS = ('static',)
     STATIC_URL = '/static/'
-    STATICFILES_FINDERS = (
-        'django.contrib.staticfiles.finders.FileSystemFinder',
-        'django.contrib.staticfiles.finders.AppDirectoriesFinder',
-    )
-    TEMPLATES = [{'BACKEND': 'django.template.backends.django.DjangoTemplates', 'DIRS': [os.path.join(BASE_DIR, 'static/templates'), ], 'APP_DIRS': True, 'OPTIONS': {'context_processors': ['django.template.context_processors.debug', 'django.template.context_processors.request', 'django.contrib.auth.context_processors.auth', 'django.contrib.messages.context_processors.messages', ], }, }, ]
+    STATICFILES_STORAGE = 'whitenoise.django.GzipManifestStaticFilesStorage'
+    TEMPLATES = [{
+        'BACKEND': 'django.template.backends.django.DjangoTemplates', 'DIRS': [os.path.join(BASE_DIR, 'staticfiles/templates').replace("\\", "/"), ], 'APP_DIRS': True,
+        'OPTIONS': {'context_processors': ['django.template.context_processors.debug', 'django.template.context_processors.request', 'django.contrib.auth.context_processors.auth', 'django.contrib.messages.context_processors.messages', ], }, }, ]
     # endregion
 
     # region Celery Settings
@@ -172,7 +170,7 @@ class Prod(Configuration):
     STATIC_ROOT = os.path.join(os.getcwd(), 'staticfiles')
     STATIC_URL = '/static/'
     STATICFILES_STORAGE = 'whitenoise.django.GzipManifestStaticFilesStorage'
-    TEMPLATES = [{'BACKEND': 'django.template.backends.django.DjangoTemplates', 'DIRS': [os.path.join(STATIC_ROOT, 'templates'), ], 'APP_DIRS': True, 'OPTIONS': {'context_processors': ['django.template.context_processors.debug', 'django.template.context_processors.request', 'django.contrib.auth.context_processors.auth', 'django.contrib.messages.context_processors.messages', ], }, }, ]
+    TEMPLATES = [{'BACKEND': 'django.template.backends.django.DjangoTemplates', 'DIRS': [os.path.join(BASE_DIR, 'staticfiles/templates'), ], 'APP_DIRS': True, 'OPTIONS': {'context_processors': ['django.template.context_processors.debug', 'django.template.context_processors.request', 'django.contrib.auth.context_processors.auth', 'django.contrib.messages.context_processors.messages', ], }, }, ]
     # endregion
 
     # region Celery Settings
