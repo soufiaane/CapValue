@@ -6,6 +6,49 @@ import os
 
 # endregion
 
+class Dev(Configuration):
+    DEBUG = True
+    TEMPLATE_DEBUG = DEBUG
+    SECRET_KEY = os.environ['SECRET_KEY']
+
+    DATABASES = {
+        'default': {
+            'ENGINE'  : 'django.db.backends.mysql',
+            'NAME'    : 'CVC',
+            'USER'    : 'soufiaane',
+            'PASSWORD': 'soufiane0',
+            'HOST'    : 'cvc.ma',
+            'PORT'    : '3306',
+            'OPTIONS' : {
+                'autocommit': True,
+            },
+        }
+    }
+
+
+class Test(Configuration):
+    DEBUG = True
+    TEMPLATE_DEBUG = DEBUG
+    SECRET_KEY = os.environ['SECRET_KEY']
+
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.sqlite3',
+            'NAME'  : 'db.sqlite3'
+        }
+    }
+
+
+class Prod(Configuration):
+    DEBUG = False
+    TEMPLATE_DEBUG = DEBUG
+    SECRET_KEY = os.environ['SECRET_KEY']
+
+    DATABASES = {'default': {}}
+    db_from_env = dj_database_url.config(conn_max_age=500)
+    DATABASES['default'].update(db_from_env)
+
+
 # region Divers
 STATIC_URL = '/static/'
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
@@ -138,44 +181,3 @@ STATICFILES_STORAGE = 'whitenoise.django.GzipManifestStaticFilesStorage'
 # endregion
 
 
-class Dev(Configuration):
-    DEBUG = True
-    TEMPLATE_DEBUG = DEBUG
-    SECRET_KEY = os.environ['SECRET_KEY']
-
-    DATABASES = {
-        'default': {
-            'ENGINE'  : 'django.db.backends.mysql',
-            'NAME'    : 'CVC',
-            'USER'    : 'soufiaane',
-            'PASSWORD': 'soufiane0',
-            'HOST'    : 'cvc.ma',
-            'PORT'    : '3306',
-            'OPTIONS' : {
-                'autocommit': True,
-            },
-        }
-    }
-
-
-class Test(Configuration):
-    DEBUG = True
-    TEMPLATE_DEBUG = DEBUG
-    SECRET_KEY = os.environ['SECRET_KEY']
-
-    DATABASES = {
-        'default': {
-            'ENGINE': 'django.db.backends.sqlite3',
-            'NAME'  : 'db.sqlite3'
-        }
-    }
-
-
-class Prod(Configuration):
-    DEBUG = False
-    TEMPLATE_DEBUG = DEBUG
-    SECRET_KEY = os.environ['SECRET_KEY']
-
-    DATABASES = {'default': {}}
-    db_from_env = dj_database_url.config(conn_max_age=500)
-    DATABASES['default'].update(db_from_env)
