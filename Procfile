@@ -1,1 +1,1 @@
-web: gunicorn gettingstarted.wsgi --log-file -
+web: gunicorn --workers=42 CapValue.wsgi:application --log-file -
