@@ -108,7 +108,7 @@ class Dev(Configuration):
 
 
 class Prod(Configuration):
-    DEBUG = True
+    DEBUG = False
     SECRET_KEY = os.environ['SECRET_KEY']
     DATABASES = {'default': {}}
     db_from_env = dj_database_url.config(conn_max_age=500)
