@@ -7,7 +7,6 @@ djangorestframework==3.3.2
 redis==2.10.5
 selenium==2.49.2
 django-extensions==1.6.1
-coveralls==1.1
 dj-database-url==0.4.0
 whitenoise==2.0.6
 django-configurations==1.0
