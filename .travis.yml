@@ -3,7 +3,10 @@ python:
   - "3.5.1"
 env:
   - SECRET_KEY='u@nup3l^ofar)mja-h6khvar^%))*$9^j%9q-9hg0#(3xyel=k' DJANGO_CONFIGURATION='Test'
-# command to install dependencies
 install: "pip install -r requirements/test.txt"
-# command to run tests
-script: "python manage.py test"
+script:
+  - py.test coveralls/tests.py --doctest-modules --pep8 coveralls -v --cov coveralls --cov-report term-missing
+  - python manage.py test
+  - coverage run --source=home manage.py test
+after_success:
+  - coveralls
