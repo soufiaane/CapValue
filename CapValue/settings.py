@@ -114,6 +114,16 @@ class Prod(Configuration):
     DATABASES['default'].update(db_from_env)
     REST_FRAMEWORK = {'UNAUTHENTICATED_USER': None, 'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination', 'PAGE_SIZE': 10, 'page_size_query_param': 'page_size', 'max_page_size': 10000, 'DEFAULT_RENDERER_CLASSES': ('rest_framework.renderers.JSONRenderer', 'rest_framework.renderers.BrowsableAPIRenderer',)}
 
+    # region Static Files
+    PROJECT_ROOT = BASE_DIR = os.getcwd()
+    STATICFILES_DIRS = (os.path.join(PROJECT_ROOT, 'static'),)
+    STATICFILES_FINDERS = ('django.contrib.staticfiles.finders.FileSystemFinder', 'django.contrib.staticfiles.finders.AppDirectoriesFinder',)
+    STATIC_ROOT = os.path.join(os.getcwd(), 'staticfiles')
+    STATIC_URL = '/static/'
+    STATICFILES_STORAGE = 'whitenoise.django.GzipManifestStaticFilesStorage'
+    TEMPLATES = [{'BACKEND': 'django.template.backends.django.DjangoTemplates', 'DIRS': [os.path.join(STATIC_ROOT, 'templates'), ], 'APP_DIRS': False, 'OPTIONS': {'context_processors': ['django.template.context_processors.debug', 'django.template.context_processors.request', 'django.contrib.auth.context_processors.auth', 'django.contrib.messages.context_processors.messages', ], }, }, ]
+    # endregion
+
     # region Installed Apps
     INSTALLED_APPS = (
         'django.contrib.admin',
@@ -163,16 +173,6 @@ class Prod(Configuration):
     GRAVATAR_DEFAULT_IMAGE = 'identicon'
     GRAVATAR_DEFAULT_SIZE = '215'
     ROLEPERMISSIONS_MODULE = 'CapValue.roles'
-    # endregion
-
-    # region Static Files
-    PROJECT_ROOT = BASE_DIR = os.getcwd()
-    STATICFILES_DIRS = (os.path.join(PROJECT_ROOT, 'static'),)
-    STATICFILES_FINDERS = ('django.contrib.staticfiles.finders.FileSystemFinder', 'django.contrib.staticfiles.finders.AppDirectoriesFinder',)
-    STATIC_ROOT = os.path.join(os.getcwd(), 'staticfiles')
-    STATIC_URL = '/static/'
-    STATICFILES_STORAGE = 'whitenoise.django.GzipManifestStaticFilesStorage'
-    TEMPLATES = [{'BACKEND': 'django.template.backends.django.DjangoTemplates', 'DIRS': [os.path.join(BASE_DIR, ''), ], 'APP_DIRS': False, 'OPTIONS': {'context_processors': ['django.template.context_processors.debug', 'django.template.context_processors.request', 'django.contrib.auth.context_processors.auth', 'django.contrib.messages.context_processors.messages', ], }, }, ]
     # endregion
 
     # region Celery Settings
