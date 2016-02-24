@@ -6,7 +6,6 @@ __pycache__/
 .idea/
 /celerybeat*
 /db.sqlite3
-/tasks.py
 /purge.py
 CapValue/security*
 CapValue/env.py
