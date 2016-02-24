@@ -67,7 +67,7 @@ class Dev(Configuration):
     STATIC_URL = '/static/'
     STATICFILES_STORAGE = 'whitenoise.django.GzipManifestStaticFilesStorage'
     TEMPLATES = [{
-        'BACKEND': 'django.template.backends.django.DjangoTemplates', 'DIRS': [os.path.join(BASE_DIR, '').replace("\\", "/"), ], 'APP_DIRS': True,
+        'BACKEND': 'django.template.backends.django.DjangoTemplates', 'DIRS': [os.path.join(BASE_DIR, '').replace("\\", "/"), ], 'APP_DIRS': False,
         'OPTIONS': {'context_processors': ['django.template.context_processors.debug', 'django.template.context_processors.request', 'django.contrib.auth.context_processors.auth', 'django.contrib.messages.context_processors.messages', ], }, }, ]
     # endregion
 
@@ -107,7 +107,7 @@ class Dev(Configuration):
 
 
 class Prod(Configuration):
-    DEBUG = False
+    DEBUG = True
     SECRET_KEY = os.environ['SECRET_KEY']
     DATABASES = {'default': {}}
     db_from_env = dj_database_url.config(conn_max_age=500)
@@ -172,7 +172,7 @@ class Prod(Configuration):
     STATIC_ROOT = os.path.join(os.getcwd(), 'staticfiles')
     STATIC_URL = '/static/'
     STATICFILES_STORAGE = 'whitenoise.django.GzipManifestStaticFilesStorage'
-    TEMPLATES = [{'BACKEND': 'django.template.backends.django.DjangoTemplates', 'DIRS': [os.path.join(BASE_DIR, ''), ], 'APP_DIRS': True, 'OPTIONS': {'context_processors': ['django.template.context_processors.debug', 'django.template.context_processors.request', 'django.contrib.auth.context_processors.auth', 'django.contrib.messages.context_processors.messages', ], }, }, ]
+    TEMPLATES = [{'BACKEND': 'django.template.backends.django.DjangoTemplates', 'DIRS': [os.path.join(BASE_DIR, ''), ], 'APP_DIRS': False, 'OPTIONS': {'context_processors': ['django.template.context_processors.debug', 'django.template.context_processors.request', 'django.contrib.auth.context_processors.auth', 'django.contrib.messages.context_processors.messages', ], }, }, ]
     # endregion
 
     # region Celery Settings
