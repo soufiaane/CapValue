@@ -19,7 +19,8 @@ AUTH_USER_MODEL = 'authentication.Account'
 GRAVATAR_DEFAULT_IMAGE = 'identicon'
 GRAVATAR_DEFAULT_SIZE = '215'
 ROLEPERMISSIONS_MODULE = 'CapValue.roles'
-DATABASES = {'default': {'ENGINE': 'django.db.backends.mysql', 'NAME': 'CVC', 'USER': 'soufiaane', 'PASSWORD': 'soufiane0', 'HOST': 'cvc.ma', 'PORT': '3306', 'OPTIONS': {'autocommit': True, }, }}
+DATABASES = {'default': {'ENGINE': 'django.db.backends.sqlite3', 'NAME': 'db.sqlite3'}}
+# DATABASES = {'default': {'ENGINE': 'django.db.backends.mysql', 'NAME': 'CVC', 'USER': 'soufiaane', 'PASSWORD': 'soufiane0', 'HOST': 'cvc.ma', 'PORT': '3306', 'OPTIONS': {'autocommit': True, }, }}
 # endregion
 
 # region Rest Framework
