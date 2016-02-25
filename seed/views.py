@@ -1,8 +1,9 @@
 from rest_framework import viewsets, permissions, status, generics
 from rest_framework.response import Response
-from seed.serializers import SeedSerializer
-from emails.models import Email
+
+from mail.models import Email
 from seed.models import Seed
+from seed.serializers import SeedSerializer
 
 
 class SeedView(generics.ListCreateAPIView):

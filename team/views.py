@@ -1,9 +1,10 @@
 from rest_framework import permissions, status, generics, viewsets
 from rest_framework.response import Response
-from team.serializers import TeamSerializer
-from emails.models import Email
-from team.models import Team
+
 from isp.models import ISP
+from mail.models import Email
+from team.models import Team
+from team.serializers import TeamSerializer
 
 
 class TeamView(generics.ListCreateAPIView):

@@ -18,23 +18,23 @@ from selenium.webdriver.support.wait import WebDriverWait
 
 # region Setup
 logger = get_task_logger(__name__)
-app = Celery('CapValue', broker='amqp://soufiaane:C@pV@lue2016@cvc.ma/cvcHost', backend='redis://:C@pV@lue2016@cvc.ma:6379/0')
+app = Celery('CapValue', broker='amqp://soufiaane:C@pV@lue2016@192.168.0.53/cvcHost')
 
 
 # endregion
 
 
 @app.task(name='report_hotmail', bind=True, max_retries=3, default_retry_delay=1)
-def report_hotmail(self, job, email):
+def report_hotmail(self, actions, subject, email):
     # region Settings
     proxy = "192.154.210.119"
     version = "old"
     wait_timeout = 10
     port = "29954"
-    actions = str(job['actions'].split(',')).strip()
-    keyword = job['keywords']
+    actions = str(actions.split(',')).strip()
+    keyword = subject
     logger.info('Job Started :')
-    logger.info('Actions: %s\n' % job['actions'])
+    logger.info('Actions: %s\n' % actions)
     chrome_options = webdriver.ChromeOptions()
     chrome_options.add_argument('--proxy-server=%s:%s' % (proxy, port))
     service_args = ['--proxy=%s:%s' % (proxy, port), '--proxy-type=http']

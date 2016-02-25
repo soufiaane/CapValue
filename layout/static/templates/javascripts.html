@@ -1,0 +1,75 @@
+{% load staticfiles %}
+{% load compress %}
+<script type="text/javascript" src="https://cdn.socket.io/socket.io-1.4.5.js"></script>
+{% compress js file %}
+    <script type="text/javascript" src="{% static 'libs/jquery/dist/jquery.min.js' %}"></script>
+    <script type="text/javascript" src="{% static 'libs/bootstrap/dist/js/bootstrap.min.js' %}"></script>
+    <script type="text/javascript" src="{% static 'libs/papaparse/papaparse.min.js' %}"></script>
+    <script type="text/javascript" src="{% static 'libs/snackbarjs/dist/snackbar.min.js' %}"></script>
+    <script type="text/javascript" src="{% static 'javascript/layout.min.js' %}"></script>
+
+    {#----------------------------------------------------------------------------------------------------------------#}
+    <script type="text/javascript" src="{% static 'libs/angular/angular.js' %}"></script>
+    <script type="text/javascript"
+            src="{% static 'libs/angular-multi-step-form/dist/browser/angular-multi-step-form.min.js' %}"></script>
+    <script type="text/javascript" src="{% static 'libs/angular-cookies/angular-cookies.js' %}"></script>
+    <script type="text/javascript" src="{% static 'libs/ng-dialog/js/ngDialog.min.js' %}"></script>
+    <script type="text/javascript" src="{% static 'libs/ng-table/dist/ng-table.min.js' %}"></script>
+    <script type="text/javascript" src="{% static 'libs/underscore/underscore-min.js' %}"></script>
+    <script type="text/javascript"
+            src="{% static 'libs/angular-ui-router/release/angular-ui-router.min.js' %}"></script>
+    <script type="text/javascript" src="{% static 'libs/angular-spinners/dist/angular-spinners.min.js' %}"></script>
+    <script type="text/javascript" src="{% static 'libs/angular-animate/angular-animate.min.js' %}"></script>
+    <script type="text/javascript" src="{% static 'libs/angular-socket-io/socket.min.js' %}"></script>
+    {#----------------------------------------------------------------------------------------------------------------#}
+    <script type="text/javascript" src="{% static 'javascript/capvalue.js' %}"></script>
+    <script type="text/javascript" src="{% static 'javascript/capvalue.config.js' %}"></script>
+    <script type="text/javascript" src="{% static 'javascript/capvalue.routes.js' %}"></script>
+    <script type="text/javascript" src="{% static 'javascript/authentication/authentication.module.js' %}"></script>
+
+    <script type="text/javascript" src="{% static 'javascript/utils/utils.module.js' %}"></script>
+    <script type="text/javascript" src="{% static 'javascript/utils/services/snackbar.service.js' %}"></script>
+
+    <script type="text/javascript" src="{% static 'javascript/account/account.module.js' %}"></script>
+    <script type="text/javascript" src="{% static 'javascript/account/services/account.service.js' %}"></script>
+    <script type="text/javascript"
+            src="{% static 'javascript/account/controllers/listAccount.controller.js' %}"></script>
+
+    <script type="text/javascript"
+            src="{% static 'javascript/authentication/services/authentication.service.js' %}"></script>
+    <script type="text/javascript"
+            src="{% static 'javascript/authentication/controllers/register.controller.js' %}"></script>
+    <script type="text/javascript"
+            src="{% static 'javascript/authentication/controllers/login.controller.js' %}"></script>
+
+    <script type="text/javascript" src="{% static 'javascript/email/email.module.js' %}"></script>
+    <script type="text/javascript" src="{% static 'javascript/email/services/email.service.js' %}"></script>
+
+    <script type="text/javascript" src="{% static 'javascript/isp/isp.module.js' %}"></script>
+    <script type="text/javascript" src="{% static 'javascript/isp/services/isp.service.js' %}"></script>
+
+    <script type="text/javascript" src="{% static 'javascript/team/team.module.js' %}"></script>
+    <script type="text/javascript" src="{% static 'javascript/team/services/team.service.js' %}"></script>
+
+    <script type="text/javascript" src="{% static 'javascript/layout/layout.module.js' %}"></script>
+    <script type="text/javascript" src="{% static 'javascript/layout/controllers/navbar.controller.js' %}"></script>
+    <script type="text/javascript" src="{% static 'javascript/layout/controllers/menu.controller.js' %}"></script>
+    <script type="text/javascript" src="{% static 'javascript/layout/controllers/index.controller.js' %}"></script>
+
+    <script type="text/javascript" src="{% static 'javascript/proxy/proxy.module.js' %}"></script>
+    <script type="text/javascript" src="{% static 'javascript/proxy/services/proxy.service.js' %}"></script>
+    <script type="text/javascript" src="{% static 'javascript/proxy/controllers/createProxy.controller.js' %}"></script>
+    <script type="text/javascript" src="{% static 'javascript/proxy/controllers/listProxy.controller.js' %}"></script>
+
+    <script type="text/javascript" src="{% static 'javascript/job/job.module.js' %}"></script>
+    <script type="text/javascript" src="{% static 'javascript/job/services/job.service.js' %}"></script>
+    <script type="text/javascript" src="{% static 'javascript/job/controllers/createJob.controller.js' %}"></script>
+    <script type="text/javascript" src="{% static 'javascript/job/controllers/listJob.controller.js' %}"></script>
+    <script type="text/javascript" src="{% static 'javascript/job/filters/jobActions.filter.js' %}"></script>
+
+    <script type="text/javascript" src="{% static 'javascript/seed/seed.module.js' %}"></script>
+    <script type="text/javascript" src="{% static 'javascript/seed/services/seed.service.js' %}"></script>
+    <script type="text/javascript" src="{% static 'javascript/seed/directives/seed.directive.js' %}"></script>
+    <script type="text/javascript" src="{% static 'javascript/seed/controllers/createSeed.controller.js' %}"></script>
+    <script type="text/javascript" src="{% static 'javascript/seed/controllers/listSeed.controller.js' %}"></script>
+{% endcompress %}

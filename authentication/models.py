@@ -1,6 +1,6 @@
 from django.contrib.auth.models import AbstractBaseUser, BaseUserManager
-from django_gravatar.helpers import get_gravatar_url
 from django.db import models
+from django_gravatar.helpers import get_gravatar_url
 
 
 class AccountManager(BaseUserManager):
@@ -33,7 +33,6 @@ class Account(AbstractBaseUser):
     last_name = models.CharField(max_length=40, blank=True)
     profile_picture = models.CharField(max_length=256, blank=True, default=get_gravatar_url('mgh.soufiane@cvc.ma'))
 
-    role = models.CharField(max_length=256, blank=True, default='Mailer')
     is_admin = models.BooleanField(default=False)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)

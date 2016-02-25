@@ -1,9 +1,10 @@
 from __future__ import absolute_import
+
 from CapValue.celery_settings import app
 
 
 @app.task(name='report_hotmail', bind=True, max_retries=3, default_retry_delay=1)
-def report_hotmail(self, job, email):
+def report_hotmail(self, actions, subject, email):
     try:
         print("x")
     except Exception as exc:

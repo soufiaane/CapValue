@@ -1,6 +1,7 @@
+from django.db import models
+
 from authentication.models import Account
 from seed.models import Seed
-from django.db import models
 
 
 class Job(models.Model):
@@ -11,7 +12,7 @@ class Job(models.Model):
         ('END', 'Finished')
     )
     owner = models.ForeignKey(Account, on_delete=models.CASCADE, related_name="jobs", null=True)
-    seed_list = models.ForeignKey(Seed, related_name='jobs', null=True)
+    seeds = models.ForeignKey(Seed, related_name='jobs', null=True)
     subject = models.CharField(max_length=200, default='')
     actions = models.CharField(max_length=200, default='RS')
     status = models.CharField(max_length=3, choices=STATUS_OPTIONS, default='PND')
