@@ -149,11 +149,10 @@ class Prod(Configuration):
         'django.contrib.sessions',
         'django.contrib.messages',
         'django.contrib.staticfiles',
-        'django_extensions',
+        'compressor',
         'rest_framework',
         'django_gravatar',
         'rolepermissions',
-        'compressor',
         'authentication',
         'djcelery',
         'layout',
@@ -176,8 +175,8 @@ class Prod(Configuration):
     STATICFILES_FINDERS = (
         'django.contrib.staticfiles.finders.FileSystemFinder',
         'django.contrib.staticfiles.finders.AppDirectoriesFinder',
-        'compressor.finders.CompressorFinder'
-        ,)
+        'compressor.finders.CompressorFinder',
+    )
     STATICFILES_STORAGE = 'whitenoise.django.GzipManifestStaticFilesStorage'
     TEMPLATES = [
         {
@@ -251,7 +250,6 @@ class Test(Configuration):
         'django.contrib.sessions',
         'django.contrib.messages',
         'django.contrib.staticfiles',
-        'django_extensions',
         'rest_framework',
         'django_gravatar',
         'rolepermissions',
