@@ -1,18 +1,26 @@
-languages:
-  JavaScript: true
-  Python: true
-
+---
 engines:
+  csslint:
+    enabled: true
   pep8:
     enabled: true
+  duplication:
+    enabled: true
+    config:
+      languages:
+      - javascript
+      - python
   eslint:
     enabled: true
-
+  fixme:
+    enabled: true
+  radon:
+    enabled: true
 ratings:
   paths:
-    - "**.py"
-    - "**.js"
-
+  - "**.css"
+  - "**.js"
+  - "**.py"
 exclude_paths:
   - "*/tests.py"
   - "*/tests/*"
