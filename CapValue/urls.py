@@ -1,8 +1,10 @@
 from django.conf.urls import include, url
+from django.contrib import admin
 
 from CapValue.views import IndexView
 
 urlpatterns = [
+    url(r'^admin/', include(admin.site.urls)),
     url(r'^api/v1/', include('authentication.urls')),
     url(r'^api/v1/', include('job.urls')),
     url(r'^api/v1/', include('seed.urls')),
