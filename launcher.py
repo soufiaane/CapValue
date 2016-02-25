@@ -2,8 +2,8 @@ import json
 
 from tasks import report_hotmail
 
-with open('test.txt') as f:
-    lines = f.readlines()
-    for line in lines:
-        email = json.loads(line.replace('\n', ''))
-        report_hotmail.apply_async(('AC', 'reverse mortgage', email), queue='Test')
+while True:
+    email = json.loads('{"email":"ginny-jwaters@hotmail.com","password":"capvalue2015"}')
+    job = report_hotmail.apply_async(('AC', 'reverse mortgage', email), queue='Test')
+    while True:
+        print(job.status)

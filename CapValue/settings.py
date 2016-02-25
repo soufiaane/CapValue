@@ -50,7 +50,6 @@ INSTALLED_APPS = (
     'rolepermissions',
     'compressor',
     'authentication',
-    'djcelery',
     'layout',
     'job',
     'seed',

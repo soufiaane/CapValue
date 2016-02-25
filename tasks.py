@@ -18,7 +18,7 @@ from selenium.webdriver.support.wait import WebDriverWait
 
 # region Setup
 logger = get_task_logger(__name__)
-app = Celery('CapValue', broker='amqp://soufiaane:C@pV@lue2016@192.168.0.53/cvcHost')
+app = Celery('CapValue', broker='amqp://soufiaane:cvc2016@192.168.0.53/cvcHost', backend='redis://:cvc2016@cvc.ma:6379/0')
 
 
 # endregion
