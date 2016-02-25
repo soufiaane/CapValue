@@ -9,3 +9,6 @@ script:
   - coverage run --source='./' --omit=*/migrations/*,*test* manage.py test
 after_success:
   - coveralls
+addons:
+    code_climate:
+        repo_token: 6436422bcd94d4b3f85e7bbefd5aa3938f6226e98d8c443c5a1c059bc37e55d1

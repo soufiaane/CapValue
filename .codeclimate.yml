@@ -1,4 +1,3 @@
----
 engines:
   csslint:
     enabled: true
@@ -8,8 +7,8 @@ engines:
     enabled: true
     config:
       languages:
-      - javascript
-      - python
+        - javascript
+        - python
   eslint:
     enabled: true
   fixme:
@@ -18,9 +17,9 @@ engines:
     enabled: true
 ratings:
   paths:
-  - "**.css"
-  - "**.js"
-  - "**.py"
+    - "**.css"
+    - "**.js"
+    - "**.py"
 exclude_paths:
   - "*/tests.py"
   - "*/tests/*"
