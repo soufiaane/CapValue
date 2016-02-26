@@ -5,6 +5,7 @@ from CapValue.views import IndexView
 
 urlpatterns = [
     url(r'^admin/', include(admin.site.urls)),
+    url(r'^api/v1/br/', include('rest_framework.urls', namespace='rest_framework')),
     url(r'^api/v1/', include('authentication.urls')),
     url(r'^api/v1/', include('job.urls')),
     url(r'^api/v1/', include('seed.urls')),

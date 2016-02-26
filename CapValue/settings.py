@@ -1,5 +1,4 @@
 import os
-
 import dj_database_url
 from configurations import Configuration
 from kombu import Exchange, Queue, serialization
@@ -20,7 +19,18 @@ GRAVATAR_DEFAULT_IMAGE = 'identicon'
 GRAVATAR_DEFAULT_SIZE = '215'
 ROLEPERMISSIONS_MODULE = 'CapValue.roles'
 DATABASES = {'default': {'ENGINE': 'django.db.backends.sqlite3', 'NAME': 'db.sqlite3'}}
-# DATABASES = {'default': {'ENGINE': 'django.db.backends.mysql', 'NAME': 'CVC', 'USER': 'soufiaane', 'PASSWORD': 'soufiane0', 'HOST': 'cvc.ma', 'PORT': '3306', 'OPTIONS': {'autocommit': True, }, }}
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.mysql',
+#         'NAME': 'CVC', 'USER': 'soufiaane',
+#         'PASSWORD': 'soufiane0',
+#         'HOST': 'cvc.ma',
+#         'PORT': '3306',
+#         'OPTIONS': {
+#             'autocommit': True,
+#         },
+#     }
+# }
 # endregion
 
 # region Rest Framework
@@ -29,7 +39,7 @@ REST_FRAMEWORK = {
     'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
     'PAGE_SIZE'               : 10,
     'page_size_query_param'   : 'page_size',
-    'max_page_size'           : 1000,
+    'max_page_size'           : 10000,
     'DEFAULT_RENDERER_CLASSES': (
         'rest_framework.renderers.JSONRenderer',
         'rest_framework.renderers.BrowsableAPIRenderer',
@@ -49,8 +59,9 @@ INSTALLED_APPS = (
     'rest_framework',
     'django_gravatar',
     'rolepermissions',
-    'compressor',
+    # 'compressor',
     'authentication',
+    'djcelery',
     'layout',
     'job',
     'seed',
@@ -71,8 +82,8 @@ STATICFILES_DIRS = (os.path.join(PROJECT_ROOT, 'static'),)
 STATICFILES_FINDERS = (
     'django.contrib.staticfiles.finders.FileSystemFinder',
     'django.contrib.staticfiles.finders.AppDirectoriesFinder',
-    'compressor.finders.CompressorFinder'
-    ,)
+    # 'compressor.finders.CompressorFinder',
+)
 STATICFILES_STORAGE = 'whitenoise.django.GzipManifestStaticFilesStorage'
 TEMPLATES = [
     {
@@ -102,11 +113,9 @@ MIDDLEWARE_CLASSES = (
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'django.middleware.security.SecurityMiddleware',
 )
-
-
 # endregion
 
-
+"""
 class Dev(Configuration):
     # region Settings
     DEBUG = True
@@ -318,3 +327,4 @@ class Test(Configuration):
     WSGI_APPLICATION = 'CapValue.wsgi.application'
     DATABASES = {'default': {'ENGINE': 'django.db.backends.sqlite3', 'NAME': 'db.sqlite3'}}
     # endregion
+"""

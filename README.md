@@ -2,8 +2,7 @@
 [![Travis CI](https://travis-ci.org/soufiaane/CapValue.svg)](https://travis-ci.org/soufiaane/CapValue)
 [![Circle CI](https://circleci.com/gh/soufiaane/CapValue.svg?style=shield)] (https://circleci.com/gh/soufiaane/CapValue)
 [![Coverage Status](https://coveralls.io/repos/github/soufiaane/CapValue/badge.svg?branch=master)](https://coveralls.io/github/soufiaane/CapValue?branch=master)
-[![Code Climate](https://codeclimate.com/github/soufiaane/CapValue/badges/gpa.svg)](https://codeclimate.com/github/soufiaane/CapValue)
-[![Issue Count](https://codeclimate.com/github/soufiaane/CapValue/badges/issue_count.svg)](https://codeclimate.com/github/soufiaane/CapValue)
+[![Codacy Badge](https://api.codacy.com/project/badge/grade/5bd087e2bf1644dda6f3af1b6bd00537)](https://www.codacy.com/app/mgh-soufiane/CapValue)
 
 ------------------------------------------
 Requirements
