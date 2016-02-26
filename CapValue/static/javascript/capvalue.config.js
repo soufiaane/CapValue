@@ -3,7 +3,7 @@
 
     angular
         .module('capvalue.config')
-        .config(config);
+        .config(configuration);
 
     config.$inject = ['$locationProvider', '$interpolateProvider'];
 

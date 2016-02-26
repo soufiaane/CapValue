@@ -35,11 +35,11 @@ DATABASES = {'default': {'ENGINE': 'django.db.backends.sqlite3', 'NAME': 'db.sql
 
 # region Rest Framework
 REST_FRAMEWORK = {
-    'UNAUTHENTICATED_USER'    : None,
+    'UNAUTHENTICATED_USER': None,
     'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
-    'PAGE_SIZE'               : 10,
-    'page_size_query_param'   : 'page_size',
-    'max_page_size'           : 10000,
+    'PAGE_SIZE': 10,
+    'page_size_query_param': 'page_size',
+    'max_page_size': 10000,
     'DEFAULT_RENDERER_CLASSES': (
         'rest_framework.renderers.JSONRenderer',
         'rest_framework.renderers.BrowsableAPIRenderer',

@@ -39,7 +39,7 @@
 
             //Handles File Upload & Generating new upload input
             //this is only when we call the function with type == file
-            if ((type == 'file') && vm.selectedFile) {
+            if ((type === 'file') && vm.selectedFile) {
                 vm.uploadedFiles.push(vm.selectedFile);
                 vm.selectedFile = null;
                 document.getElementById("seedfile_import").value = "";
@@ -47,10 +47,10 @@
             //*******************************************************************************************************
 
             //Handles Parsing Logic When proxyType is Manual
-            if (vm.seedList.proxyType == "manual") {
+            if (vm.seedList.proxyType === "manual") {
                 //*******************************************************************************************************
                 //Handles the File Parsing Logic For Manual ProxyType
-                if (type == 'file') {
+                if (type === 'file') {
                     for (var i = 0; i < vm.uploadedFiles.length; i++) {
                         var imported_data = {filename: vm.uploadedFiles[i].name, emails: []};
                         Papa.parse(vm.uploadedFiles[i],
@@ -77,7 +77,7 @@
                     vm.seedList.emails["textarea"] = [];
                     data = Papa.parse(vm.seedList.textarea_Input).data;
                     for (var k = 0; k < data.length; k++) {
-                        if (data[k].length == 6) {
+                        if (data[k].length === 6) {
                             if (data[k][0] && data[k][1] && re_email.test(data[k][0])) {
                                 vm.seedList.emails['textarea'].push({
                                         'email': data[k][0],
@@ -95,7 +95,7 @@
 
             //Handles Parsing Logic When proxyType is Proxy or VPN
             else if (vm.seedList.proxyType !== "manual") {
-                if (type == 'file') {
+                if (type === 'file') {
                     for (var m = 0; m < vm.uploadedFiles.length; m++) {
                         var imported_data2 = {filename: vm.uploadedFiles[m].name, emails: []};
                         Papa.parse(vm.uploadedFiles[m],
@@ -119,7 +119,7 @@
                     vm.seedList.emails["textarea"] = [];
                     data = Papa.parse(vm.seedList.textarea_Input).data;
                     for (var l = 0; l < data.length; l++) {
-                        if (data[l].length == 2) {
+                        if (data[l].length === 2) {
                             if (data[l][0] && data[l][1] && re_email.test(data[l][0])) {
 
                                 vm.seedList.emails['textarea'].push({
@@ -138,13 +138,13 @@
             while (element.firstChild) {
                 element.removeChild(element.firstChild);
             }
-            if ($getActiveIndex() == '1') {
+            if ($getActiveIndex() === '1') {
                 checkStep1($nextStep);
             }
-            else if ($getActiveIndex() == '2') {
+            else if ($getActiveIndex() === '2') {
                 checkStep2($nextStep);
             }
-            else if ($getActiveIndex() == '3') {
+            else if ($getActiveIndex() === '3') {
                 checkStep3($nextStep);
             }
         }
@@ -164,7 +164,7 @@
                     error: 'Seed List Proxy Type is required !'
                 });
             }
-            if (errors.length == 0) {
+            if (errors.length === 0) {
                 $nextStep();
             } else {
                 for (var index = 0; index < errors.length; index++) {
@@ -177,9 +177,9 @@
                     div.appendChild(h4);
                     document.getElementById("formErrors").appendChild(div);
 
-                    if (errors[index]['name'] == 'seedList.name') {
+                    if (errors[index]['name'] === 'seedList.name') {
                         document.getElementById("seedlist_name").setAttribute("style", errorHighlightStyle);
-                    } else if (errors[index]['name'] == 'seedList.proxyType') {
+                    } else if (errors[index]['name'] === 'seedList.proxyType') {
                         document.getElementById("seedlist_proxytype").setAttribute("style", errorHighlightStyle);
                     }
                 }
@@ -189,7 +189,7 @@
         function checkStep2($nextStep) {
             var errors = [];
 
-            if (vm.seedList.emails == {textarea: [], files: []}) {
+            if (vm.seedList.emails === {textarea: [], files: []}) {
                 errors.push({
                     name: 'seedList.emails',
                     error: 'Email list is empty !'
@@ -201,7 +201,7 @@
                     error: 'Seed List Proxy Type is required !'
                 });
             }
-            if (errors.length == 0) {
+            if (errors.length === 0) {
                 $nextStep();
             } else {
                 for (var index = 0; index < errors.length; index++) {
