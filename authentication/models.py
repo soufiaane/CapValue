@@ -1,6 +1,8 @@
-from django.contrib.auth.models import AbstractBaseUser, BaseUserManager
+from django.contrib.auth.models import AbstractBaseUser, BaseUserManager, PermissionsMixin
 from django.db import models
 from django_gravatar.helpers import get_gravatar_url
+
+from CapValue.roles import Mailer, Manager
 
 
 class AccountManager(BaseUserManager):
@@ -10,30 +12,30 @@ class AccountManager(BaseUserManager):
 
         account = self.model(
             username=kwargs.get('username'),
-            first_name=kwargs.get('first_name') if kwargs.get('first_name')else kwargs.get('username'),
-            last_name=kwargs.get('last_name') if kwargs.get('last_name')else '',
-            profile_picture=get_gravatar_url(str(kwargs.get('username')) + '@cvc.ma')
+            first_name=kwargs.get('first_name') if kwargs.get('first_name').title() else "",
+            last_name=kwargs.get('last_name') if kwargs.get('last_name').title() else "",
+            profile_picture=get_gravatar_url(str(kwargs.get('username')) + '@cvc.ma')  # TODO-CVC implement user picture
         )
 
         account.set_password(password)
+        Mailer.assign_role_to_user(account)
         account.save()
         return account
 
     def create_superuser(self, password, **kwargs):
-        account = self.create_user(password, **kwargs)
-        account.is_admin = True
-        account.role = 'Manager'
-        account.save()
-        return account
+        superuser = self.create_user(password, **kwargs)
+        superuser.is_superuser = True
+        Manager.assign_role_to_user(superuser)
+        superuser.save()
+        return superuser
 
 
-class Account(AbstractBaseUser):
+class Account(AbstractBaseUser, PermissionsMixin):
     username = models.CharField(max_length=40, unique=True)
     first_name = models.CharField(max_length=40, blank=True)
     last_name = models.CharField(max_length=40, blank=True)
     profile_picture = models.CharField(max_length=256, blank=True, default=get_gravatar_url('mgh.soufiane@cvc.ma'))
 
-    is_admin = models.BooleanField(default=False)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
     objects = AccountManager()
@@ -48,17 +50,3 @@ class Account(AbstractBaseUser):
 
     def get_short_name(self):
         return self.first_name
-
-    @property
-    def is_superuser(self):
-        return self.is_admin
-
-    @property
-    def is_staff(self):
-        return self.is_admin
-
-    def has_perm(self, perm, obj=None):
-        return self.is_admin
-
-    def has_module_perms(self, app_label):
-        return self.is_admin

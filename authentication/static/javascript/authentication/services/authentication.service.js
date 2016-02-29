@@ -3,12 +3,22 @@
 
     angular
         .module('capvalue.authentication.services')
+        .factory('Notifications', Notifications)
         .factory('Authentication', Authentication);
 
-    Authentication.$inject = ['$cookies', '$http', '$state'];
+    Notifications.$inject = ['socketFactory'];
+    Authentication.$inject = ['$cookies', '$http', 'Notifications'];
 
+    function Notifications(socketFactory) {
+        var myIoSocket = io.connect('http://cvc.ma:3000');
 
-    function Authentication($cookies, $http) {
+        return socketFactory({
+            ioSocket: myIoSocket
+        });
+
+    }
+
+    function Authentication($cookies, $http, Notifications) {
 
         return Authentication = {
             getAuthenticatedAccount: getAuthenticatedAccount,
@@ -38,10 +48,11 @@
             function loginSuccessFn(data) {
                 Authentication.setAuthenticatedAccount(data.data);
                 window.location = '/';
+                Notifications.emit('message', 'Taboun 3achwa2i\n' + data.data);
             }
 
             function loginErrorFn() {
-                console.error('Error login in the User !');
+                console.error('loginErrorFn');
             }
         }
 
@@ -54,17 +65,26 @@
             }
 
             function logoutErrorFn() {
-                Snackbar.error('Error login out the User !');
+                Snackbar.error('logoutErrorFn');
             }
         }
 
         function getAuthenticatedAccount() {
             var authAccount = $cookies.get('authenticatedAccount');
+
             if (!authAccount) {
                 return false;
+            } else {
+                var result = JSON.parse(authAccount);
+                result.role[0] = toTitleCase(result.role[0]);
+                return result;
             }
+        }
 
-            return JSON.parse(authAccount);
+        function toTitleCase(str) {
+            return str.replace(/\w\S*/g, function (txt) {
+                return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();
+            });
         }
 
         function isAuthenticated() {

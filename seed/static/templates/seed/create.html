@@ -1,48 +1,120 @@
-<!-- form.html -->
 <div class="row">
     <div class="col-sm-8 col-sm-offset-2">
         <div id="form-container">
-            <multi-step-container steps="vm.steps">
-                <div class="page-header text-center" style="padding: 1px;">
-                    <h2 style="color: #ffffff;">Seed List Creation</h2>
-
-                    <div id="status-buttons" class="text-center">
-                        <a class="{$ ($getActiveIndex() == '1') ? 'active' : 'disabled' $}"><span>1</span>
-                            Infos</a>
-                        <a class="{$ ($getActiveIndex() == '2') ? 'active' : 'disabled' $}"><span>2</span>
-                            Email
-                            List</a>
-                        <a class="{$ ($getActiveIndex() == '3') ? 'active' : 'disabled' $}"><span>3</span> Proxy</a>
+            <div class="page-header text-center" style="padding: 1px;">
+                <h2 style="color: #ffffff;">New job :</h2>
+            </div>
+            <div class="jumbotron job-create">
+                <form id="seedCreate_form" ng-submit="vm.submitJob()"
+                      style="min-height: 100px; padding-bottom: 0" novalidate>
+                    <table class="table table-responsive">
+                        <tr style="width: 100px">
+                            <td style="border: none;">
+                                <span class="pull-left">Keyword :</span>
+                            </td>
+                            <td style="border: none;" id="job_keyword">
+                                <input type="text" class="form-control" placeholder="Keyword..."
+                                       aria-describedby="sizing-addon1" ng-model="vm.job.keyword"
+                                       name="seedList.name">
+                            </td>
+                        </tr>
+                    </table>
+                    <div class="box-body" style="padding-left: 100px;" id="job_actions">
+                        <table class="table table-responsive table-condensed">
+                            <tr style="width: 100px">
+                                <td style="border: none; padding: 0; width: 50%;" class="pull-left">
+                                    <label class="checkbox">
+                                        <input type="checkbox" ng-model="vm.job.actions[0].isChecked">
+                                        Mark spam as read.
+                                    </label>
+                                </td>
+                                <td style="border: none; padding: 0; width: 50%;" class="pull-left">
+                                    <label class="checkbox">
+                                        <input type="checkbox" ng-model="vm.job.actions[1].isChecked">
+                                        Not spam (spam to inbox).
+                                    </label>
+                                </td>
+                            </tr>
+                            <tr style="width: 100px">
+                                <td style="border: none; padding: 0; width: 50%;" class="pull-left">
+                                    <label class="checkbox">
+                                        <input type="checkbox" ng-model="vm.job.actions[4].isChecked">
+                                        Safe spam mail.
+                                    </label>
+                                </td>
+                                <td style="border: none; padding: 0; width: 50%;" class="pull-left">
+                                    <label class="checkbox">
+                                        <input type="checkbox" ng-model="vm.job.actions[2].isChecked">
+                                        Mark inbox as read.
+                                    </label>
+                                </td>
+                            </tr>
+                            <tr style="width: 100px">
+                                <td style="border: none; padding: 0; width: 50%;" class="pull-left">
+                                    <label class="checkbox">
+                                        <input type="checkbox" ng-model="vm.job.actions[5].isChecked">
+                                        Add contacts <b>INBOX</b>
+                                    </label>
+                                </td>
+                                <td style="border: none; padding: 0; width: 50%;" class="pull-left">
+                                    <label class="checkbox">
+                                        <input type="checkbox" ng-model="vm.job.actions[6].isChecked">
+                                        Click links <b>INBOX</b>
+                                    </label>
+                                </td>
+                            </tr>
+                            <tr style="width: 100px">
+                                <td style="border: none; padding: 0; width: 50%;" class="pull-left">
+                                    <label class="checkbox">
+                                        <input type="checkbox" ng-model="vm.job.actions[7].isChecked">
+                                        Flag Mails <b>INBOX</b>
+                                    </label>
+                                </td>
+                            </tr>
+                        </table>
                     </div>
-                </div>
 
-                <div class="text-center">
-                    <form id="seedCreate_form" ng-submit="vm.processForm()"
-                          style="min-height: 100px; padding-bottom: 0px" novalidate>
-
-                        <!-- our nested state views will be injected here -->
-                        <step-container></step-container>
-                    </form>
-                </div>
-
-                <hr style="margin-bottom: 0px;">
-                <ul class="pager" style="margin-bottom: 0px; margin-top: 0px;">
-                    <li class="previous pull-left">
-                        <button href="#" ng-disabled="$isFirst()" ng-click="$previousStep()"
-                                class="btn btn-lg btn-warning"><span
-                                class="glyphicon glyphicon-circle-arrow-left"></span>
-                            Previous&nbsp;</button>
-                    </li>
-
-                    <li class="next pull-right">
-                        <button href="#" ng-click="vm.checkStep($nextStep, $getActiveIndex)"
-                                ng-disabled="$isLast()"
-                                class="btn btn-lg btn-success">
-                            Next&nbsp;
-                            <span class="glyphicon glyphicon-circle-arrow-right"></span></button>
-                    </li>
-                </ul>
-            </multi-step-container>
+                    <div class="box-body">
+                        <div class="col-sm-12">
+                            <table class="table table-bordered table-hover dataTable" style="width: 100%;"
+                                   ng-table="vm.tableParams" show-filter="true" id="job_seed_list" ng-hide="loading"
+                                   ng-cloak>
+                                <tbody>
+                                <tr role="row" class="odd" ng-repeat="seed in $data" style="width: 100px;">
+                                    <td>
+                                        <input type="checkbox"
+                                               ng-click="vm.toggleSeedSelection(seed, seed.id)"
+                                               ng-checked="vm.findWithAttr(vm.job.selectedSeeds, 'id', seed.id) > -1">
+                                    </td>
+                                    <td title="'List Id'" filter="{ id: 'number'}" sortable="'id'">
+                                        {$ seed.id $}
+                                    </td>
+                                    <td title="'List Name'" filter="{ list_name: 'text'}" sortable="'list_name'">
+                                        {$ seed.list_name $}
+                                    </td>
+                                    <td title="'Count'">
+                                        {$ seed.emails.length $}
+                                    </td>
+                                </tr>
+                                </tbody>
+                            </table>
+                            <div ng-show="loading" class="text-center">
+                                <img id="mySpinner" src="/static/templates/dist/img/ajax-loader.gif"/>
+                            </div>
+                        </div>
+                    </div>
+                    <hr style="margin: 0;">
+                    <hr style="margin: 0;">
+                    <hr style="margin: 0;">
+                    <hr style="margin: 0;">
+                    <div id="formErrors" class="col-xs-8 col-sm-offset-2"></div>
+                    <div class="text-center">
+                        <button type="submit" class="btn btn-danger btn-block">Submit</button>
+                    </div>
+                </form>
+            </div>
         </div>
     </div>
 </div>
+
+

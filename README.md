@@ -9,3 +9,18 @@ Requirements
 ------------------------------------------
 python version =3.5.1 x64<br>
 ----------------
+
+
+var io = require('socket.io')(3000);
+var redis = require('redis').createClient;
+var adapter = require('socket.io-redis');
+var pub = redis(6379, 'localhost', { auth_pass: "cvc2016" });
+var sub = redis(6379, 'localhost', { return_buffers: true, auth_pass: "cvc2016" });
+
+io.adapter(adapter({ pubClient: pub, subClient: sub }));
+
+io.sockets.on('connection', function(socket) {
+  socket.on('message', function(data) {
+   console.log(data);
+  });
+});

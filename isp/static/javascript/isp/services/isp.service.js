@@ -11,8 +11,7 @@
         return ISP = {
             all: all,
             create: create,
-            get: get,
-            get_isp_team: get_isp_team
+            get: get
         };
 
         function all() {
@@ -20,7 +19,7 @@
         }
 
         function get(username) {
-            return $http.get('/api/v1/emails/' + username + '/');
+            return $http.get('/api/v1/accounts/' + username + '/isp/');
         }
 
         function create(email) {
@@ -30,8 +29,6 @@
             });
         }
 
-        function get_isp_team(team_id) {
-            return $http.get('/api/v1/isps/team/' + team_id + '/');
-        }
+
     }
 })();

@@ -11,8 +11,6 @@
     function LoginController(Authentication) {
         var vm = this;
         vm.login = login;
-        activate();
-
 
         function activate() {
             if (Authentication.isAuthenticated()) {
@@ -23,5 +21,7 @@
         function login() {
             Authentication.login(vm.username, vm.password);
         }
+
+        activate();
     }
 })();

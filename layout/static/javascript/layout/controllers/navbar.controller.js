@@ -5,37 +5,31 @@
         .module('capvalue.layout.controllers')
         .controller('NavbarController', NavbarController);
 
-    NavbarController.$inject = ['Authentication', 'ISP', '$rootScope', '$scope'];
+    NavbarController.$inject = ['Authentication', 'ISP'];
 
-    function NavbarController(Authentication, ISP, $rootScope, $scope) {
+    function NavbarController(Authentication, ISP) {
         var vm = this;
-        activate();
         vm.logout = logout;
+        vm.showIspLogo = false;
 
         function logout() {
             Authentication.logout();
         }
 
         function activate() {
-            $rootScope.isp_name = {
-                show: false,
-                name: '',
-                logo: ''
-            };
-            if (Authentication.isAuthenticated()) {
-                vm.user = Authentication.getAuthenticatedAccount();
-                if ((vm.user.role != 'Manager') && vm.user && vm.user.teams[0]) {
-                    ISP.get_isp_team(vm.user.teams[0]).then(function (results) {
-                        vm.isp = results.data[0];
-                        $rootScope.isp_name = {
-                            show: true,
-                            name: vm.isp.isp_name,
-                            logo: vm.isp.logo
-                        };
-                        $scope.isp_name = $rootScope.isp_name;
-                    });
-                }
+            vm.user = Authentication.getAuthenticatedAccount();
+            ISP.get(vm.user.username).then(getUserIspSuccess, getUserIspError);
+
+            function getUserIspSuccess(results) {
+                vm.isp = results.data[0];
+                vm.showIspLogo = true;
+            }
+
+            function getUserIspError(e) {
+                console.log(e);
             }
         }
+
+        activate();
     }
 })();

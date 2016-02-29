@@ -4,15 +4,14 @@
         .module('capvalue.layout.controllers')
         .controller('IndexController', IndexController);
     IndexController.$inject = ['Authentication', '$state'];
-    function IndexController(Authentication, $state) {
-        var vm = this;
-        activate();
 
+    function IndexController(Authentication, $state) {
         function activate() {
             if (!Authentication.isAuthenticated()) {
                 $state.go('Login');
             }
         }
-        vm.isAuthenticated = Authentication.isAuthenticated();
+
+        activate();
     }
 })();

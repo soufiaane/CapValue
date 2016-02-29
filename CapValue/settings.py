@@ -1,4 +1,5 @@
 import os
+
 import dj_database_url
 from configurations import Configuration
 from kombu import Exchange, Queue, serialization
@@ -18,19 +19,19 @@ AUTH_USER_MODEL = 'authentication.Account'
 GRAVATAR_DEFAULT_IMAGE = 'identicon'
 GRAVATAR_DEFAULT_SIZE = '215'
 ROLEPERMISSIONS_MODULE = 'CapValue.roles'
-DATABASES = {'default': {'ENGINE': 'django.db.backends.sqlite3', 'NAME': 'db.sqlite3'}}
-# DATABASES = {
-#     'default': {
-#         'ENGINE': 'django.db.backends.mysql',
-#         'NAME': 'CVC', 'USER': 'soufiaane',
-#         'PASSWORD': 'soufiane0',
-#         'HOST': 'cvc.ma',
-#         'PORT': '3306',
-#         'OPTIONS': {
-#             'autocommit': True,
-#         },
-#     }
-# }
+# DATABASES = {'default': {'ENGINE': 'django.db.backends.sqlite3', 'NAME': 'db.sqlite3'}}
+DATABASES = {
+    'default': {
+        'ENGINE'  : 'django.db.backends.mysql',
+        'NAME'    : 'CVC', 'USER': 'soufiaane',
+        'PASSWORD': 'soufiane0',
+        'HOST'    : 'cvc.ma',
+        'PORT'    : '3306',
+        'OPTIONS' : {
+            'autocommit': True,
+        },
+    }
+}
 # endregion
 
 # region Rest Framework
@@ -59,9 +60,8 @@ INSTALLED_APPS = (
     'rest_framework',
     'django_gravatar',
     'rolepermissions',
-    # 'compressor',
     'authentication',
-    'djcelery',
+    'django.core',
     'layout',
     'job',
     'seed',
@@ -70,7 +70,10 @@ INSTALLED_APPS = (
     'isp',
     'team',
     'shift',
-    'planning'
+    'planning',
+    'notifications'
+    # 'compressor',
+    # 'djcelery'
 )
 # endregion
 
