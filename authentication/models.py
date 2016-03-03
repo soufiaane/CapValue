@@ -12,14 +12,14 @@ class AccountManager(BaseUserManager):
 
         account = self.model(
             username=kwargs.get('username'),
-            first_name=kwargs.get('first_name') if kwargs.get('first_name').title() else "",
-            last_name=kwargs.get('last_name') if kwargs.get('last_name').title() else "",
+            first_name=kwargs.get('first_name').title() if kwargs.get('first_name') else "",
+            last_name=kwargs.get('last_name').title() if kwargs.get('last_name') else "",
             profile_picture=get_gravatar_url(str(kwargs.get('username')) + '@cvc.ma')  # TODO-CVC implement user picture
         )
 
         account.set_password(password)
-        Mailer.assign_role_to_user(account)
         account.save()
+        Mailer.assign_role_to_user(account)
         return account
 
     def create_superuser(self, password, **kwargs):
