@@ -5,7 +5,7 @@ from kombu import Exchange, Queue, serialization
 
 # region Settings
 DEBUG = True
-SECRET_KEY = os.environ['SECRET_KEY']
+SECRET_KEY = "iba5ht!u!_#8r6=lta=mdiux)aqxt37*9j%ijq$t4q4k1s2nbd"
 USE_I18N = True
 USE_L10N = True
 USE_TZ = True
@@ -22,14 +22,12 @@ ROLEPERMISSIONS_MODULE = 'CapValue.roles'
 DATABASES = {
     'default': {
         'ENGINE'  : 'django.db.backends.postgresql_psycopg2',
-        'NAME'    : 'CVC',
+        'NAME'    : 'cvc',
         'USER': 'cvcadmin',
         'PASSWORD': 'C@pV@Lue2016**-',
         'HOST'    : 'localhost',
         'PORT'    : '',
-        'OPTIONS' : {
-            'autocommit': True,
-        },
+        'AUTOCOMMIT' : True,
     }
 }
 # endregion
