@@ -21,11 +21,12 @@ ROLEPERMISSIONS_MODULE = 'CapValue.roles'
 # DATABASES = {'default': {'ENGINE': 'django.db.backends.sqlite3', 'NAME': 'db.sqlite3'}}
 DATABASES = {
     'default': {
-        'ENGINE'  : 'django.db.backends.mysql',
-        'NAME'    : 'CVC', 'USER': 'soufiaane',
-        'PASSWORD': 'soufiane0',
-        'HOST'    : 'cvc.ma',
-        'PORT'    : '3306',
+        'ENGINE'  : 'django.db.backends.postgresql_psycopg2',
+        'NAME'    : 'CVC', 
+	'USER': 'cvcadmin',
+        'PASSWORD': 'C@pV@Lue2016**-',
+        'HOST'    : 'localhost',
+        'PORT'    : '',
         'OPTIONS' : {
             'autocommit': True,
         },
