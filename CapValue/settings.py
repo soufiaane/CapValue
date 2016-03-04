@@ -22,8 +22,8 @@ ROLEPERMISSIONS_MODULE = 'CapValue.roles'
 DATABASES = {
     'default': {
         'ENGINE'  : 'django.db.backends.postgresql_psycopg2',
-        'NAME'    : 'CVC', 
-	'USER': 'cvcadmin',
+        'NAME'    : 'CVC',
+        'USER': 'cvcadmin',
         'PASSWORD': 'C@pV@Lue2016**-',
         'HOST'    : 'localhost',
         'PORT'    : '',
