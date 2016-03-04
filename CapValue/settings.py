@@ -1,7 +1,6 @@
 import os
 
 import dj_database_url
-from configurations import Configuration
 from kombu import Exchange, Queue, serialization
 
 # region Settings
