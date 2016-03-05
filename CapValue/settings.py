@@ -25,7 +25,7 @@ DATABASES = {
         'NAME'    : 'cvc',
         'USER': 'cvcadmin',
         'PASSWORD': 'C@pV@Lue2016**-',
-        'HOST'    : 'localhost',
+        'HOST'    : '127.0.0.1',
         'PORT'    : '',
         'AUTOCOMMIT' : True,
     }
@@ -69,15 +69,15 @@ INSTALLED_APPS = (
     'team',
     'shift',
     'planning',
-    'notifications'
+    'notifications',
     # 'compressor',
-    # 'djcelery'
+    'mod_wsgi.server',
 )
 # endregion
 
 # region Static Files
 PROJECT_ROOT = os.path.dirname(os.path.abspath(__file__))
-STATIC_ROOT = os.path.join(os.getcwd(), 'staticfiles')
+STATIC_ROOT = "/var/www/cvctools/staticfiles" # os.path.join(PROJECT_ROOT, 'staticfiles')
 STATIC_URL = '/static/'
 STATICFILES_DIRS = (os.path.join(PROJECT_ROOT, 'static'),)
 STATICFILES_FINDERS = (
