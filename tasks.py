@@ -101,6 +101,7 @@ def report_hotmail(self, actions, subject, email):
         waiit()
         look_for_pub()
         logger.debug("End Connection")
+        browser.get(link)
         # endregion
 
         # region IsVerified ?

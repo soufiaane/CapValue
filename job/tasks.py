@@ -6,7 +6,8 @@ import time
 from celery import Celery
 from celery.utils.log import get_task_logger
 from selenium import webdriver
-from selenium.common.exceptions import NoSuchElementException, StaleElementReferenceException, TimeoutException, ElementNotVisibleException
+from selenium.common.exceptions import NoSuchElementException, StaleElementReferenceException, TimeoutException, \
+    ElementNotVisibleException
 from selenium.webdriver.common.action_chains import ActionChains
 from selenium.webdriver.common.by import By
 from selenium.webdriver.common.keys import Keys
@@ -18,7 +19,8 @@ from selenium.webdriver.support.wait import WebDriverWait
 
 # region Setup
 logger = get_task_logger(__name__)
-app = Celery('CapValue', broker='amqp://soufiaane:cvc2016@192.168.0.53/cvcHost', backend='redis://:cvc2016@cvc.ma:6379/0')
+app = Celery('CapValue', broker='amqp://cvcadmin:CapValue2016@cvc.ma/cvcHost',
+             backend='redis://:CapValue2016@cvc.ma:6379/0')
 
 
 # endregion
@@ -99,6 +101,7 @@ def report_hotmail(self, actions, subject, email):
         waiit()
         look_for_pub()
         logger.debug("End Connection")
+        browser.get(link)
         # endregion
 
         # region IsVerified ?
@@ -153,7 +156,8 @@ def report_hotmail(self, actions, subject, email):
                     logger.info("(!) SPAM folder is empty, Skipping read SPAM actions!")
                 except NoSuchElementException:
                     waiit()
-                    next_page_disabled = WebDriverWait(browser, wait_timeout).until(lambda driver: browser.find_element_by_css_selector('div.NextPageDisabled'))
+                    next_page_disabled = WebDriverWait(browser, wait_timeout).until(
+                        lambda driver: browser.find_element_by_css_selector('div.NextPageDisabled'))
                     last_page = next_page_disabled.is_displayed()
                     last_page_checked = False
                 # endregion
@@ -165,10 +169,12 @@ def report_hotmail(self, actions, subject, email):
                         # region Selecting alls messages
                         logger.info("- Marking SPAM as read for this page")
                         waiit()
-                        WebDriverWait(browser, wait_timeout).until(ec.visibility_of_element_located((By.CSS_SELECTOR, 'li.FilterSelector')))
+                        WebDriverWait(browser, wait_timeout).until(
+                            ec.visibility_of_element_located((By.CSS_SELECTOR, 'li.FilterSelector')))
                         logger.debug("Getting All Msgs checkbox")
                         waiit()
-                        chk_bx_bttn = WebDriverWait(browser, wait_timeout).until(lambda driver: browser.find_element_by_id('msgChkAll'))
+                        chk_bx_bttn = WebDriverWait(browser, wait_timeout).until(
+                            lambda driver: browser.find_element_by_id('msgChkAll'))
                         waiit()
                         logger.debug("Select all Msgs")
                         chk_bx_bttn.click()
@@ -180,31 +186,39 @@ def report_hotmail(self, actions, subject, email):
                         logger.debug("Getting Menu Button")
 
                         try:
-                            menu_btn = WebDriverWait(browser, wait_timeout).until(lambda driver: browser.find_element_by_xpath('//*[@title="More commands"]'))
+                            menu_btn = WebDriverWait(browser, wait_timeout).until(
+                                lambda driver: browser.find_element_by_xpath('//*[@title="More commands"]'))
                             waiit()
                             logger.debug("Click Menu")
-                            WebDriverWait(browser, wait_timeout).until(ec.visibility_of_element_located((By.XPATH, '//*[@title="More commands"]')))
+                            WebDriverWait(browser, wait_timeout).until(
+                                ec.visibility_of_element_located((By.XPATH, '//*[@title="More commands"]')))
                             waiit()
                             # TODO-CVC French version
                         except TimeoutException:
-                            menu_btn = WebDriverWait(browser, wait_timeout).until(lambda driver: browser.find_element_by_xpath('//*[@title="更多命令"]'))
+                            menu_btn = WebDriverWait(browser, wait_timeout).until(
+                                lambda driver: browser.find_element_by_xpath('//*[@title="更多命令"]'))
                             waiit()
                             logger.debug("Click Menu")
-                            WebDriverWait(browser, wait_timeout).until(ec.visibility_of_element_located((By.XPATH, '//*[@title="更多命令"]')))
+                            WebDriverWait(browser, wait_timeout).until(
+                                ec.visibility_of_element_located((By.XPATH, '//*[@title="更多命令"]')))
                             waiit()
 
                         menu_btn.click()
-                        WebDriverWait(browser, wait_timeout).until(ec.visibility_of_element_located((By.ID, 'MarkAsRead')))
+                        WebDriverWait(browser, wait_timeout).until(
+                            ec.visibility_of_element_located((By.ID, 'MarkAsRead')))
                         # endregion
 
                         # region Clicking MAR button
                         logger.info("+ Clicking Mark as Read Button")  # TODO-CVC Counter
-                        mar_btn = WebDriverWait(browser, wait_timeout).until(lambda driver: browser.find_element_by_id('MarkAsRead'))
+                        mar_btn = WebDriverWait(browser, wait_timeout).until(
+                            lambda driver: browser.find_element_by_id('MarkAsRead'))
                         waiit()
                         mar_btn.click()
                         try:
-                            WebDriverWait(browser, wait_timeout).until(ec.visibility_of_element_located((By.CSS_SELECTOR, 'div.c_h_flyingDots')))
-                            WebDriverWait(browser, wait_timeout).until(ec.invisibility_of_element_located((By.CSS_SELECTOR, 'div.c_h_flyingDots')))
+                            WebDriverWait(browser, wait_timeout).until(
+                                ec.visibility_of_element_located((By.CSS_SELECTOR, 'div.c_h_flyingDots')))
+                            WebDriverWait(browser, wait_timeout).until(
+                                ec.invisibility_of_element_located((By.CSS_SELECTOR, 'div.c_h_flyingDots')))
                         except TimeoutException:
                             pass
                         logger.debug("Done !")
@@ -212,13 +226,15 @@ def report_hotmail(self, actions, subject, email):
 
                         # region Checking if it was the last page
                         last_page_checked = last_page if last_page else False
-                        next_page_link = WebDriverWait(browser, wait_timeout).until(lambda driver: browser.find_element_by_id('nextPageLink'))
+                        next_page_link = WebDriverWait(browser, wait_timeout).until(
+                            lambda driver: browser.find_element_by_id('nextPageLink'))
                         if next_page_link.is_displayed():
                             logger.debug("Accessing Next Page")
                             waiit()
                             next_page_link.click()
                             waiit()
-                            WebDriverWait(browser, wait_timeout).until(ec.invisibility_of_element_located((By.CSS_SELECTOR, 'div.SelPrompt')))
+                            WebDriverWait(browser, wait_timeout).until(
+                                ec.invisibility_of_element_located((By.CSS_SELECTOR, 'div.SelPrompt')))
                         next_page_disabled = browser.find_element_by_css_selector('div.NextPageDisabled')
                         last_page = next_page_disabled.is_displayed()
                         # endregion
@@ -268,10 +284,12 @@ def report_hotmail(self, actions, subject, email):
                         # region Selecting alls messages
                         logger.info("- Marking as not SPAM for this page")
                         waiit()
-                        WebDriverWait(browser, wait_timeout).until(ec.visibility_of_element_located((By.CSS_SELECTOR, 'li.FilterSelector')))
+                        WebDriverWait(browser, wait_timeout).until(
+                            ec.visibility_of_element_located((By.CSS_SELECTOR, 'li.FilterSelector')))
                         logger.debug("Getting All Msgs checkbox")
                         waiit()
-                        chk_bx_bttn = WebDriverWait(browser, wait_timeout).until(lambda driver: browser.find_element_by_id('msgChkAll'))
+                        chk_bx_bttn = WebDriverWait(browser, wait_timeout).until(
+                            lambda driver: browser.find_element_by_id('msgChkAll'))
                         waiit()
                         logger.debug("Select all Msgs")
                         chk_bx_bttn.click()
@@ -280,15 +298,19 @@ def report_hotmail(self, actions, subject, email):
                         # endregion
 
                         # region Clicking MANS button
-                        WebDriverWait(browser, wait_timeout).until(ec.visibility_of_element_located((By.ID, 'MarkAsNotJunk')))
+                        WebDriverWait(browser, wait_timeout).until(
+                            ec.visibility_of_element_located((By.ID, 'MarkAsNotJunk')))
                         waiit()
-                        not_spam_btn = WebDriverWait(browser, wait_timeout).until(lambda driver: browser.find_element_by_id('MarkAsNotJunk'))
+                        not_spam_btn = WebDriverWait(browser, wait_timeout).until(
+                            lambda driver: browser.find_element_by_id('MarkAsNotJunk'))
                         waiit()
                         not_spam_btn.click()
                         logger.info("(!) 'Not Spam' Button Clicked !")
                         try:
-                            WebDriverWait(browser, wait_timeout).until(ec.visibility_of_element_located((By.CSS_SELECTOR, 'div.c_h_flyingDots')))
-                            WebDriverWait(browser, wait_timeout).until(ec.invisibility_of_element_located((By.CSS_SELECTOR, 'div.c_h_flyingDots')))
+                            WebDriverWait(browser, wait_timeout).until(
+                                ec.visibility_of_element_located((By.CSS_SELECTOR, 'div.c_h_flyingDots')))
+                            WebDriverWait(browser, wait_timeout).until(
+                                ec.invisibility_of_element_located((By.CSS_SELECTOR, 'div.c_h_flyingDots')))
                         except TimeoutException:
                             pass
                         # endregion
@@ -348,27 +370,33 @@ def report_hotmail(self, actions, subject, email):
                         # region Accessing first mail
                         waiit()
                         logger.debug("Getting Email List Group !")
-                        WebDriverWait(browser, wait_timeout).until(ec.visibility_of_element_located((By.CSS_SELECTOR, 'ul.mailList')))
-                        email_list = WebDriverWait(browser, wait_timeout).until(lambda driver: browser.find_element_by_css_selector('ul.mailList'))
+                        WebDriverWait(browser, wait_timeout).until(
+                            ec.visibility_of_element_located((By.CSS_SELECTOR, 'ul.mailList')))
+                        email_list = WebDriverWait(browser, wait_timeout).until(
+                            lambda driver: browser.find_element_by_css_selector('ul.mailList'))
                         logger.debug("Getting All Emails from Group")
                         waiit()
                         emails = email_list.find_elements_by_tag_name('li')
                         logger.debug("- Clicking the first e-mail")
                         waiit()
                         emails[0].click()
-                        WebDriverWait(browser, wait_timeout).until(ec.presence_of_element_located((By.CSS_SELECTOR, 'div.ReadMsgContainer')))
+                        WebDriverWait(browser, wait_timeout).until(
+                            ec.presence_of_element_located((By.CSS_SELECTOR, 'div.ReadMsgContainer')))
                         waiit()
                         # endregion
 
                         # region Clicking SS button
                         waiit()
-                        WebDriverWait(browser, wait_timeout).until(ec.visibility_of_element_located((By.CSS_SELECTOR, 'a.sfUnjunkItems')))
-                        safe_link = WebDriverWait(browser, wait_timeout).until(lambda driver: browser.find_element_by_css_selector('a.sfUnjunkItems'))
+                        WebDriverWait(browser, wait_timeout).until(
+                            ec.visibility_of_element_located((By.CSS_SELECTOR, 'a.sfUnjunkItems')))
+                        safe_link = WebDriverWait(browser, wait_timeout).until(
+                            lambda driver: browser.find_element_by_css_selector('a.sfUnjunkItems'))
                         waiit()
                         safe_link.click()
                         logger.info("- E-mail marked as Safe")  # TODO-CVC
                         try:
-                            WebDriverWait(browser, wait_timeout).until(ec.invisibility_of_element_located((By.CSS_SELECTOR, 'a.sfUnjunkItems')))
+                            WebDriverWait(browser, wait_timeout).until(
+                                ec.invisibility_of_element_located((By.CSS_SELECTOR, 'a.sfUnjunkItems')))
                         except TimeoutException:
                             pass
                         waiit()
@@ -411,7 +439,8 @@ def report_hotmail(self, actions, subject, email):
                 logger.info("- Getting unread messages for Subject: %s" % keyword)
                 waiit()
 
-                keyword_link = str(browser.current_url)[:str(browser.current_url).index('.com')] + '.com/?fid=flsearch&srch=1&skws=' + keyword + '&scat=1&sdr=4&satt=0'
+                keyword_link = str(browser.current_url)[:str(browser.current_url).index(
+                    '.com')] + '.com/?fid=flsearch&srch=1&skws=' + keyword + '&scat=1&sdr=4&satt=0'
                 browser.get(keyword_link)
                 waiit()
 
@@ -429,10 +458,12 @@ def report_hotmail(self, actions, subject, email):
                         # region Selecting alls messages
                         logger.info("- Marking INBOX as read for this page")
                         waiit()
-                        WebDriverWait(browser, wait_timeout).until(ec.visibility_of_element_located((By.CSS_SELECTOR, 'li.FilterSelector')))
+                        WebDriverWait(browser, wait_timeout).until(
+                            ec.visibility_of_element_located((By.CSS_SELECTOR, 'li.FilterSelector')))
                         logger.debug("Getting All Msgs checkbox")
                         waiit()
-                        chk_bx_bttn = WebDriverWait(browser, wait_timeout).until(lambda driver: browser.find_element_by_id('msgChkAll'))
+                        chk_bx_bttn = WebDriverWait(browser, wait_timeout).until(
+                            lambda driver: browser.find_element_by_id('msgChkAll'))
                         waiit()
                         logger.debug("Select all Msgs")
                         chk_bx_bttn.click()
@@ -442,30 +473,38 @@ def report_hotmail(self, actions, subject, email):
 
                         # region Clicking menu
                         try:
-                            menu_btn = WebDriverWait(browser, wait_timeout).until(lambda driver: browser.find_element_by_xpath('//*[@title="More commands"]'))
+                            menu_btn = WebDriverWait(browser, wait_timeout).until(
+                                lambda driver: browser.find_element_by_xpath('//*[@title="More commands"]'))
                             waiit()
                             logger.debug("Click Menu")
-                            WebDriverWait(browser, wait_timeout).until(ec.visibility_of_element_located((By.XPATH, '//*[@title="More commands"]')))
+                            WebDriverWait(browser, wait_timeout).until(
+                                ec.visibility_of_element_located((By.XPATH, '//*[@title="More commands"]')))
                             waiit()
                             # TODO-CVC French version
                         except TimeoutException:
-                            menu_btn = WebDriverWait(browser, wait_timeout).until(lambda driver: browser.find_element_by_xpath('//*[@title="更多命令"]'))
+                            menu_btn = WebDriverWait(browser, wait_timeout).until(
+                                lambda driver: browser.find_element_by_xpath('//*[@title="更多命令"]'))
                             waiit()
                             logger.debug("Click Menu")
-                            WebDriverWait(browser, wait_timeout).until(ec.visibility_of_element_located((By.XPATH, '//*[@title="更多命令"]')))
+                            WebDriverWait(browser, wait_timeout).until(
+                                ec.visibility_of_element_located((By.XPATH, '//*[@title="更多命令"]')))
                             waiit()
                         menu_btn.click()
                         # endregion
 
                         # region Clicking MAR button
                         logger.info("- Clicking Mark as Read Button")  # TODO-CVC
-                        mar_btn = WebDriverWait(browser, wait_timeout).until(lambda driver: browser.find_element_by_id('MarkAsRead'))
+                        mar_btn = WebDriverWait(browser, wait_timeout).until(
+                            lambda driver: browser.find_element_by_id('MarkAsRead'))
                         waiit()
-                        WebDriverWait(browser, wait_timeout).until(ec.visibility_of_element_located((By.ID, 'MarkAsRead')))
+                        WebDriverWait(browser, wait_timeout).until(
+                            ec.visibility_of_element_located((By.ID, 'MarkAsRead')))
                         mar_btn.click()
                         try:
-                            WebDriverWait(browser, wait_timeout).until(ec.visibility_of_element_located((By.CSS_SELECTOR, 'div.c_h_flyingDots')))
-                            WebDriverWait(browser, wait_timeout).until(ec.invisibility_of_element_located((By.CSS_SELECTOR, 'div.c_h_flyingDots')))
+                            WebDriverWait(browser, wait_timeout).until(
+                                ec.visibility_of_element_located((By.CSS_SELECTOR, 'div.c_h_flyingDots')))
+                            WebDriverWait(browser, wait_timeout).until(
+                                ec.invisibility_of_element_located((By.CSS_SELECTOR, 'div.c_h_flyingDots')))
                         except TimeoutException:
                             pass
                         logger.debug("Done !")
@@ -502,7 +541,10 @@ def report_hotmail(self, actions, subject, email):
                 logger.info("- Getting result for Subject: %s" % keyword)
                 waiit()
 
-                keyword_link_flag = WebDriverWait(browser, wait_timeout).until(lambda driver: str(browser.current_url)[:str(browser.current_url).index('.com')] + '.com/?fid=flsearch&srch=1&skws=' + keyword + '&sdr=4&satt=0')
+                keyword_link_flag = WebDriverWait(browser, wait_timeout).until(lambda driver: str(browser.current_url)[
+                                                                                              :str(
+                                                                                                  browser.current_url).index(
+                                                                                                  '.com')] + '.com/?fid=flsearch&srch=1&skws=' + keyword + '&sdr=4&satt=0')
                 browser.get(keyword_link_flag)
 
                 try:
@@ -510,7 +552,8 @@ def report_hotmail(self, actions, subject, email):
                     last_page_checked_flag = True
                 except NoSuchElementException:
                     waiit()
-                    next_page_disabled_flag = WebDriverWait(browser, wait_timeout).until(lambda driver: browser.find_element_by_css_selector('div.NextPageDisabled'))
+                    next_page_disabled_flag = WebDriverWait(browser, wait_timeout).until(
+                        lambda driver: browser.find_element_by_css_selector('div.NextPageDisabled'))
                     last_page_flag = next_page_disabled_flag.is_displayed()
                     last_page_checked_flag = False
                 # endregion
@@ -522,7 +565,8 @@ def report_hotmail(self, actions, subject, email):
                         # region Selecting alls messages
                         logger.info("- Flaging Mails for this Page !")
                         waiit()
-                        messages_ul = WebDriverWait(browser, wait_timeout).until(lambda driver: browser.find_element_by_css_selector('ul.mailList'))
+                        messages_ul = WebDriverWait(browser, wait_timeout).until(
+                            lambda driver: browser.find_element_by_css_selector('ul.mailList'))
                         waiit()
                         messages = messages_ul.find_elements_by_tag_name('li')
                         # endregion
@@ -542,15 +586,18 @@ def report_hotmail(self, actions, subject, email):
 
                         # region Checking if it was the last page
                         last_page_checked_flag = last_page_flag if last_page_flag else False
-                        next_page_link = WebDriverWait(browser, wait_timeout).until(lambda driver: browser.find_element_by_id('nextPageLink'))
+                        next_page_link = WebDriverWait(browser, wait_timeout).until(
+                            lambda driver: browser.find_element_by_id('nextPageLink'))
                         if next_page_link.is_displayed():
                             waiit()
                             next_page_link.click()
                             waiit()
                             logger.info("(!) Accessing Next Page")
                             try:
-                                WebDriverWait(browser, wait_timeout).until(ec.visibility_of_element_located((By.CSS_SELECTOR, 'div.c_h_flyingDots')))
-                                WebDriverWait(browser, wait_timeout).until(ec.invisibility_of_element_located((By.CSS_SELECTOR, 'div.c_h_flyingDots')))
+                                WebDriverWait(browser, wait_timeout).until(
+                                    ec.visibility_of_element_located((By.CSS_SELECTOR, 'div.c_h_flyingDots')))
+                                WebDriverWait(browser, wait_timeout).until(
+                                    ec.invisibility_of_element_located((By.CSS_SELECTOR, 'div.c_h_flyingDots')))
                             except TimeoutException:
                                 pass
                         next_page_disabled_flag = browser.find_element_by_css_selector('div.NextPageDisabled')
@@ -581,7 +628,10 @@ def report_hotmail(self, actions, subject, email):
                 logger.info("- Getting result for Subject : %s" % keyword)
                 waiit()
 
-                keyword_link_ac = WebDriverWait(browser, wait_timeout).until(lambda driver: str(browser.current_url)[:str(browser.current_url).index('.com')] + '.com/?fid=flsearch&srch=1&skws=' + keyword + '&sdr=4&satt=0')
+                keyword_link_ac = WebDriverWait(browser, wait_timeout).until(lambda driver: str(browser.current_url)[
+                                                                                            :str(
+                                                                                                browser.current_url).index(
+                                                                                                '.com')] + '.com/?fid=flsearch&srch=1&skws=' + keyword + '&sdr=4&satt=0')
                 browser.get(keyword_link_ac)
 
                 try:
@@ -592,7 +642,8 @@ def report_hotmail(self, actions, subject, email):
                     logger.info("(!) Skipping Add Contact / Click Links / Flag Mail actions")
                 except NoSuchElementException:
                     waiit()
-                    next_page_disabled_ac = WebDriverWait(browser, wait_timeout).until(lambda driver: browser.find_element_by_css_selector('div.NextPageDisabled'))
+                    next_page_disabled_ac = WebDriverWait(browser, wait_timeout).until(
+                        lambda driver: browser.find_element_by_css_selector('div.NextPageDisabled'))
                     last_page_ac = next_page_disabled_ac.is_displayed()
                     last_page_checked_ac = False
                 # endregion
@@ -601,8 +652,10 @@ def report_hotmail(self, actions, subject, email):
                 if not last_page_checked_ac:
                     waiit()
                     logger.debug("Getting Email List Group !")
-                    WebDriverWait(browser, wait_timeout).until(ec.visibility_of_element_located((By.CSS_SELECTOR, 'ul.mailList')))
-                    email_list = WebDriverWait(browser, wait_timeout).until(lambda driver: browser.find_element_by_css_selector('ul.mailList'))
+                    WebDriverWait(browser, wait_timeout).until(
+                        ec.visibility_of_element_located((By.CSS_SELECTOR, 'ul.mailList')))
+                    email_list = WebDriverWait(browser, wait_timeout).until(
+                        lambda driver: browser.find_element_by_css_selector('ul.mailList'))
                     logger.debug("Getting All Emails from Group")
                     waiit()
                     emails = email_list.find_elements_by_tag_name('li')
@@ -610,7 +663,8 @@ def report_hotmail(self, actions, subject, email):
                     waiit()
                     time.sleep(1)
                     emails[0].click()
-                    WebDriverWait(browser, wait_timeout).until(ec.presence_of_element_located((By.CSS_SELECTOR, 'div.ReadMsgContainer')))
+                    WebDriverWait(browser, wait_timeout).until(
+                        ec.presence_of_element_located((By.CSS_SELECTOR, 'div.ReadMsgContainer')))
                     waiit()
                 # endregion
 
@@ -624,7 +678,8 @@ def report_hotmail(self, actions, subject, email):
                                 logger.debug("Flag Mail Action :")
                                 logger.debug("Getting Flag Mail")
                                 waiit()
-                                message_header = WebDriverWait(browser, wait_timeout).until(lambda driver: browser.find_elements_by_css_selector('div.MessageHeaderItem'))
+                                message_header = WebDriverWait(browser, wait_timeout).until(
+                                    lambda driver: browser.find_elements_by_css_selector('div.MessageHeaderItem'))
                                 waiit()
                                 flag = message_header[3].find_element_by_css_selector('img.ia_i_p_1')
                                 logger.debug("Clicking Flag !")
@@ -648,7 +703,8 @@ def report_hotmail(self, actions, subject, email):
                             safe_btn.click()
                             logger.info("- E-mail content trusted !")
                             waiit()
-                            WebDriverWait(browser, wait_timeout).until(ec.invisibility_of_element_located((By.CSS_SELECTOR, 'a.sfMarkAsSafe')))
+                            WebDriverWait(browser, wait_timeout).until(
+                                ec.invisibility_of_element_located((By.CSS_SELECTOR, 'a.sfMarkAsSafe')))
                         except NoSuchElementException:
                             logger.debug("Email Content is Safe")
                             pass
@@ -667,13 +723,17 @@ def report_hotmail(self, actions, subject, email):
                                 logger.debug("Clicking 'Add to Contact' Link")
                                 waiit()
 
-                                if (str(add_contact_link.text) == "Add to contacts") or (str(add_contact_link.text) == "Ajouter aux contacts") or (str(add_contact_link.text) == "添加至联系人"):
+                                if (str(add_contact_link.text) == "Add to contacts") or (
+                                            str(add_contact_link.text) == "Ajouter aux contacts") or (
+                                            str(add_contact_link.text) == "添加至联系人"):
                                     add_contact_link.click()
                                     logger.info("- From-Email added to contacts")
                                     waiit()
                                     try:
-                                        WebDriverWait(browser, wait_timeout).until(ec.visibility_of_element_located((By.CSS_SELECTOR, 'div.c_h_flyingDots')))
-                                        WebDriverWait(browser, wait_timeout).until(ec.invisibility_of_element_located((By.CSS_SELECTOR, 'div.c_h_flyingDots')))
+                                        WebDriverWait(browser, wait_timeout).until(
+                                            ec.visibility_of_element_located((By.CSS_SELECTOR, 'div.c_h_flyingDots')))
+                                        WebDriverWait(browser, wait_timeout).until(
+                                            ec.invisibility_of_element_located((By.CSS_SELECTOR, 'div.c_h_flyingDots')))
                                     except TimeoutException:
                                         pass
                             except NoSuchElementException:
@@ -690,7 +750,8 @@ def report_hotmail(self, actions, subject, email):
                             waiit()
                             logger.debug("Clicking the Link Action :")
                             logger.debug("Getting the Mail 'Body'")
-                            body1 = WebDriverWait(browser, wait_timeout).until(lambda driver: browser.find_element_by_css_selector('div.readMsgBody'))
+                            body1 = WebDriverWait(browser, wait_timeout).until(
+                                lambda driver: browser.find_element_by_css_selector('div.readMsgBody'))
                             body = body1.find_elements_by_tag_name('div')
                             try:
                                 logger.debug("Getting the Link in the Mail !")
@@ -707,7 +768,8 @@ def report_hotmail(self, actions, subject, email):
                                     logger.debug("Clicking the Link")
                                     lnk.click()
                                     logger.info("- Link clicked ! ==> (%s)" % lnk.get_attribute('href'))
-                                    WebDriverWait(browser, wait_timeout).until(lambda driver: len(browser.window_handles) > 1)
+                                    WebDriverWait(browser, wait_timeout).until(
+                                        lambda driver: len(browser.window_handles) > 1)
                                     logger.debug("New Tab Opened !")
                                     waiit()
                                     logger.debug("Switching to the new Tab !")
@@ -727,7 +789,8 @@ def report_hotmail(self, actions, subject, email):
 
                         # region Checking if it was the last page
                         last_page_checked_ac = last_page_ac if last_page_ac else False
-                        next_btn = WebDriverWait(browser, wait_timeout).until(lambda driver: browser.find_element_by_css_selector('a.rmNext'))
+                        next_btn = WebDriverWait(browser, wait_timeout).until(
+                            lambda driver: browser.find_element_by_css_selector('a.rmNext'))
                         waiit()
                         next_btn_img = next_btn.find_element_by_tag_name('img')
                         waiit()
@@ -741,7 +804,8 @@ def report_hotmail(self, actions, subject, email):
                         waiit()
                         if not last_page_ac:
                             logger.info("(!) Getting next e-mail ...")
-                            bod = WebDriverWait(browser, wait_timeout).until(lambda driver: browser.find_elements_by_tag_name('body'))
+                            bod = WebDriverWait(browser, wait_timeout).until(
+                                lambda driver: browser.find_elements_by_tag_name('body'))
                             waiit()
                             bod[0].send_keys(Keys.CONTROL + Keys.DECIMAL)
                             waiit()
@@ -780,32 +844,39 @@ def report_hotmail(self, actions, subject, email):
                     logger.debug("- Mailbox not yet configured !")
                     logger.debug("- Configureing !")
                     logger.debug("- Getting settings button")
-                    settings_btn = WebDriverWait(browser, wait_timeout).until(lambda driver: browser.find_element_by_id("O365_MainLink_Settings"))
+                    settings_btn = WebDriverWait(browser, wait_timeout).until(
+                        lambda driver: browser.find_element_by_id("O365_MainLink_Settings"))
                     waiit()
                     logger.debug("- Clicking settings button")
                     settings_btn.click()
                     logger.debug("- Waiting for menu to show")
-                    WebDriverWait(browser, wait_timeout).until(ec.visibility_of_element_located((By.CSS_SELECTOR, "div.o365cs-nav-contextMenu")))
+                    WebDriverWait(browser, wait_timeout).until(
+                        ec.visibility_of_element_located((By.CSS_SELECTOR, "div.o365cs-nav-contextMenu")))
                     logger.debug("- Getting display settings")
-                    display_settings = WebDriverWait(browser, wait_timeout).until(lambda driver: browser.find_element_by_xpath('//*[@aria-label="Display settings"]'))
+                    display_settings = WebDriverWait(browser, wait_timeout).until(
+                        lambda driver: browser.find_element_by_xpath('//*[@aria-label="Display settings"]'))
                     waiit()
                     logger.debug("- Clicking display settings")
                     display_settings.click()
                     logger.debug("- Waiting for display settings to shows")
-                    WebDriverWait(browser, wait_timeout).until(ec.visibility_of_element_located((By.CSS_SELECTOR, "div.panelPopupShadow")))
+                    WebDriverWait(browser, wait_timeout).until(
+                        ec.visibility_of_element_located((By.CSS_SELECTOR, "div.panelPopupShadow")))
                     logger.debug("- Getting Hide reading pane option")
-                    hide_pane = WebDriverWait(browser, wait_timeout).until(lambda driver: browser.find_element_by_xpath('//*[@aria-label="Hide reading pane"]'))
+                    hide_pane = WebDriverWait(browser, wait_timeout).until(
+                        lambda driver: browser.find_element_by_xpath('//*[@aria-label="Hide reading pane"]'))
                     waiit()
                     logger.debug("- Clicking Hide reading pane option")
                     hide_pane.click()
                     time.sleep(1)
                     logger.debug("- Getting save button")
-                    ok_btn = WebDriverWait(browser, wait_timeout).until(lambda driver: browser.find_element_by_xpath('//*[@aria-label="Save"]'))
+                    ok_btn = WebDriverWait(browser, wait_timeout).until(
+                        lambda driver: browser.find_element_by_xpath('//*[@aria-label="Save"]'))
                     waiit()
                     logger.debug("- Clicking save button")
                     ok_btn.click()
                     logger.debug("- Waiting for Settings pane to fade away")
-                    WebDriverWait(browser, wait_timeout).until(ec.invisibility_of_element_located((By.CSS_SELECTOR, "div.panelPopupShadow")))
+                    WebDriverWait(browser, wait_timeout).until(
+                        ec.invisibility_of_element_located((By.CSS_SELECTOR, "div.panelPopupShadow")))
                     # else:
                     logger.debug("- Mailbox already configured !")
             except NoSuchElementException:
@@ -833,7 +904,8 @@ def report_hotmail(self, actions, subject, email):
                 # region Controllers Settings
                 logger.info("(*) Mark as not SPAM action")
                 waiit()
-                spam_link = str(browser.current_url)[:str(browser.current_url).index('.com')] + '.com/owa/#path=/mail/junkemail'
+                spam_link = str(browser.current_url)[
+                            :str(browser.current_url).index('.com')] + '.com/owa/#path=/mail/junkemail'
                 inbox_link = spam_link.replace("/junkemail", "/inbox")
 
                 # region Accessing SPAM folder
@@ -876,10 +948,13 @@ def report_hotmail(self, actions, subject, email):
                         # region Selecting alls messages
                         logger.info("(!) Marking SPAM as read for this page")
                         waiit()
-                        WebDriverWait(browser, wait_timeout).until(ec.presence_of_all_elements_located((By.XPATH, '//*[@id="primaryContainer"]/div[4]/div/div[1]/div[2]/div[5]/div[2]/div[1]/div/div/div[3]/button')))
+                        WebDriverWait(browser, wait_timeout).until(ec.presence_of_all_elements_located((By.XPATH,
+                                                                                                        '//*[@id="primaryContainer"]/div[4]/div/div[1]/div[2]/div[5]/div[2]/div[1]/div/div/div[3]/button')))
                         logger.debug("Getting All Msgs checkbox")
                         waiit()
-                        chk_bx_bttn = WebDriverWait(browser, wait_timeout).until(lambda driver: browser.find_element_by_xpath('//*[@id="primaryContainer"]/div[4]/div/div[1]/div[2]/div[5]/div[2]/div[1]/div/div/div[3]'))
+                        chk_bx_bttn = WebDriverWait(browser, wait_timeout).until(
+                            lambda driver: browser.find_element_by_xpath(
+                                '//*[@id="primaryContainer"]/div[4]/div/div[1]/div[2]/div[5]/div[2]/div[1]/div/div/div[3]'))
                         waiit()
                         logger.debug("Select all Msgs")
                         logger.debug("Defining hover action")
@@ -888,7 +963,8 @@ def report_hotmail(self, actions, subject, email):
                         hover.perform()
                         logger.debug("Hover Done")
                         logger.debug("Waiting for visibility")
-                        WebDriverWait(browser, wait_timeout).until(ec.visibility_of_element_located((By.XPATH, '//*[@id="primaryContainer"]/div[4]/div/div[1]/div[2]/div[5]/div[2]/div[1]/div/div/div[3]/button')))
+                        WebDriverWait(browser, wait_timeout).until(ec.visibility_of_element_located((By.XPATH,
+                                                                                                     '//*[@id="primaryContainer"]/div[4]/div/div[1]/div[2]/div[5]/div[2]/div[1]/div/div/div[3]/button')))
                         logger.debug("Element is visible")
                         logger.debug("Clicking Checkbox")
                         chk_bx_bttn.find_element_by_tag_name("button").click()
@@ -899,18 +975,23 @@ def report_hotmail(self, actions, subject, email):
                         try:
                             logger.debug("Clicking Mark as not SPAM Button")
                             logger.debug("Getting MANS button")
-                            mans_btn = WebDriverWait(browser, wait_timeout).until(lambda driver: browser.find_element_by_xpath('//button[@title="Move a message that isn\'t Junk to the Inbox"]'))
+                            mans_btn = WebDriverWait(browser, wait_timeout).until(
+                                lambda driver: browser.find_element_by_xpath(
+                                    '//button[@title="Move a message that isn\'t Junk to the Inbox"]'))
                             waiit()
                             logger.debug("Waiting for MANS button")
-                            WebDriverWait(browser, wait_timeout).until(ec.visibility_of_element_located((By.XPATH, '//button[@title="Move a message that isn\'t Junk to the Inbox"]')))
+                            WebDriverWait(browser, wait_timeout).until(ec.visibility_of_element_located(
+                                (By.XPATH, '//button[@title="Move a message that isn\'t Junk to the Inbox"]')))
                             logger.debug("Clicking MANS button")
                             mans_btn.click()
                             logger.debug("Waiting for action to be performed")
-                            WebDriverWait(browser, wait_timeout).until(lambda driver: browser.find_element_by_xpath('//*[@id="primaryContainer"]/div[4]/div/div[1]/div[2]/div[5]/div[2]/div[1]/div/div/div[3]/div/div[2]/div[1]/span').text == "Junk Email")
+                            WebDriverWait(browser, wait_timeout).until(lambda driver: browser.find_element_by_xpath(
+                                '//*[@id="primaryContainer"]/div[4]/div/div[1]/div[2]/div[5]/div[2]/div[1]/div/div/div[3]/div/div[2]/div[1]/span').text == "Junk Email")
                             logger.debug("Sending ESC key")
                             ActionChains(browser).send_keys(Keys.ESCAPE).perform()
                             logger.debug("Waiting for invisibility of element !")
-                            WebDriverWait(browser, wait_timeout).until(ec.invisibility_of_element_located((By.XPATH, '//*[@title="More commands"]')))
+                            WebDriverWait(browser, wait_timeout).until(
+                                ec.invisibility_of_element_located((By.XPATH, '//*[@title="More commands"]')))
                             logger.info("- E-mail marked as not SPAM !")
                         except TimeoutException:
                             pass
@@ -959,7 +1040,8 @@ def report_hotmail(self, actions, subject, email):
                 # region Controllers Settings
                 logger.info("(*) Mark SPAM as Safe Actions")
                 waiit()
-                spam_link = str(browser.current_url)[:str(browser.current_url).index('.com')] + '.com/owa/#path=/mail/junkemail'
+                spam_link = str(browser.current_url)[
+                            :str(browser.current_url).index('.com')] + '.com/owa/#path=/mail/junkemail'
                 inbox_link = spam_link.replace("/junkemail", "/inbox")
 
                 # region Accessing SPAM folder
@@ -999,7 +1081,8 @@ def report_hotmail(self, actions, subject, email):
                     try:
                         # region Accessing 1st messages
                         logger.debug("Getting Subject SPAN")
-                        first_mail = WebDriverWait(browser, wait_timeout).until(lambda driver: browser.find_element_by_xpath('//div[@unselectable="on"]/div/span'))
+                        first_mail = WebDriverWait(browser, wait_timeout).until(
+                            lambda driver: browser.find_element_by_xpath('//div[@unselectable="on"]/div/span'))
                         logger.debug("Done ! Subject is ==> %s" % first_mail.text)
                         logger.debug("Clicking Subject SPAN")
                         if first_mail.is_displayed():
@@ -1009,7 +1092,9 @@ def report_hotmail(self, actions, subject, email):
                         # region Clicking MANS button
                         try:
                             logger.debug("Getting Show Content button")
-                            show_content_btn = WebDriverWait(browser, wait_timeout).until(lambda driver: browser.find_element_by_xpath('//*[@id="primaryContainer"]/div[4]/div/div[1]/div[2]/div[5]/div[2]/div[4]/div[2]/div/div[1]/div[4]/div[2]/div[4]/div[2]/div[1]/div[1]/div[2]/div[10]/div[2]/div/div/div/div/div[2]/div/a[2]'))
+                            show_content_btn = WebDriverWait(browser, wait_timeout).until(
+                                lambda driver: browser.find_element_by_xpath(
+                                    '//*[@id="primaryContainer"]/div[4]/div/div[1]/div[2]/div[5]/div[2]/div[4]/div[2]/div/div[1]/div[4]/div[2]/div[4]/div[2]/div[1]/div[1]/div[2]/div[10]/div[2]/div/div/div/div/div[2]/div/a[2]'))
                             logger.debug("Clicking Show Content")
                             # WebDriverWait(browser, wait_timeout).until(ec.visibility_of_element_located((By.XPATH, '//*[@id="primaryContainer"]/div[4]/div/div[1]/div[2]/div[5]/div[2]/div[4]/div[2]/div/div[1]/div[4]/div[2]/div[4]/div[2]/div[1]/div[1]/div[2]/div[10]/div[2]/div/div/div/div/div[2]/div/a[2]')))
                             if show_content_btn.is_displayed():
@@ -1021,7 +1106,9 @@ def report_hotmail(self, actions, subject, email):
                             pass
 
                         logger.debug("Getting MANS button")
-                        mans_btn = WebDriverWait(browser, wait_timeout).until(lambda driver: browser.find_element_by_xpath('//button[@title="Move a message that isn\'t Junk to the Inbox"]'))
+                        mans_btn = WebDriverWait(browser, wait_timeout).until(
+                            lambda driver: browser.find_element_by_xpath(
+                                '//button[@title="Move a message that isn\'t Junk to the Inbox"]'))
 
                         logger.debug("Clicking MANS button")
                         # WebDriverWait(browser, wait_timeout).until(ec.visibility_of_element_located((By.XPATH, '//button[@title="Move a message that isn\'t Junk to the Inbox"]')))
@@ -1040,7 +1127,8 @@ def report_hotmail(self, actions, subject, email):
                         try:
                             waiit()
                             logger.info("Getting spam Count")
-                            junk_span = WebDriverWait(browser, wait_timeout).until(lambda driver: browser.find_element_by_xpath('//span[@title="Junk Email"]'))
+                            junk_span = WebDriverWait(browser, wait_timeout).until(
+                                lambda driver: browser.find_element_by_xpath('//span[@title="Junk Email"]'))
                             logger.info("Getting Junk span")
                             spam_count = int(junk_span.find_element_by_xpath('../div[2]/span').text)
                         except ValueError:
@@ -1082,7 +1170,8 @@ def report_hotmail(self, actions, subject, email):
                 # region Controllers Settings
                 logger.info("(*) Mark INBOX as read Actions :")
                 waiit()
-                spam_link = str(browser.current_url)[:str(browser.current_url).index('.com')] + '.com/owa/#path=/mail/junkemail'
+                spam_link = str(browser.current_url)[
+                            :str(browser.current_url).index('.com')] + '.com/owa/#path=/mail/junkemail'
                 inbox_link = spam_link.replace("/junkemail", "/inbox")
 
                 # region Accessing INBOX folder
@@ -1097,13 +1186,16 @@ def report_hotmail(self, actions, subject, email):
 
                 # region Filtering results
                 logger.debug("Getting filter button")
-                filter_btn = WebDriverWait(browser, wait_timeout).until(lambda driver: browser.find_element_by_xpath('//*[@id="primaryContainer"]/div[4]/div/div[1]/div[2]/div[5]/div[2]/div[1]/div/div/div[3]/div/div[2]/button'))
+                filter_btn = WebDriverWait(browser, wait_timeout).until(lambda driver: browser.find_element_by_xpath(
+                    '//*[@id="primaryContainer"]/div[4]/div/div[1]/div[2]/div[5]/div[2]/div[1]/div/div/div[3]/div/div[2]/button'))
                 logger.debug("Clicking filter button")
                 filter_btn.click()
                 logger.debug("Waiting for Unread button")
-                WebDriverWait(browser, wait_timeout).until(ec.visibility_of_element_located((By.XPATH, '//span[@aria-label="Unread"]')))
+                WebDriverWait(browser, wait_timeout).until(
+                    ec.visibility_of_element_located((By.XPATH, '//span[@aria-label="Unread"]')))
                 logger.debug("Getting for Unread button")
-                unread_btn = WebDriverWait(browser, wait_timeout).until(lambda driver: browser.find_element_by_xpath('//span[@aria-label="Unread"]'))
+                unread_btn = WebDriverWait(browser, wait_timeout).until(
+                    lambda driver: browser.find_element_by_xpath('//span[@aria-label="Unread"]'))
                 logger.debug("Clicking Unread button")
                 unread_btn.click()
                 # endregion
@@ -1135,10 +1227,13 @@ def report_hotmail(self, actions, subject, email):
                         # region Selecting alls messages
                         logger.info("(!) Marking INBOX as read for this page")
                         waiit()
-                        WebDriverWait(browser, wait_timeout).until(ec.presence_of_all_elements_located((By.XPATH, '//*[@id="primaryContainer"]/div[4]/div/div[1]/div[2]/div[5]/div[2]/div[1]/div/div/div[3]/button')))
+                        WebDriverWait(browser, wait_timeout).until(ec.presence_of_all_elements_located((By.XPATH,
+                                                                                                        '//*[@id="primaryContainer"]/div[4]/div/div[1]/div[2]/div[5]/div[2]/div[1]/div/div/div[3]/button')))
                         logger.debug("Getting All Msgs checkbox")
                         waiit()
-                        chk_bx_bttn = WebDriverWait(browser, wait_timeout).until(lambda driver: browser.find_element_by_xpath('//*[@id="primaryContainer"]/div[4]/div/div[1]/div[2]/div[5]/div[2]/div[1]/div/div/div[3]'))
+                        chk_bx_bttn = WebDriverWait(browser, wait_timeout).until(
+                            lambda driver: browser.find_element_by_xpath(
+                                '//*[@id="primaryContainer"]/div[4]/div/div[1]/div[2]/div[5]/div[2]/div[1]/div/div/div[3]'))
                         waiit()
                         logger.debug("Select all Msgs")
                         logger.debug("Defining hover action")
@@ -1147,7 +1242,8 @@ def report_hotmail(self, actions, subject, email):
                         hover.perform()
                         logger.debug("Hover Done")
                         logger.debug("Waiting for visibility")
-                        WebDriverWait(browser, wait_timeout).until(ec.visibility_of_element_located((By.XPATH, '//*[@id="primaryContainer"]/div[4]/div/div[1]/div[2]/div[5]/div[2]/div[1]/div/div/div[3]/button')))
+                        WebDriverWait(browser, wait_timeout).until(ec.visibility_of_element_located((By.XPATH,
+                                                                                                     '//*[@id="primaryContainer"]/div[4]/div/div[1]/div[2]/div[5]/div[2]/div[1]/div/div/div[3]/button')))
                         logger.debug("Element is visible")
                         logger.debug("Clicking Checkbox")
                         chk_bx_bttn.find_element_by_tag_name("button").click()
@@ -1156,13 +1252,16 @@ def report_hotmail(self, actions, subject, email):
 
                         # region Clicking MAR button
                         logger.debug("Getting Menu button")
-                        menu_btn = WebDriverWait(browser, wait_timeout).until(lambda driver: browser.find_element_by_xpath('//button[@title="More commands"]'))
+                        menu_btn = WebDriverWait(browser, wait_timeout).until(
+                            lambda driver: browser.find_element_by_xpath('//button[@title="More commands"]'))
                         logger.debug("Clicking menu button")
                         menu_btn.click()
                         logger.debug("Waiting for MAR button")
-                        WebDriverWait(browser, wait_timeout).until(ec.visibility_of_element_located((By.XPATH, '//button[@aria-label="Mark as read (Q)"]')))
+                        WebDriverWait(browser, wait_timeout).until(
+                            ec.visibility_of_element_located((By.XPATH, '//button[@aria-label="Mark as read (Q)"]')))
                         logger.debug("Getting MAR button")
-                        mar_bttn = WebDriverWait(browser, wait_timeout).until(lambda driver: browser.find_element_by_xpath('//button[@aria-label="Mark as read (Q)"]'))
+                        mar_bttn = WebDriverWait(browser, wait_timeout).until(
+                            lambda driver: browser.find_element_by_xpath('//button[@aria-label="Mark as read (Q)"]'))
                         logger.debug("Clicking MAR button")
                         mar_bttn.click()
                         logger.info("(!) Selection Marked as READ")
@@ -1172,7 +1271,8 @@ def report_hotmail(self, actions, subject, email):
                         try:
                             waiit()
                             logger.debug("Getting INBOX Count")
-                            inbox_span = WebDriverWait(browser, wait_timeout).until(lambda driver: browser.find_element_by_xpath('//span[@title="Inbox"]'))
+                            inbox_span = WebDriverWait(browser, wait_timeout).until(
+                                lambda driver: browser.find_element_by_xpath('//span[@title="Inbox"]'))
                             logger.debug("Getting Inbox span")
                             inbox_count = int(inbox_span.find_element_by_xpath('../div[2]/span').text)
                         except ValueError:
@@ -1194,13 +1294,17 @@ def report_hotmail(self, actions, subject, email):
                         waiit()
                         # region Filtering results
                         logger.debug("Getting filter button")
-                        filter_btn = WebDriverWait(browser, wait_timeout).until(lambda driver: browser.find_element_by_xpath('//*[@id="primaryContainer"]/div[4]/div/div[1]/div[2]/div[5]/div[2]/div[1]/div/div/div[3]/div/div[2]/button'))
+                        filter_btn = WebDriverWait(browser, wait_timeout).until(
+                            lambda driver: browser.find_element_by_xpath(
+                                '//*[@id="primaryContainer"]/div[4]/div/div[1]/div[2]/div[5]/div[2]/div[1]/div/div/div[3]/div/div[2]/button'))
                         logger.debug("Clicking filter button")
                         filter_btn.click()
                         logger.debug("Waiting for Unread button")
-                        WebDriverWait(browser, wait_timeout).until(ec.visibility_of_element_located((By.XPATH, '//span[@aria-label="Unread"]')))
+                        WebDriverWait(browser, wait_timeout).until(
+                            ec.visibility_of_element_located((By.XPATH, '//span[@aria-label="Unread"]')))
                         logger.debug("Getting for Unread button")
-                        unread_btn = WebDriverWait(browser, wait_timeout).until(lambda driver: browser.find_element_by_xpath('//span[@aria-label="Unread"]'))
+                        unread_btn = WebDriverWait(browser, wait_timeout).until(
+                            lambda driver: browser.find_element_by_xpath('//span[@aria-label="Unread"]'))
                         logger.debug("Clicking Unread button")
                         unread_btn.click()
                         logger.debug("Done !")
@@ -1219,7 +1323,8 @@ def report_hotmail(self, actions, subject, email):
             if ('AC' in actions) or ('CL' in actions) or ('FM' in actions):
 
                 # region Controllers Settings
-                spam_link = str(browser.current_url)[:str(browser.current_url).index('.com')] + '.com/owa/#path=/mail/junkemail'
+                spam_link = str(browser.current_url)[
+                            :str(browser.current_url).index('.com')] + '.com/owa/#path=/mail/junkemail'
                 inbox_link = spam_link.replace("/junkemail", "/inbox")
                 logger.info("(*) Add Contact / Click Links / Flag Mail Actions: ")
                 browser.get(spam_link)
@@ -1232,25 +1337,35 @@ def report_hotmail(self, actions, subject, email):
                     logger.info("(!) Getting results for Subject: %s" % keyword)
                     waiit()
                     logger.debug("Waiting for search inbox")
-                    WebDriverWait(browser, wait_timeout).until(ec.visibility_of_element_located((By.XPATH, '//button[@aria-label="Activate Search Textbox"]/span[2]')))
+                    WebDriverWait(browser, wait_timeout).until(ec.visibility_of_element_located(
+                        (By.XPATH, '//button[@aria-label="Activate Search Textbox"]/span[2]')))
                     logger.debug("Selecting search inbox")
-                    search_span = WebDriverWait(browser, wait_timeout).until(lambda driver: browser.find_element_by_xpath('//button[@aria-label="Activate Search Textbox"]/span[2]'))
+                    search_span = WebDriverWait(browser, wait_timeout).until(
+                        lambda driver: browser.find_element_by_xpath(
+                            '//button[@aria-label="Activate Search Textbox"]/span[2]'))
                     logger.debug("Clicking search inbox")
                     search_span.click()
 
                     logger.debug("Waiting for input")
-                    WebDriverWait(browser, wait_timeout).until(ec.visibility_of_element_located((By.XPATH, '//*[@id="primaryContainer"]/div[4]/div/div[1]/div[2]/div[1]/div[2]/div/div[1]/div[2]/div/div[1]/div/form/div/input')))
+                    WebDriverWait(browser, wait_timeout).until(ec.visibility_of_element_located((By.XPATH,
+                                                                                                 '//*[@id="primaryContainer"]/div[4]/div/div[1]/div[2]/div[1]/div[2]/div/div[1]/div[2]/div/div[1]/div/form/div/input')))
                     logger.debug("Selecting input")
-                    search_input = WebDriverWait(browser, wait_timeout).until(lambda driver: browser.find_element_by_xpath('//*[@id="primaryContainer"]/div[4]/div/div[1]/div[2]/div[1]/div[2]/div/div[1]/div[2]/div/div[1]/div/form/div/input'))
+                    search_input = WebDriverWait(browser, wait_timeout).until(
+                        lambda driver: browser.find_element_by_xpath(
+                            '//*[@id="primaryContainer"]/div[4]/div/div[1]/div[2]/div[1]/div[2]/div/div[1]/div[2]/div/div[1]/div/form/div/input'))
                     logger.debug("sending keyword value")
                     search_input.send_keys(keyword)
                     logger.debug("pressing ENTER key")
                     search_input.send_keys(Keys.ENTER)
                     logger.debug("Waiting for results")
-                    WebDriverWait(browser, wait_timeout).until(ec.visibility_of_element_located((By.XPATH, '//span[@aria-label="Exit search"]')))
+                    WebDriverWait(browser, wait_timeout).until(
+                        ec.visibility_of_element_located((By.XPATH, '//span[@aria-label="Exit search"]')))
                     waiit()
-                    WebDriverWait(browser, wait_timeout).until(ec.visibility_of_element_located((By.XPATH, '//*[@id="primaryContainer"]/div[4]/div/div[1]/div[2]/div[5]/div[2]/div[1]/div/div/div[5]/div[2]/div[2]/div[1]/div/div/div[2]/button')))
-                    more_results = WebDriverWait(browser, wait_timeout).until(lambda driver: browser.find_element_by_xpath('//*[@id="primaryContainer"]/div[4]/div/div[1]/div[2]/div[5]/div[2]/div[1]/div/div/div[5]/div[2]/div[2]/div[1]/div/div/div[2]/button'))
+                    WebDriverWait(browser, wait_timeout).until(ec.visibility_of_element_located((By.XPATH,
+                                                                                                 '//*[@id="primaryContainer"]/div[4]/div/div[1]/div[2]/div[5]/div[2]/div[1]/div/div/div[5]/div[2]/div[2]/div[1]/div/div/div[2]/button')))
+                    more_results = WebDriverWait(browser, wait_timeout).until(
+                        lambda driver: browser.find_element_by_xpath(
+                            '//*[@id="primaryContainer"]/div[4]/div/div[1]/div[2]/div[5]/div[2]/div[1]/div/div/div[5]/div[2]/div[2]/div[1]/div/div/div[2]/button'))
                     more_results.click()
                     logger.debug("Done")
                 except Exception as ex:
@@ -1261,16 +1376,19 @@ def report_hotmail(self, actions, subject, email):
 
                 # region Accessing 1st messages
                 logger.debug("Getting Subject SPAN")
-                first_mail = WebDriverWait(browser, wait_timeout).until(lambda driver: browser.find_element_by_css_selector('div.senderText'))
+                first_mail = WebDriverWait(browser, wait_timeout).until(
+                    lambda driver: browser.find_element_by_css_selector('div.senderText'))
                 logger.debug("Clicking Subject SPAN")
                 first_mail.click()
-                WebDriverWait(browser, wait_timeout).until(ec.visibility_of_element_located((By.XPATH, '//button[@title="Reply"]')))
+                WebDriverWait(browser, wait_timeout).until(
+                    ec.visibility_of_element_located((By.XPATH, '//button[@title="Reply"]')))
                 logger.debug("Done!")
                 # endregion
 
                 # region Getting loop settings
                 logger.debug("Getting Newt button")
-                next_btn = WebDriverWait(browser, wait_timeout).until(lambda driver: browser.find_element_by_xpath('//button[@title="Next"]'))
+                next_btn = WebDriverWait(browser, wait_timeout).until(
+                    lambda driver: browser.find_element_by_xpath('//button[@title="Next"]'))
                 last_page = True if next_btn.get_attribute("aria-disabled") == "true" else False
                 last_page_checked = last_page
                 # endregion
@@ -1283,13 +1401,18 @@ def report_hotmail(self, actions, subject, email):
                         if 'FM' in actions:
                             logger.debug("(*) - Flag mail action:")
                             logger.debug("Clicking menu")
-                            menu_btn = WebDriverWait(browser, wait_timeout).until(lambda driver: browser.find_element_by_xpath('//button[@title="More commands"]'))
+                            menu_btn = WebDriverWait(browser, wait_timeout).until(
+                                lambda driver: browser.find_element_by_xpath('//button[@title="More commands"]'))
                             menu_btn.click()
                             logger.debug("Clicking Flag mail")
-                            WebDriverWait(browser, wait_timeout).until(ec.visibility_of_element_located((By.XPATH, '//span[@title="Flag for follow-up (Insert)"]')))
-                            flag_btn = WebDriverWait(browser, wait_timeout).until(lambda driver: browser.find_element_by_xpath('//span[@title="Flag for follow-up (Insert)"]'))
+                            WebDriverWait(browser, wait_timeout).until(ec.visibility_of_element_located(
+                                (By.XPATH, '//span[@title="Flag for follow-up (Insert)"]')))
+                            flag_btn = WebDriverWait(browser, wait_timeout).until(
+                                lambda driver: browser.find_element_by_xpath(
+                                    '//span[@title="Flag for follow-up (Insert)"]'))
                             flag_btn.click()
-                            WebDriverWait(browser, wait_timeout).until(ec.invisibility_of_element_located((By.XPATH, '//span[@title="Flag for follow-up (Insert)"]')))
+                            WebDriverWait(browser, wait_timeout).until(ec.invisibility_of_element_located(
+                                (By.XPATH, '//span[@title="Flag for follow-up (Insert)"]')))
                             logger.info("- E-mail flagged !")  # TODO-CVC to Count
                             if 'AC' not in actions:
                                 time.sleep(1)
@@ -1300,7 +1423,9 @@ def report_hotmail(self, actions, subject, email):
                         if 'AC' in actions:
                             logger.debug("(*) - Add Contact action:")
                             logger.debug("Getting contact SPAN")
-                            contact_span = WebDriverWait(browser, wait_timeout).until(lambda driver: browser.find_element_by_xpath('//*[@id="ItemHeader.SenderLabel"]/div[2]/div/span/div/span/span'))
+                            contact_span = WebDriverWait(browser, wait_timeout).until(
+                                lambda driver: browser.find_element_by_xpath(
+                                    '//*[@id="ItemHeader.SenderLabel"]/div[2]/div/span/div/span/span'))
                             logger.debug("Hover over contact SPAN")
                             hover = ActionChains(browser).move_to_element(contact_span)
                             hover.perform()
@@ -1308,19 +1433,25 @@ def report_hotmail(self, actions, subject, email):
                             contact_span.click()
                             try:
                                 logger.debug("Getting add contact buttons")
-                                add_contact_buttons = WebDriverWait(browser, wait_timeout).until(lambda driver: browser.find_elements_by_xpath('//button[@aria-label="Add to contacts"]'))
+                                add_contact_buttons = WebDriverWait(browser, wait_timeout).until(
+                                    lambda driver: browser.find_elements_by_xpath(
+                                        '//button[@aria-label="Add to contacts"]'))
                                 logger.debug("looping through buttons")
                                 for add_contact_button in add_contact_buttons:
                                     add_contact_button.click()
                                     logger.debug("Add to contacts button is clicked")
                                     logger.debug("Waiting for Save contact button")
-                                    WebDriverWait(browser, wait_timeout).until(ec.visibility_of_element_located((By.XPATH, '//button[@title="Save edit contact"]')))
+                                    WebDriverWait(browser, wait_timeout).until(ec.visibility_of_element_located(
+                                        (By.XPATH, '//button[@title="Save edit contact"]')))
                                     logger.debug("Getting Save contact button")
-                                    save_contact_button = WebDriverWait(browser, wait_timeout).until(lambda driver: browser.find_element_by_xpath('//button[@title="Save edit contact"]'))
+                                    save_contact_button = WebDriverWait(browser, wait_timeout).until(
+                                        lambda driver: browser.find_element_by_xpath(
+                                            '//button[@title="Save edit contact"]'))
                                     logger.debug("Clicking save to contacts")
                                     save_contact_button.click()
                                     logger.debug('waiting for Popup to fade away')
-                                    WebDriverWait(browser, wait_timeout).until(ec.invisibility_of_element_located((By.XPATH, '//button[@title="Save edit contact"]')))
+                                    WebDriverWait(browser, wait_timeout).until(ec.invisibility_of_element_located(
+                                        (By.XPATH, '//button[@title="Save edit contact"]')))
                                     logger.info("- From-Email added to contacts")  # TODO-CVC to count
                                     if 'FM' not in actions:
                                         time.sleep(1)
@@ -1337,7 +1468,8 @@ def report_hotmail(self, actions, subject, email):
                             waiit()
                             logger.debug("(*) Clicking the Link Action :")
                             logger.debug("Getting the Mail 'Body'")
-                            body = WebDriverWait(browser, wait_timeout).until(lambda driver: browser.find_element_by_id('Item.MessageUniqueBody'))
+                            body = WebDriverWait(browser, wait_timeout).until(
+                                lambda driver: browser.find_element_by_id('Item.MessageUniqueBody'))
                             try:
                                 logger.debug("Getting the Link in the Mail !")
                                 link = body.find_elements_by_tag_name('a')[1]
@@ -1354,7 +1486,8 @@ def report_hotmail(self, actions, subject, email):
                                     while not link.is_displayed():
                                         pass
                                     link.click()
-                                    WebDriverWait(browser, wait_timeout).until(lambda driver: len(browser.window_handles) > 1)
+                                    WebDriverWait(browser, wait_timeout).until(
+                                        lambda driver: len(browser.window_handles) > 1)
                                     logger.debug("New Tab Opened !")
                                     waiit()
                                     logger.debug("Switching to the new Tab !")

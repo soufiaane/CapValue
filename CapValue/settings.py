@@ -1,8 +1,5 @@
 import os
 
-import dj_database_url
-from kombu import Exchange, Queue, serialization
-
 # region Installed Apps
 INSTALLED_APPS = (
     'django.contrib.admin',
@@ -28,7 +25,6 @@ INSTALLED_APPS = (
     'planning',
     'notifications',
     'compressor',
-    # 'mod_wsgi.server',
 )
 # endregion
 
@@ -85,7 +81,7 @@ STATICFILES_FINDERS = (
     'django.contrib.staticfiles.finders.AppDirectoriesFinder',
     'compressor.finders.CompressorFinder',
 )
-STATICFILES_STORAGE = 'whitenoise.django.GzipManifestStaticFilesStorage'
+# STATICFILES_STORAGE = 'whitenoise.django.GzipManifestStaticFilesStorage'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
