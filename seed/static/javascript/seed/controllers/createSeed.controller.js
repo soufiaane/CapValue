@@ -138,13 +138,14 @@
             while (element.firstChild) {
                 element.removeChild(element.firstChild);
             }
-            if ($getActiveIndex() === '1') {
+            var activeIndex = $getActiveIndex();
+            if (activeIndex === 1) {
                 checkStep1($nextStep);
             }
-            else if ($getActiveIndex() === '2') {
+            else if (activeIndex === 2) {
                 checkStep2($nextStep);
             }
-            else if ($getActiveIndex() === '3') {
+            else if (activeIndex === 3) {
                 checkStep3($nextStep);
             }
         }

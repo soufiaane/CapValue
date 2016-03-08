@@ -6,7 +6,7 @@ from mail.models import Email
 
 class Seed(models.Model):
     owner = models.ForeignKey(Account, on_delete=models.CASCADE, related_name='seeds', null=True)
-    emails = models.ForeignKey(Email, related_name='seed', null=True)
+    emails = models.ManyToManyField(Email, related_name='seed', null=True)
     name = models.CharField(max_length=40, blank=True)
     proxy = models.CharField(max_length=40, blank=True)
 

@@ -3,22 +3,22 @@
 
     angular
         .module('capvalue.authentication.services')
-        .factory('Notifications', Notifications)
+        //.factory('Notifications', Notifications)
         .factory('Authentication', Authentication);
 
-    Notifications.$inject = ['socketFactory'];
-    Authentication.$inject = ['$cookies', '$http', 'Notifications'];
+    //Notifications.$inject = ['socketFactory'];
+    Authentication.$inject = ['$cookies', '$http'];
 
-    function Notifications(socketFactory) {
-        var myIoSocket = io.connect('http://cvc.ma:3000');
+    //function Notifications(socketFactory) {
+    //    var myIoSocket = io.connect('http://cvc.ma:3000');
+    //
+    //    return socketFactory({
+    //        ioSocket: myIoSocket
+    //    });
+    //
+    //}
 
-        return socketFactory({
-            ioSocket: myIoSocket
-        });
-
-    }
-
-    function Authentication($cookies, $http, Notifications) {
+    function Authentication($cookies, $http) {
 
         return Authentication = {
             getAuthenticatedAccount: getAuthenticatedAccount,
@@ -48,7 +48,7 @@
             function loginSuccessFn(data) {
                 Authentication.setAuthenticatedAccount(data.data);
                 window.location = '/';
-                Notifications.emit('message', 'Taboun 3achwa2i\n' + data.data);
+                //Notifications.emit('message', 'Taboun 3achwa2i\n' + data.data);
             }
 
             function loginErrorFn() {

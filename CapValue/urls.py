@@ -4,7 +4,7 @@ from rest_framework_nested import routers
 from CapValue.views import IndexView
 from authentication.views import LoginView, LogoutView, AccountViewSet
 from isp.views import IspViewSet, AccountIspViewSet
-from seed.views import SeedViewSet, AccountSeedList
+from seed.views import SeedViewSet, AccountSeedViewSet
 
 router = routers.SimpleRouter()
 router.register(r'accounts', AccountViewSet)
@@ -15,7 +15,7 @@ account_isp = routers.NestedSimpleRouter(router, r'accounts', lookup='account')
 account_isp.register(r'isp', AccountIspViewSet)
 
 account_seed = routers.NestedSimpleRouter(router, r'accounts', lookup='account')
-account_seed.register(r'seed', AccountSeedList)
+account_seed.register(r'seed', AccountSeedViewSet)
 
 urlpatterns = [
     # url(r'^admin/', include(admin.site.urls))

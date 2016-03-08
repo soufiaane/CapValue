@@ -21,7 +21,7 @@
         }
 
         function get(username) {
-            return $http.get('/api/v1/seeds/' + username + '/');
+            return $http.get('/api/v1/accounts/' + username + '/seed/');
         }
 
         function get_seed(seed_id) {

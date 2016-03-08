@@ -19,8 +19,8 @@
             'ngDialog',
             'ngTable',
             'ngCookies',
-            'ui.router',
-            'btford.socket-io'
+            'ui.router'
+            //'btford.socket-io'
         ]).run(run);
 
     run.$inject = ['$http'];

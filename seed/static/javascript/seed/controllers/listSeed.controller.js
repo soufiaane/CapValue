@@ -21,6 +21,7 @@
             getData: function (params) {
                 console.log(params.page());
                 Seed.get(user.username).then(function (results) {
+                    return results.data.results;
                 });
             }
         });

@@ -25,6 +25,7 @@ INSTALLED_APPS = (
     'planning',
     'notifications',
     'compressor',
+    'celeryTasks',
 )
 # endregion
 

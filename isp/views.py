@@ -41,7 +41,7 @@ class ISPView(generics.ListCreateAPIView):
             return Response(serialized.data, status=status.HTTP_201_CREATED)
 
         return Response({
-            'status' : 'Bad request',
+            'status': 'Bad request',
             'message': 'Team could not be created with received data.'
         }, status=status.HTTP_400_BAD_REQUEST)
 
