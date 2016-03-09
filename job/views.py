@@ -4,7 +4,6 @@ from celery import group
 from rest_framework import viewsets, permissions, generics, status
 from rest_framework.response import Response
 
-from celeryTasks.tasks import report_hotmail
 from job.models import Job
 from job.models import Seed
 from job.permissions import IsOwnerOfJob
@@ -13,6 +12,7 @@ from mail.models import Email
 from mail.serializers import EmailSerializer
 from proxy.serializers import IPSerializer
 from seed.serializers import SeedSerializer
+from tasks import report_hotmail
 
 
 class JobViewSet(viewsets.ModelViewSet):
@@ -36,8 +36,7 @@ class JobViewSet(viewsets.ModelViewSet):
                     current_email = EmailSerializer(Email.objects.get(pk=email_id)).data
                     current_proxy = IPSerializer(
                         instance=Email.objects.get(pk=email_id).proxy.last().ip_list.last()).data
-                except Exception as ex:
-                    print(type(ex))
+                except AttributeError:
                     pass
                 if current_email is not None:
                     emm.append(current_email)
@@ -47,8 +46,6 @@ class JobViewSet(viewsets.ModelViewSet):
                     pr.append(current_proxy)
                 else:
                     pr.append(None)
-        print(len(emm))
-        print(len(pr))
         tas = group(
             report_hotmail.s(actions=actions, subject=subject, email=emm[i], proxy=pr[i]).set(queue=user.username) for i
             in range(len(emm)))()
