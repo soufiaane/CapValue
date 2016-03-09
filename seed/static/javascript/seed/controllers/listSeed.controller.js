@@ -13,35 +13,22 @@
         vm.openEmailDetails = openEmailDetails;
         $scope.loading = true;
 
-
         vm.tableParams = new NgTableParams({
             page: 1,
             count: 10
         }, {
             getData: function (params) {
-                console.log(params.page());
-                Seed.get(user.username).then(function (results) {
+                var page = params.page();
+                return Seed.get(user.username, page).then(function (results) {
+                    params.total(results.data.count);
+                    vm.seed_list_count = results.data.count;
+                    params.data = results.data.results;
+                    $scope.loading = false;
                     return results.data.results;
-                });
-            }
+                }, ErrorSeedListFn);
+            },
+            counts: []
         });
-
-
-        //Seed.get(user.username).then(function (results) {
-        //    vm.seed_list_count = results.data.length;
-        //    vm.tableParams = new NgTableParams({
-        //        page: 1,
-        //        count: 10
-        //    }, {
-        //        total: results.data.length,
-        //        counts: [],
-        //        data: results.data
-        //    });
-        //    $scope.loading = false;
-        //}, ErrorSeedListFn);
-
-
-
 
         function openSeedDetails(seed_id) {
             $scope.detail_loading = true;

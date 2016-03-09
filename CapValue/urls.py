@@ -4,12 +4,14 @@ from rest_framework_nested import routers
 from CapValue.views import IndexView
 from authentication.views import LoginView, LogoutView, AccountViewSet
 from isp.views import IspViewSet, AccountIspViewSet
+from job.views import JobViewSet
 from seed.views import SeedViewSet, AccountSeedViewSet
 
 router = routers.SimpleRouter()
 router.register(r'accounts', AccountViewSet)
 router.register(r'isps', IspViewSet)
 router.register(r'seeds', SeedViewSet)
+router.register(r'jobs', JobViewSet)
 
 account_isp = routers.NestedSimpleRouter(router, r'accounts', lookup='account')
 account_isp.register(r'isp', AccountIspViewSet)

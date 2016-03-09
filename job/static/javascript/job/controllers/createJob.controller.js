@@ -27,18 +27,23 @@
         vm.findWithAttr = findWithAttr;
         vm.selected_actions = "";
 
-        Seed.get(user.username).then(function (results) {
-            vm.seed_list_count = results.data.length;
-            vm.tableParams = new NgTableParams({
-                page: 1,
-                count: 10
-            }, {
-                total: results.data.length,
-                counts: [],
-                data: results.data
-            });
-            $scope.loading = false;
-        }, ErrorSeedListFn);
+        vm.tableParams = new NgTableParams({
+            page: 1,
+            count: 10
+        }, {
+            getData: function (params) {
+                var page = params.page();
+                return Seed.get(user.username, page).then(function (results) {
+                    params.total(results.data.count);
+                    vm.seed_list_count = results.data.count;
+                    params.data = results.data.results;
+                    $scope.loading = false;
+                    return results.data.results;
+                }, ErrorSeedListFn);
+            },
+            counts: []
+        });
+
 
         function findWithAttr(array, attr, value) {
             for (var i = 0; i < array.length; i += 1) {
@@ -119,7 +124,7 @@
                         document.getElementById("job_actions").setAttribute("style", errorHighlightStyle);
                     } else if (errors[index]['name'] == 'job.keyword') {
                         document.getElementById("job_keyword").setAttribute("style", errorHighlightStyle);
-                    }else if (errors[index]['name'] == 'job.selectedSeeds') {
+                    } else if (errors[index]['name'] == 'job.selectedSeeds') {
                         document.getElementById("job_seed_list").setAttribute("style", errorHighlightStyle);
                     }
                 }

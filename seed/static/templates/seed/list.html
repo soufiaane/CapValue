@@ -3,7 +3,7 @@
         <div class="box">
             <div class="box-header">
                 <h3 class="box-title">List Seed :&nbsp;&nbsp;&nbsp;&nbsp;<span class="badge label label-success" ng-cloak>{$ vm.seed_list_count $}</span>
-                    <img id="mySpinner" src="/static/templates/images/ajax-loader.gif" ng-show="loading"/>
+                    <img id="mySpinner" src="/static/images/ajax-loader.gif" ng-show="loading"/>
                 </h3>
             </div>
             <!-- /.box-header -->
@@ -15,8 +15,7 @@
                                 <tbody>
                                 <tr role="row" class="odd" ng-repeat="seed in $data">
                                     <td title="'Id'" filter="{ id: 'number'}" sortable="'id'" style="width: 5%;"><a href="#"  ng-click="vm.openSeedDetails(seed.id)">{$ seed.id $}</a></td>
-                                    <td title="'List Name'" filter="{ list_name: 'text'}" sortable="'list_name'">{$
-                                        seed.list_name $}
+                                    <td title="'List Name'" filter="{ name: 'text'}" sortable="'name'">{$ seed.name $}
                                     </td>
                                     <td title="'Count'"><a href="#"  ng-click="vm.openEmailDetails(seed.id)">{$ seed.emails.length $}</a></td>
                                     <td title="'Active'">##</td>

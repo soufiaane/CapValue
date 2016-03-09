@@ -6,5 +6,5 @@ from seed.models import Seed
 class SeedSerializer(serializers.ModelSerializer):
     class Meta:
         model = Seed
-        fields = ('id', 'owner', 'emails', 'name', 'proxy', 'created_at', 'updated_at')
+        fields = ('id', 'owner', 'emails', 'name', 'created_at', 'updated_at')
         read_only_fields = ('id', 'created_at', 'updated_at')

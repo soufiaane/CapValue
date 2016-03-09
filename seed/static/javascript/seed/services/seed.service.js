@@ -20,8 +20,8 @@
             return $http.get('/api/v1/seeds/');
         }
 
-        function get(username) {
-            return $http.get('/api/v1/accounts/' + username + '/seed/');
+        function get(username, page) {
+            return $http.get('/api/v1/accounts/' + username + '/seed/?page=' + page);
         }
 
         function get_seed(seed_id) {
@@ -33,18 +33,18 @@
         }
 
         function create(list_name, proxyType, emails) {
-            var emails_created = [];
+            var mails = [];
 
             for (var i = 0; i < emails["files"].length; i++) {
-                emails_created.push(emails["files"][i]);
+                mails.push(emails["files"][i]);
             }
 
             for (var l = 0; l < emails["textarea"].length; l++) {
-                emails_created.push(emails["textarea"][l]);
+                mails.push(emails["textarea"][l]);
             }
 
             return $http.post('/api/v1/seeds/', {
-                emails: emails_created,
+                emails: mails,
                 list_name: list_name,
                 proxyType: proxyType
             });

@@ -13,9 +13,9 @@
                                 <span class="pull-left">Keyword :</span>
                             </td>
                             <td style="border: none;" id="job_keyword">
-                                <input type="text" class="form-control" placeholder="Keyword..."
+                                <input type="text" class="form-control" placeholder="Subject..."
                                        aria-describedby="sizing-addon1" ng-model="vm.job.keyword"
-                                       name="seedList.name">
+                                       name="seedList.keyword">
                             </td>
                         </tr>
                     </table>
@@ -86,20 +86,15 @@
                                                ng-click="vm.toggleSeedSelection(seed, seed.id)"
                                                ng-checked="vm.findWithAttr(vm.job.selectedSeeds, 'id', seed.id) > -1">
                                     </td>
-                                    <td title="'List Id'" filter="{ id: 'number'}" sortable="'id'">
-                                        {$ seed.id $}
+                                    <td title="'List Id'" filter="{ id: 'number'}" sortable="'id'">{$ seed.id $}</td>
+                                    <td title="'List Name'" filter="{ name: 'text'}" sortable="'name'">{$ seed.name $}
                                     </td>
-                                    <td title="'List Name'" filter="{ list_name: 'text'}" sortable="'list_name'">
-                                        {$ seed.list_name $}
-                                    </td>
-                                    <td title="'Count'">
-                                        {$ seed.emails.length $}
-                                    </td>
+                                    <td title="'Count'">{$ seed.emails.length $}</td>
                                 </tr>
                                 </tbody>
                             </table>
                             <div ng-show="loading" class="text-center">
-                                <img id="mySpinner" src="/static/templates/dist/img/ajax-loader.gif"/>
+                                <img id="mySpinner" src="/static/images/ajax-loader.gif"/>
                             </div>
                         </div>
                     </div>

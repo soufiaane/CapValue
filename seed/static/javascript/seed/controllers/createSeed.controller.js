@@ -77,15 +77,20 @@
                     vm.seedList.emails["textarea"] = [];
                     data = Papa.parse(vm.seedList.textarea_Input).data;
                     for (var k = 0; k < data.length; k++) {
-                        if (data[k].length === 6) {
-                            if (data[k][0] && data[k][1] && re_email.test(data[k][0])) {
-                                vm.seedList.emails['textarea'].push({
-                                        'email': data[k][0],
-                                        'password': data[k][1]
+                        if (data[k][0] && data[k][1] && re_email.test(data[k][0])) {
+                            vm.seedList.emails['textarea'].push({
+                                    'email': data[k][0],
+                                    'password': data[k][1],
+                                    'proxy': {
+                                        'ip': data[k][2] ? data[k][2] : '',
+                                        'port': data[k][2] ? data[k][3] : '',
+                                        'login': data[k][2] ? data[k][4] : '',
+                                        'pass': data[k][2] ? data[k][5] : ''
                                     }
-                                );
-                            }
+                                }
+                            );
                         }
+
                     }
                 }
                 //******************************************************************************************************
@@ -121,7 +126,6 @@
                     for (var l = 0; l < data.length; l++) {
                         if (data[l].length === 2) {
                             if (data[l][0] && data[l][1] && re_email.test(data[l][0])) {
-
                                 vm.seedList.emails['textarea'].push({
                                     'email': data[l][0],
                                     'password': data[l][1]

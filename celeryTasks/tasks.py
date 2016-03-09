@@ -4,7 +4,6 @@ from __future__ import absolute_import
 import time
 
 from celery.utils.log import get_task_logger
-from celerySettings import app
 from selenium import webdriver
 from selenium.common.exceptions import NoSuchElementException, StaleElementReferenceException, TimeoutException, \
     ElementNotVisibleException
@@ -14,43 +13,52 @@ from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.support import expected_conditions as ec
 from selenium.webdriver.support.wait import WebDriverWait
 
+from celeryTasks.celerySettings import app
+
 # endregion
+
 logger = get_task_logger(__name__)
 
 
+# TODO-CVC Detect Mailbox language to optimize Timeout Exceptions !!
+# TODO-CVC Job option for browser
+
 @app.task(name='report_hotmail', bind=True, max_retries=3, default_retry_delay=1)
-def report_hotmail(self, actions, subject, email):
+def report_hotmail(self, **kwargs):
     # region Settings
-    proxy = "192.154.210.119"
+    actions = str(kwargs.get('actions', None)).split(',')
+    keyword = kwargs.get('subject', None)
+    mail_args = kwargs.get('email', None)
+    mail = mail_args['login']
+    pswd = mail_args['password']
+    proxy_args = kwargs.get('proxy', None)
+    if proxy_args is not None:
+        proxy = proxy_args['ip_address']
+        port = str(proxy_args['ip_port'])
+    else:
+        proxy = None
+        port = None
+    link = 'http://www.hotmail.com'
+
+    logger.info(
+        "\n******\nStarting JOB for :\n*-Actions: %s\n*-Subject: %s\n*-Email: %s\n*-Password: %s\n*-Proxy: %s\n*-Port: %s\n******\n" % (
+            kwargs.get('actions', None), keyword, mail, pswd, proxy, port))
+
     version = "old"
     wait_timeout = 10
-    port = "29954"
-    actions = str(actions.split(',')).strip()
-    keyword = subject
     logger.info('Job Started :')
-    logger.info('Actions: %s\n' % actions)
-    chrome_options = webdriver.ChromeOptions()
-    chrome_options.add_argument('--proxy-server=%s:%s' % (proxy, port))
-    service_args = ['--proxy=%s:%s' % (proxy, port), '--proxy-type=http']
-    print(service_args)
-    # TODO-CVC Detect Mailbox language to optimize Timeout Exceptions !!
-    # TODO-CVC Job option for browser
 
-    user_agent = "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_8_4) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/29.0.1547.57 Safari/537.36"
-    webdriver.DesiredCapabilities.PHANTOMJS["phantomjs.page.settings.userAgent"] = user_agent
-    browser = webdriver.Chrome(executable_path="chromedriver")
-    # browser = webdriver.PhantomJS(executable_path="phantomjs.exe")
-    # browser = webdriver.PhantomJS(executable_path="phantomjs.exe", service_args=service_args)
-    # browser = webdriver.Chrome(executable_path="chromedriver", chrome_options=chrome_options)
+    if proxy is not None and port is not None:
+        chrome_options = webdriver.ChromeOptions()
+        chrome_options.add_argument('--proxy-server=%s:%s' % (proxy, port))
+        browser = webdriver.Chrome(executable_path="chromedriver", chrome_options=chrome_options)
+    else:
+        browser = webdriver.Chrome(executable_path="chromedriver")
     browser.maximize_window()
 
-    mail = email['email']
-    pswd = email['password']
-    link = 'http://www.hotmail.com'
     # endregion
 
     try:
-
         # region helper Functions
         def look_for_pub():
             try:
@@ -116,6 +124,8 @@ def report_hotmail(self, actions, subject, email):
         else:
             logger.info("(!) Old Version")
         # endregion
+
+        # ***********************************************************************
 
         # region Old Version
         if version == "old":
@@ -1525,20 +1535,28 @@ def report_hotmail(self, actions, subject, email):
         # endregion
 
         return True
-    # region Exceptions
+
     except Exception as exc:
+        # region Exceptions
         browser.save_screenshot(str(self.request.id) + ".png")
         logger.error("#*#*#*#*#*#*#*#*#*#*#*#*#*#*#*#*#*#*#*#*#*#*#*#*#*#*#*#*#*#*#*#*#*#*#*#*")
         logger.error("#*#*#*#*#*#*#*#*#*#*#*#*#*#*#*# OUPS !! #*#*#*#*#*#*#*#*#*#*#*#*#*#*#*#*")
         logger.error("#*#*#*#*#*#*#*#*#*#*#*#*#*#*#*#*#*#*#*#*#*#*#*#*#*#*#*#*#*#*#*#*#*#*#*#*")
         logger.error(type(exc))
         self.retry(exc=exc)
-    # endregion
+        # endregion
 
-    # region Finally
     finally:
+        # region Finally
         logger.info("###************************************************************************###")
         logger.info('        (!) - Finished Actions for %s - (!)' % mail)
         logger.info("###************************************************************************###")
         browser.quit()
         # endregion
+
+        # user_agent = "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_8_4) AppleWebKit/537.36\
+        #  (KHTML, like Gecko) Chrome/29.0.1547.57 Safari/537.36"
+        # webdriver.DesiredCapabilities.PHANTOMJS["phantomjs.page.settings.userAgent"] = user_agent
+        # service_args = ['--proxy=%s:%s' % (proxy, port), '--proxy-type=http']
+        # browser = webdriver.PhantomJS(executable_path="phantomjs.exe")
+        # browser = webdriver.PhantomJS(executable_path="phantomjs.exe", service_args=service_args)

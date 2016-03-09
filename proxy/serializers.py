@@ -1,20 +1,21 @@
 from rest_framework import serializers
 
-from authentication.serializers import AccountSerializer
 from proxy.models import IP, Proxy
 
 
 class IPSerializer(serializers.ModelSerializer):
+    proxy_name = serializers.SlugRelatedField(many=True, read_only=True, slug_field="proxy_name", source="proxies")
+
     class Meta:
         model = IP
-        fields = ('id', 'proxies', 'ip_address', 'ip_port', 'ip_login', 'ip_password', 'created_at', 'updated_at')
-        read_only_fields = ('id', 'proxies', 'created_at', 'updated_at')
+        fields = (
+            'id', 'ip_address', 'proxies', 'proxy_name', 'ip_port', 'ip_login', 'ip_password', 'created_at',
+            'updated_at')
+        read_only_fields = ('id', 'proxies', 'proxy_name', 'created_at', 'updated_at')
 
 
 class ProxySerializer(serializers.ModelSerializer):
-    user = AccountSerializer(read_only=True, required=False)
-
     class Meta:
         model = Proxy
-        fields = ('id', 'user', 'ip_list', 'proxy_name', 'proxy_type', 'created_at', 'updated_at')
-        read_only_fields = ('id', 'user', 'created_at', 'updated_at')
+        fields = ('id', 'proxy_name', 'proxy_type', 'created_at', 'updated_at')
+        read_only_fields = ('id', 'owner', 'ip_list', 'created_at', 'updated_at')
