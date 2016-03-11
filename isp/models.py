@@ -4,7 +4,7 @@ from authentication.models import Account
 
 
 class ISP(models.Model):
-    members = models.ManyToManyField(Account, related_name="isp", blank=True)
+    teams = models.ManyToManyField(Account, related_name="isp", blank=True)
     name = models.CharField(max_length=40)
     logo = models.CharField(max_length=40)
     created_at = models.DateTimeField(auto_now_add=True)

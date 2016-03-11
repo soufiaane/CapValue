@@ -21,7 +21,12 @@
         }
 
         function get(username, page) {
-            return $http.get('/api/v1/accounts/' + username + '/seed/?page=' + page);
+            if (page > 1) {
+                return $http.get('/api/v1/accounts/' + username + '/seed/?page=' + page);
+            }
+            else {
+                return $http.get('/api/v1/accounts/' + username + '/seed/');
+            }
         }
 
         function get_seed(seed_id) {

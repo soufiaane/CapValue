@@ -3,7 +3,7 @@
         <div class="box">
             <div class="box-header">
                 <h3 class="box-title">Jobs List :&nbsp;&nbsp;&nbsp;&nbsp;<span class="badge label label-success" ng-cloak>{$ vm.joblist_count $}</span>
-                    <img id="mySpinner" src="/static/templates/dist/img/ajax-loader.gif" ng-show="loading" />
+                    <img id="mySpinner" src="/static/images/ajax-loader.gif" ng-show="loading"/>
                 </h3>
             </div>
             <!-- /.box-header -->
@@ -14,7 +14,9 @@
                             <table ng-table="vm.tableParams" class="table" show-filter="true" ng-hide="loading">
                                 <tbody>
                                 <tr role="row" class="odd" ng-repeat="job in $data">
-                                    <td title="'Id'" filter="{ id: 'number'}" sortable="'id'"><a href="#"  ng-click="vm.openJobDetails(job.id)">{$ job.id $}</a></td>
+                                    <td title="'Id'" filter="{ id: 'text'}" sortable="'id'"><a href="#"
+                                                                                               ng-click="vm.openJobDetails(job.celery_id)">{$
+                                        job.celery_id $}</a></td>
                                     <td title="'Entered'" filter="{ created_at: 'text'}" sortable="'created_at'">{$
                                         job.created_at | date:'dd-MM-yyyy'$}
                                     </td>

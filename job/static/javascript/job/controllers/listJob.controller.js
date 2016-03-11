@@ -13,20 +13,26 @@
         vm.openJobDetails = openJobDetails;
         $scope.loading = true;
 
-        Job.get(user.username).then(function (results) {
-            vm.joblist_count = results.data.length;
-            vm.tableParams = new NgTableParams({
-                page: 1,
-                count: 10
-            }, {
-                total: results.data.length,
-                counts: [],
-                data: results.data
-            });
-            $scope.loading = false;
-        }, ErrorSeedListFn);
 
-        function ErrorSeedListFn() {
+        vm.tableParams = new NgTableParams({
+            page: 1,
+            count: 10
+        }, {
+            getData: function (params) {
+                var page = params.page();
+                return Job.get(user.username, page).then(function (results) {
+                    params.total(results.data.count);
+                    vm.joblist_count = results.data.count;
+                    vm.seed_list_count = results.data.count;
+                    params.data = results.data.results;
+                    $scope.loading = false;
+                    return results.data.results;
+                }, ErrorJobListFn);
+            },
+            counts: []
+        });
+
+        function ErrorJobListFn() {
             Snackbar.error('Error fetching Job List');
             $scope.loading = false;
             return [];

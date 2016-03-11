@@ -5,9 +5,9 @@
         .module('capvalue.layout.controllers')
         .controller('NavbarController', NavbarController);
 
-    NavbarController.$inject = ['Authentication', 'ISP'];
+    NavbarController.$inject = ['Authentication', 'Team'];
 
-    function NavbarController(Authentication, ISP) {
+    function NavbarController(Authentication, Team) {
         var vm = this;
         vm.logout = logout;
         vm.showIspLogo = false;
@@ -17,15 +17,16 @@
         }
 
         function activate() {
-            vm.user = Authentication.getAuthenticatedAccount();
-            ISP.get(vm.user.username).then(getUserIspSuccess, getUserIspError);
-
-            function getUserIspSuccess(results) {
+            if (Authentication.isAuthenticated()) {
+                vm.user = Authentication.getAuthenticatedAccount();
+                Team.get(vm.user.username).then(getUserTeamSuccess, getUserTeamError);
+            }
+            function getUserTeamSuccess(results) {
                 vm.isp = results.data[0];
                 vm.showIspLogo = true;
             }
 
-            function getUserIspError(e) {
+            function getUserTeamError(e) {
                 console.log(e);
             }
         }

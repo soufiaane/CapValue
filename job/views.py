@@ -6,7 +6,6 @@ from rest_framework.response import Response
 
 from job.models import Job
 from job.models import Seed
-from job.permissions import IsOwnerOfJob
 from job.serializers import JobSerializer
 from mail.models import Email
 from mail.serializers import EmailSerializer
@@ -55,6 +54,22 @@ class JobViewSet(viewsets.ModelViewSet):
         return Response(self.serializer_class(instance=job).data, status=status.HTTP_201_CREATED)
 
 
+class AccountJobViewSet(generics.ListCreateAPIView, viewsets.ViewSet):
+    queryset = Job.objects.select_related('owner').all()
+    serializer_class = JobSerializer
+    permission_classes = permissions.AllowAny,
+
+    def list(self, request, account_username=None, **kwargs):
+        queryset = self.queryset.filter(owner__username=account_username)
+        page = self.paginate_queryset(queryset)
+        if page is not None:
+            serializer = self.get_serializer(page, many=True)
+            return self.get_paginated_response(serializer.data)
+        serializer = self.get_serializer(queryset, many=True)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+
+
+# TODO-CVC remove
 class JobView(generics.ListCreateAPIView):
     def post(self, request, *args, **kwargs):
         keywords = request.data.get('keywords', None)
@@ -99,35 +114,3 @@ class JobDetail(generics.RetrieveUpdateDestroyAPIView):
 
     def put(self, request, *args, **kwargs):
         pass
-
-
-class AccountJobList(viewsets.GenericViewSet):
-    queryset = Job.objects.select_related('user').all()
-    serializer_class = JobSerializer
-    permission_classes = (permissions.IsAuthenticatedOrReadOnly, IsOwnerOfJob,)
-
-    def list(self, request, **kwargs):
-        username = kwargs.get('username')
-        queryset = self.queryset.filter(user__username=username)
-        # page = self.paginate_queryset(queryset)
-        # if page is not None:
-        #     serializer = self.get_serializer(page, many=True)
-        #     return self.get_paginated_response(serializer.data)
-
-        serializer = self.get_serializer(queryset, many=True)
-        return Response(serializer.data, status=status.HTTP_200_OK)
-
-
-        # for seed in seed_list:
-        #     for email_id in seed['emails']:
-        #         prox = IPSerializer(instance=Email.objects.get(pk=email_id).proxy.last().ip_list.last()).data
-        #         mail = EmailSerializer(instance=Email.objects.get(pk=email_id)).data
-        #         report_hotmail(actions=actions, subject=subject, email=mail, proxy=prox)
-        #
-        #     [[report_hotmail.apply_async(kwargs={'actions': actions, 'subject': subject,
-        #                                          'email': EmailSerializer(
-        #                                              instance=Email.objects.get(pk=email_id)).data,
-        #                                          proxy: ProxySerializer(
-        #                                              instance=Email.objects.get(pk=email_id).proxy.all(),
-        #                                              many=True)}, queue=user.username) for email_id
-        #       in seed['emails']] for seed in seed_list]

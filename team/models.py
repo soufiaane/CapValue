@@ -6,11 +6,10 @@ from isp.models import ISP
 
 class Team(models.Model):
     name = models.CharField(max_length=40, blank=True)
-    members = models.ForeignKey(Account, related_name='teams', null=True)
-    isp = models.ForeignKey(ISP, related_name='teams')
+    members = models.ManyToManyField(Account, related_name='teams')
 
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
     def __str__(self):
-        return '%s' % team_name
+        return '%s' % self.name

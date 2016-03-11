@@ -14,7 +14,6 @@ from selenium.webdriver.support import expected_conditions as ec
 from selenium.webdriver.support.wait import WebDriverWait
 
 from celeryTasks.celerySettings import app
-
 # endregion
 
 logger = get_task_logger(__name__)
@@ -1538,12 +1537,12 @@ def report_hotmail(self, **kwargs):
 
     except Exception as exc:
         # region Exceptions
-        browser.save_screenshot(str(self.request.id) + ".png")
         logger.error("#*#*#*#*#*#*#*#*#*#*#*#*#*#*#*#*#*#*#*#*#*#*#*#*#*#*#*#*#*#*#*#*#*#*#*#*")
         logger.error("#*#*#*#*#*#*#*#*#*#*#*#*#*#*#*# OUPS !! #*#*#*#*#*#*#*#*#*#*#*#*#*#*#*#*")
         logger.error("#*#*#*#*#*#*#*#*#*#*#*#*#*#*#*#*#*#*#*#*#*#*#*#*#*#*#*#*#*#*#*#*#*#*#*#*")
         logger.error(type(exc))
         self.retry(exc=exc)
+        browser.save_screenshot(str(self.request.id) + ".png")
         # endregion
 
     finally:

@@ -24,7 +24,7 @@
         }
 
         function get(username) {
-            return $http.get('/api/v1/emails/' + username + '/');
+            return $http.get('/api/v1/accounts/' + username + '/team/');
         }
 
 

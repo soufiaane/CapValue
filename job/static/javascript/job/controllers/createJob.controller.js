@@ -8,6 +8,7 @@
     function JobCreateController(Job, Seed, Authentication, $state, NgTableParams, Snackbar, $scope) {
         var vm = this;
         activate();
+
         vm.job = {
             selectedSeeds: [], actions: [
                 {name: "RS", isChecked: true},
@@ -20,6 +21,7 @@
                 {name: "FM", isChecked: false}
             ]
         };
+
         $scope.loading = true;
         var user = Authentication.getAuthenticatedAccount();
         vm.submitJob = submitJob;
