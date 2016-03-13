@@ -26,6 +26,7 @@ INSTALLED_APPS = (
     'notifications',
     'compressor',
     'celeryTasks',
+    'mod_wsgi.server',
 )
 # endregion
 
