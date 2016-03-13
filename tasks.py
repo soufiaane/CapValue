@@ -1,8 +1,5 @@
 # region Imports
 from __future__ import absolute_import
-
-import time
-
 from celery.utils.log import get_task_logger
 from selenium import webdriver
 from selenium.common.exceptions import NoSuchElementException, StaleElementReferenceException, TimeoutException, \
@@ -12,8 +9,8 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.support import expected_conditions as ec
 from selenium.webdriver.support.wait import WebDriverWait
-
 from celeryTasks.celerySettings import app
+import time
 # endregion
 
 logger = get_task_logger(__name__)
@@ -1559,3 +1556,16 @@ def report_hotmail(self, **kwargs):
         # service_args = ['--proxy=%s:%s' % (proxy, port), '--proxy-type=http']
         # browser = webdriver.PhantomJS(executable_path="phantomjs.exe")
         # browser = webdriver.PhantomJS(executable_path="phantomjs.exe", service_args=service_args)
+
+
+@app.task(name='spf_check', bind=True, max_retries=3, default_retry_delay=1)
+def spf_check(self, **kwargs):
+    domain = kwargs.get('domain', None)
+    import dns.resolver
+    try:
+        answers = dns.resolver.query(domain, 'TXT')
+        for answer in answers:
+            print(answer)
+            logger.info(answer)
+    except Exception as ex:
+        self.retry(exc=ex)
