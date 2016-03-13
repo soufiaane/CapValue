@@ -52,7 +52,7 @@ DATABASES = {
         'NAME': 'cvc',
         'USER': 'cvcadmin',
         'PASSWORD': 'C@pV@Lue2016**-',
-        'HOST': 'cvc.ma',
+        'HOST': 'tools.cvc.ma',
         'PORT': '5432',
         'AUTOCOMMIT': True,
     }
