@@ -11,6 +11,9 @@
         var user = Authentication.getAuthenticatedAccount();
         vm.openSeedDetails = openSeedDetails;
         vm.openEmailDetails = openEmailDetails;
+        vm.save = save;
+        vm.edit = edit;
+        vm.del = del;
         $scope.loading = true;
 
         vm.tableParams = new NgTableParams({
@@ -87,12 +90,34 @@
             $scope.loading = false;
         }
 
+        function edit(seed) {
+            vm.originalSeed = angular.extend({}, seed);
+            vm.isEditing = true;
+        }
+
+        function del(seed) {
+            Seed.dell(seed.id).then(function () {
+                vm.tableParams.reload().then(function (data) {
+                    if (data === undefined && vm.tableParams.total() > 0) {
+                        vm.tableParams.page(vm.tableParams.page() - 1);
+                        vm.tableParams.reload();
+                    }
+                    Snackbar.show('Seed List Deleted with success.');
+                });
+            }, function () {
+                Snackbar.error('Error Deleting Seed List !');
+            });
+        }
+
+        function save(seed) {
+            angular.extend(row);
+        }
+
         function activate() {
+            vm.isEditing = false;
             if (!Authentication.isAuthenticated()) {
                 $state.go('Login');
             }
         }
     }
 })();
-
-//dataset: data

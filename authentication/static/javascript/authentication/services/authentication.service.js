@@ -88,7 +88,12 @@
         }
 
         function isAuthenticated() {
-            return !!$cookies.get('authenticatedAccount');
+            var authAccount = $cookies.get('authenticatedAccount');
+            if (!authAccount) {
+                return false;
+            } else {
+                return authAccount;
+            }
         }
 
         function setAuthenticatedAccount(account) {
@@ -96,7 +101,12 @@
         }
 
         function unauthenticate() {
-            $cookies.remove('authenticatedAccount');
+            var authAccount = $cookies.get('authenticatedAccount');
+            if (!authAccount) {
+                return false;
+            } else {
+                $cookies.remove('authenticatedAccount');
+            }
         }
     }
 })();

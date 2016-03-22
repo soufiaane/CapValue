@@ -17,6 +17,7 @@
         }
     }
 
+    // region TODO-CVC remove from here
     $("[data-toggle='offcanvas']").click(function (e) {
         e.preventDefault();
 
@@ -70,6 +71,7 @@
 
     //Fix the fixed layout sidebar scroll bug
     fix_sidebar();
+    // endregion
 
 })();
 

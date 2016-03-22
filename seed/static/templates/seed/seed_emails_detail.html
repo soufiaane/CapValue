@@ -1,5 +1,5 @@
 <div ng-show="email_detail_loading" class="text-center">
-    <img id="mySpinner" src="/static/templates/dist/img/ajax-loader.gif" ng-show="email_detail_loading"/>
+    <img id="mySpinner" src="/static/templates/images/ajax-loader.gif" ng-show="email_detail_loading"/>
 </div>
 <div ng-hide="email_detail_loading">
     <div class="row">
@@ -17,7 +17,7 @@
                     <div class="form-inline dt-bootstrap">
                         <div class="row">
                             <div class="col-sm-12">
-                                <table ng-table="vm.emailsTableParams" class="table" show-filter="true"  ng-hide="email_detail_loading">
+                                <table ng-table="vm.emailsTableParams" class="table" ng-hide="email_detail_loading">
                                     <tbody>
                                     <tr role="row" class="odd" ng-repeat="mail in $data">
                                         <td title="{$ mail.id $}" filter="{ id: 'number'}" sortable="'id'" style="width: 10%;">

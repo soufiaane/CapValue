@@ -1,6 +1,5 @@
 from rest_framework import viewsets, permissions, status, generics
 from rest_framework.response import Response
-
 from mail.models import Email
 from proxy.models import Proxy, IP
 from seed.models import Seed
@@ -10,10 +9,10 @@ from seed.serializers import SeedSerializer
 class SeedViewSet(viewsets.ModelViewSet):
     queryset = Seed.objects.all()
     serializer_class = SeedSerializer
+    permission_classes = permissions.AllowAny,
 
     def create(self, request, *args, **kwargs):
         seed = Seed.objects.create(owner=request.user, name=request.data['list_name'])
-        # , proxy=request.data['proxyType'])
         seed.save()
         proxy = None
         if request.data['proxyType'] == 'manual':
@@ -45,6 +44,14 @@ class SeedViewSet(viewsets.ModelViewSet):
             seed.save()
         serialized = self.serializer_class(instance=Seed.objects.get(pk=seed.id))
         return Response(serialized.data, status=status.HTTP_201_CREATED)
+
+    def destroy(self, request, *args, **kwargs):
+        seed_id = kwargs.get('pk', None)
+        if seed_id:
+            seed = Seed.objects.get(pk=seed_id)
+            seed.delete()
+            return Response(status=status.HTTP_202_ACCEPTED)
+        return Response(status=status.HTTP_400_BAD_REQUEST)
 
 
 class AccountSeedViewSet(generics.ListCreateAPIView, viewsets.ViewSet):

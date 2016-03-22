@@ -12,6 +12,7 @@
             all: all,
             create: create,
             get: get,
+            dell: dell,
             get_seed: get_seed,
             get_seed_emails: get_seed_emails
         };
@@ -53,6 +54,10 @@
                 list_name: list_name,
                 proxyType: proxyType
             });
+        }
+
+        function dell(seed_id){
+            return $http.delete('/api/v1/seeds/' + seed_id + '/');
         }
     }
 })();
