@@ -23,6 +23,7 @@ INSTALLED_APPS = (
     'team',
     'shift',
     'planning',
+    'entity',
     'notifications',
     'compressor',
     'celeryTasks',

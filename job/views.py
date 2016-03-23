@@ -114,3 +114,4 @@ class JobDetail(generics.RetrieveUpdateDestroyAPIView):
 
     def put(self, request, *args, **kwargs):
         pass
+

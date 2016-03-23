@@ -11,6 +11,7 @@ from selenium.webdriver.support import expected_conditions as ec
 from selenium.webdriver.support.wait import WebDriverWait
 from celeryTasks.celerySettings import app
 import time
+
 # endregion
 
 logger = get_task_logger(__name__)
@@ -97,7 +98,8 @@ def report_hotmail(self, **kwargs):
         waiit()
         look_for_pub()
         logger.debug("End Connection")
-        browser.get(link)
+        # browser.get(link)
+        # waiit()
         # endregion
 
         # region IsVerified ?
@@ -835,55 +837,55 @@ def report_hotmail(self, **kwargs):
             logger.info("(###) Starting actions for NEW e-mail version\n")
 
             # region Configure Mail BOX
-            try:
-                waiit()
-                preview_pane = browser.find_element_by_css_selector("div.vResize")
-                if preview_pane.is_displayed():
-                    logger.debug("- Mailbox not yet configured !")
-                    logger.debug("- Configureing !")
-                    logger.debug("- Getting settings button")
-                    settings_btn = WebDriverWait(browser, wait_timeout).until(
-                        lambda driver: browser.find_element_by_id("O365_MainLink_Settings"))
-                    waiit()
-                    logger.debug("- Clicking settings button")
-                    settings_btn.click()
-                    logger.debug("- Waiting for menu to show")
-                    WebDriverWait(browser, wait_timeout).until(
-                        ec.visibility_of_element_located((By.CSS_SELECTOR, "div.o365cs-nav-contextMenu")))
-                    logger.debug("- Getting display settings")
-                    display_settings = WebDriverWait(browser, wait_timeout).until(
-                        lambda driver: browser.find_element_by_xpath('//*[@aria-label="Display settings"]'))
-                    waiit()
-                    logger.debug("- Clicking display settings")
-                    display_settings.click()
-                    logger.debug("- Waiting for display settings to shows")
-                    WebDriverWait(browser, wait_timeout).until(
-                        ec.visibility_of_element_located((By.CSS_SELECTOR, "div.panelPopupShadow")))
-                    logger.debug("- Getting Hide reading pane option")
-                    hide_pane = WebDriverWait(browser, wait_timeout).until(
-                        lambda driver: browser.find_element_by_xpath('//*[@aria-label="Hide reading pane"]'))
-                    waiit()
-                    logger.debug("- Clicking Hide reading pane option")
-                    hide_pane.click()
-                    time.sleep(1)
-                    logger.debug("- Getting save button")
-                    ok_btn = WebDriverWait(browser, wait_timeout).until(
-                        lambda driver: browser.find_element_by_xpath('//*[@aria-label="Save"]'))
-                    waiit()
-                    logger.debug("- Clicking save button")
-                    ok_btn.click()
-                    logger.debug("- Waiting for Settings pane to fade away")
-                    WebDriverWait(browser, wait_timeout).until(
-                        ec.invisibility_of_element_located((By.CSS_SELECTOR, "div.panelPopupShadow")))
-                    # else:
-                    logger.debug("- Mailbox already configured !")
-            except NoSuchElementException:
-                logger.debug("- Mailbox already configured !")
-                pass
-            except Exception as ex:
-                logger.error("/!\ (Error) Check Display Settings")
-                logger.error(type(ex))
-            logger.debug("- Done configuring mailbox !\n")
+            # try:
+            #     waiit()
+            #     preview_pane = browser.find_element_by_css_selector("div.vResize")
+            #     if preview_pane.is_displayed():
+            #         logger.debug("- Mailbox not yet configured !")
+            #         logger.debug("- Configureing !")
+            #         logger.debug("- Getting settings button")
+            #         settings_btn = WebDriverWait(browser, wait_timeout).until(
+            #             lambda driver: browser.find_element_by_id("O365_MainLink_Settings"))
+            #         waiit()
+            #         logger.debug("- Clicking settings button")
+            #         settings_btn.click()
+            #         logger.debug("- Waiting for menu to show")
+            #         WebDriverWait(browser, wait_timeout).until(
+            #             ec.visibility_of_element_located((By.CSS_SELECTOR, "div.o365cs-nav-contextMenu")))
+            #         logger.debug("- Getting display settings")
+            #         display_settings = WebDriverWait(browser, wait_timeout).until(
+            #             lambda driver: browser.find_element_by_xpath('//*[@aria-label="Display settings"]'))
+            #         waiit()
+            #         logger.debug("- Clicking display settings")
+            #         display_settings.click()
+            #         logger.debug("- Waiting for display settings to shows")
+            #         WebDriverWait(browser, wait_timeout).until(
+            #             ec.visibility_of_element_located((By.CSS_SELECTOR, "div.panelPopupShadow")))
+            #         logger.debug("- Getting Hide reading pane option")
+            #         hide_pane = WebDriverWait(browser, wait_timeout).until(
+            #             lambda driver: browser.find_element_by_xpath('//*[@aria-label="Hide reading pane"]'))
+            #         waiit()
+            #         logger.debug("- Clicking Hide reading pane option")
+            #         hide_pane.click()
+            #         time.sleep(1)
+            #         logger.debug("- Getting save button")
+            #         ok_btn = WebDriverWait(browser, wait_timeout).until(
+            #             lambda driver: browser.find_element_by_xpath('//*[@aria-label="Save"]'))
+            #         waiit()
+            #         logger.debug("- Clicking save button")
+            #         ok_btn.click()
+            #         logger.debug("- Waiting for Settings pane to fade away")
+            #         WebDriverWait(browser, wait_timeout).until(
+            #             ec.invisibility_of_element_located((By.CSS_SELECTOR, "div.panelPopupShadow")))
+            #         # else:
+            #         logger.debug("- Mailbox already configured !")
+            # except NoSuchElementException:
+            #     logger.debug("- Mailbox already configured !")
+            #     pass
+            # except Exception as ex:
+            #     logger.error("/!\ (Error) Check Display Settings")
+            #     logger.error(type(ex))
+            # logger.debug("- Done configuring mailbox !\n")
             # endregion
 
             # ***********************************************************************
@@ -892,8 +894,165 @@ def report_hotmail(self, **kwargs):
 
             # region Mark Spam as read
             if ('RS' in actions) and ('SS' not in actions):
-                logger.error("/!\ Mark SPAM as read are disabled for new version of mailboxes !")
-                logger.error("/!\ Skipping marking SPAM as read !\n")
+                # region Controllers Settings
+                logger.info("(*) Mark SPAM as read Actions :")
+                waiit()
+                spam_link = str(browser.current_url)[
+                            :str(browser.current_url).index('.com')] + '.com/owa/#path=/mail/junkemail'
+                inbox_link = spam_link.replace("/junkemail", "/inbox")
+
+                # region Accessing SPAM folder
+                logger.debug("- Getting SPAM folder")
+                browser.get(spam_link)
+                waiit()
+                browser.find_element_by_xpath('//span[text()="Junk Email"]').click()
+                waiit()
+                time.sleep(1)
+                # endregion
+
+                # region Filtering results
+                logger.debug("Getting filter button")
+                filter_btn = WebDriverWait(browser, wait_timeout).until(lambda driver: browser.find_element_by_xpath(
+                    '//*[@id="primaryContainer"]/div[4]/div/div[1]/div[2]/div[5]/div[2]/div[1]/div/div/div[3]/div/div[2]/button'))
+                logger.debug("Clicking filter button")
+                filter_btn.click()
+                logger.debug("Waiting for Unread button")
+                WebDriverWait(browser, wait_timeout).until(
+                    ec.visibility_of_element_located((By.XPATH, '//span[@aria-label="Unread"]')))
+                logger.debug("Getting for Unread button")
+                unread_btn = WebDriverWait(browser, wait_timeout).until(
+                    lambda driver: browser.find_element_by_xpath('//span[@aria-label="Unread"]'))
+                logger.debug("Clicking Unread button")
+                unread_btn.click()
+                # endregion
+
+                # region Checking results
+                try:
+                    noresult_span = browser.find_element_by_xpath(
+                        '//span[text()="We didn\'t find anything to show here."]')  # TODO-CVC
+                    waiit()
+                    no_results = noresult_span.is_displayed()
+                except NoSuchElementException:
+                    no_results = False
+                except Exception as ex:
+                    logger.error("/!\ (Error) Getting SPAM Results")
+                    logger.error(type(ex))
+                    no_results = True
+                # endregion
+                # endregion
+
+                # region looping through results
+                while not no_results:
+                    try:
+                        # region Checking results
+                        try:
+                            noresult_span = browser.find_element_by_xpath(
+                                '//span[text()="We didn\'t find anything to show here."]')  # TODO-CVC
+                            waiit()
+                            no_results = noresult_span.is_displayed()
+                            break
+                        except NoSuchElementException:
+                            no_results = False
+                        except Exception as ex:
+                            logger.error("/!\ (Error) Getting SPAM Results")
+                            logger.error(type(ex))
+                            no_results = True
+                            break
+                        # endregion
+
+                        # region Selecting alls messages
+                        logger.info("(!) Marking INBOX as read for this page")
+                        waiit()
+                        WebDriverWait(browser, wait_timeout).until(ec.presence_of_all_elements_located((By.XPATH,
+                                                                                                        '//*[@id="primaryContainer"]/div[4]/div/div[1]/div[2]/div[5]/div[2]/div[1]/div/div/div[3]/button')))
+                        logger.debug("Getting All Msgs checkbox")
+                        waiit()
+                        chk_bx_bttn = WebDriverWait(browser, wait_timeout).until(
+                            lambda driver: browser.find_element_by_xpath(
+                                '//*[@id="primaryContainer"]/div[4]/div/div[1]/div[2]/div[5]/div[2]/div[1]/div/div/div[3]'))
+                        waiit()
+                        logger.debug("Select all Msgs")
+                        logger.debug("Defining hover action")
+                        hover = ActionChains(browser).move_to_element(chk_bx_bttn)
+                        logger.debug("Hover over the checkbox")
+                        hover.perform()
+                        logger.debug("Hover Done")
+                        logger.debug("Waiting for visibility")
+                        WebDriverWait(browser, wait_timeout).until(ec.visibility_of_element_located((By.XPATH,
+                                                                                                     '//*[@id="primaryContainer"]/div[4]/div/div[1]/div[2]/div[5]/div[2]/div[1]/div/div/div[3]/button')))
+                        logger.debug("Element is visible")
+                        logger.debug("Clicking Checkbox")
+                        chk_bx_bttn.find_element_by_tag_name("button").click()
+                        waiit()
+                        # endregion
+
+                        # region Clicking MAR button
+                        logger.debug("Getting Menu button")
+                        menu_btn = WebDriverWait(browser, wait_timeout).until(
+                            lambda driver: browser.find_element_by_xpath('//button[@title="More commands"]'))
+                        logger.debug("Clicking menu button")
+                        menu_btn.click()
+                        logger.debug("Waiting for MAR button")
+                        WebDriverWait(browser, wait_timeout).until(
+                            ec.visibility_of_element_located((By.XPATH, '//button[@aria-label="Mark as read (Q)"]')))
+                        logger.debug("Getting MAR button")
+                        mar_bttn = WebDriverWait(browser, wait_timeout).until(
+                            lambda driver: browser.find_element_by_xpath('//button[@aria-label="Mark as read (Q)"]'))
+                        logger.debug("Clicking MAR button")
+                        mar_bttn.click()
+                        logger.info("(!) Selection Marked as READ")
+                        time.sleep(1)
+                        # endregion
+                    except StaleElementReferenceException:
+                        pass
+                    except TimeoutException:
+                        logger.error("/!\ (Error) Mark SPAM as Read Timed Out")
+                        browser.find_element_by_xpath('//span[text()="Inbox"]').click()
+                        time.sleep(1)
+                        waiit()
+                        browser.find_element_by_xpath('//span[text()="Junk Email"]').click()
+                        waiit()
+
+                        # region Checking results
+                        try:
+                            noresult_span = browser.find_element_by_xpath(
+                                '//span[text()="We didn\'t find anything to show here."]')  # TODO-CVC
+                            waiit()
+                            no_results = noresult_span.is_displayed()
+                            break
+                        except NoSuchElementException:
+                            no_results = False
+                        except Exception as ex:
+                            logger.error("/!\ (Error) Getting SPAM Results")
+                            logger.error(type(ex))
+                            no_results = True
+                            break
+                        # endregion
+
+
+                        # region Filtering results
+                        logger.debug("Getting filter button")
+                        filter_btn = WebDriverWait(browser, wait_timeout).until(
+                            lambda driver: browser.find_element_by_xpath(
+                                '//*[@id="primaryContainer"]/div[4]/div/div[1]/div[2]/div[5]/div[2]/div[1]/div/div/div[3]/div/div[2]/button'))
+                        logger.debug("Clicking filter button")
+                        filter_btn.click()
+                        logger.debug("Waiting for Unread button")
+                        WebDriverWait(browser, wait_timeout).until(
+                            ec.visibility_of_element_located((By.XPATH, '//span[@aria-label="Unread"]')))
+                        logger.debug("Getting for Unread button")
+                        unread_btn = WebDriverWait(browser, wait_timeout).until(
+                            lambda driver: browser.find_element_by_xpath('//span[@aria-label="Unread"]'))
+                        logger.debug("Clicking Unread button")
+                        unread_btn.click()
+                        logger.debug("Done !")
+                        # endregion
+                    except Exception as ex:
+                        logger.error("/!\ (Error) Mark SPAM as read")
+                        logger.error(type(ex))
+                        break
+                # endregion
+                logger.info("(!) Done marking as not SPAM !\n")
             # endregion
 
             # region Mark as Not SPAM
@@ -1539,33 +1698,19 @@ def report_hotmail(self, **kwargs):
         logger.error("#*#*#*#*#*#*#*#*#*#*#*#*#*#*#*#*#*#*#*#*#*#*#*#*#*#*#*#*#*#*#*#*#*#*#*#*")
         logger.error(type(exc))
         self.retry(exc=exc)
-        browser.save_screenshot(str(self.request.id) + ".png")
+        # browser.save_screenshot(str(self.request.id) + ".png")
         # endregion
 
-    finally:
-        # region Finally
-        logger.info("###************************************************************************###")
-        logger.info('        (!) - Finished Actions for %s - (!)' % mail)
-        logger.info("###************************************************************************###")
-        browser.quit()
-        # endregion
+    # region Finally
+    logger.info("###************************************************************************###")
+    logger.info('        (!) - Finished Actions for %s - (!)' % mail)
+    logger.info("###************************************************************************###")
+    browser.quit()
+    # endregion
 
-        # user_agent = "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_8_4) AppleWebKit/537.36\
-        #  (KHTML, like Gecko) Chrome/29.0.1547.57 Safari/537.36"
-        # webdriver.DesiredCapabilities.PHANTOMJS["phantomjs.page.settings.userAgent"] = user_agent
-        # service_args = ['--proxy=%s:%s' % (proxy, port), '--proxy-type=http']
-        # browser = webdriver.PhantomJS(executable_path="phantomjs.exe")
-        # browser = webdriver.PhantomJS(executable_path="phantomjs.exe", service_args=service_args)
-
-
-@app.task(name='spf_check', bind=True, max_retries=3, default_retry_delay=1)
-def spf_check(self, **kwargs):
-    domain = kwargs.get('domain', None)
-    import dns.resolver
-    try:
-        answers = dns.resolver.query(domain, 'TXT')
-        for answer in answers:
-            print(answer)
-            logger.info(answer)
-    except Exception as ex:
-        self.retry(exc=ex)
+    # user_agent = "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_8_4) AppleWebKit/537.36\
+    #  (KHTML, like Gecko) Chrome/29.0.1547.57 Safari/537.36"
+    # webdriver.DesiredCapabilities.PHANTOMJS["phantomjs.page.settings.userAgent"] = user_agent
+    # service_args = ['--proxy=%s:%s' % (proxy, port), '--proxy-type=http']
+    # browser = webdriver.PhantomJS(executable_path="phantomjs.exe")
+    # browser = webdriver.PhantomJS(executable_path="phantomjs.exe", service_args=service_args)
