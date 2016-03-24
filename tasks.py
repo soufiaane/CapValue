@@ -939,6 +939,7 @@ def report_hotmail(self, **kwargs):
                     logger.error(type(ex))
                     no_results = True
                 # endregion
+
                 # endregion
 
                 # region looping through results
@@ -1193,7 +1194,6 @@ def report_hotmail(self, **kwargs):
 
             # region Mark SPAM as Safe
             if 'SS' in actions:
-
                 # region Controllers Settings
                 logger.info("(*) Mark SPAM as Safe Actions")
                 waiit()
@@ -1261,17 +1261,28 @@ def report_hotmail(self, **kwargs):
                             logger.critical("/!\ (Error) Clicking 'Show content' button")
                             logger.critical(type(ex))
                             pass
+                        try:
+                            logger.debug("Getting MANS button")
+                            mans_btn = WebDriverWait(browser, wait_timeout).until(
+                                lambda driver: browser.find_element_by_xpath('//span[text()="It\'s not spam"]'))
 
-                        logger.debug("Getting MANS button")
-                        mans_btn = WebDriverWait(browser, wait_timeout).until(
-                            lambda driver: browser.find_element_by_xpath(
-                                '//button[@title="Move a message that isn\'t Junk to the Inbox"]'))
+                            logger.debug("Clicking MANS button")
+                            # WebDriverWait(browser, wait_timeout).until(ec.visibility_of_element_located((By.XPATH, '//button[@title="Move a message that isn\'t Junk to the Inbox"]')))
+                            if mans_btn.is_displayed():
+                                mans_btn.click()
+                                logger.info("- 'Not SPAM' button clicked")
+                        except TimeoutException:
+                            print(type(ex))
+                            logger.debug("Getting MANS button")
+                            mans_btn = WebDriverWait(browser, wait_timeout).until(
+                                lambda driver: browser.find_element_by_xpath(
+                                    '//button[@title="Move a message that isn\'t Junk to the Inbox"]'))
 
-                        logger.debug("Clicking MANS button")
-                        # WebDriverWait(browser, wait_timeout).until(ec.visibility_of_element_located((By.XPATH, '//button[@title="Move a message that isn\'t Junk to the Inbox"]')))
-                        if mans_btn.is_displayed():
-                            mans_btn.click()
-                            logger.info("- 'Not SPAM' button clicked")
+                            logger.debug("Clicking MANS button")
+                            # WebDriverWait(browser, wait_timeout).until(ec.visibility_of_element_located((By.XPATH, '//button[@title="Move a message that isn\'t Junk to the Inbox"]')))
+                            if mans_btn.is_displayed():
+                                mans_btn.click()
+                                logger.info("- 'Not SPAM' button clicked")
 
                         logger.debug("Waiting for action to be performed")
                         WebDriverWait(browser, wait_timeout).until(ec.staleness_of(first_mail))
@@ -1358,28 +1369,39 @@ def report_hotmail(self, **kwargs):
                 # endregion
 
                 # region Checking results
-                inbox_count = 0
                 try:
+                    noresult_span = browser.find_element_by_xpath(
+                        '//span[text()="We didn\'t find anything to show here."]')  # TODO-CVC
                     waiit()
-                    logger.debug("Getting INBOX Count")
-                    logger.debug("Getting Inbox span")
-                    inbox_span = browser.find_element_by_xpath('//span[@title="Inbox"]')
-                    logger.debug("%s" % inbox_span.text)
-                    inbox_count = int(inbox_span.find_element_by_xpath('../div[2]/span').text)
-                except ValueError:
-                    pass
+                    no_results = noresult_span.is_displayed()
+                except NoSuchElementException:
+                    no_results = False
                 except Exception as ex:
-                    logger.error("/!\ (Error) Getting SPAM Count")
+                    logger.error("/!\ (Error) Getting SPAM Results")
                     logger.error(type(ex))
-                    inbox_count = 0
-                logger.info("(!) INBOX count is : %s" % str(inbox_count))
+                    no_results = True
                 # endregion
 
                 # endregion
 
                 # region looping through results
-                while inbox_count > 0:
+                while not no_results:
                     try:
+                        # region Checking results
+                        try:
+                            noresult_span = browser.find_element_by_xpath(
+                                '//span[text()="We didn\'t find anything to show here."]')  # TODO-CVC
+                            waiit()
+                            no_results = noresult_span.is_displayed()
+                            break
+                        except NoSuchElementException:
+                            no_results = False
+                        except Exception as ex:
+                            logger.error("/!\ (Error) Getting SPAM Results")
+                            logger.error(type(ex))
+                            no_results = True
+                            break
+
 
                         # region Selecting alls messages
                         logger.info("(!) Marking INBOX as read for this page")
@@ -1449,6 +1471,24 @@ def report_hotmail(self, **kwargs):
                         waiit()
                         browser.get(inbox_link)
                         waiit()
+
+
+                        # region Checking results
+                        try:
+                            noresult_span = browser.find_element_by_xpath(
+                                '//span[text()="We didn\'t find anything to show here."]')  # TODO-CVC
+                            waiit()
+                            no_results = noresult_span.is_displayed()
+                            break
+                        except NoSuchElementException:
+                            no_results = False
+                        except Exception as ex:
+                            logger.error("/!\ (Error) Getting SPAM Results")
+                            logger.error(type(ex))
+                            no_results = True
+                            break
+                        # endregion
+
                         # region Filtering results
                         logger.debug("Getting filter button")
                         filter_btn = WebDriverWait(browser, wait_timeout).until(
@@ -1466,7 +1506,6 @@ def report_hotmail(self, **kwargs):
                         unread_btn.click()
                         logger.debug("Done !")
                         # endregion
-                        pass
                     except Exception as ex:
                         logger.error("/!\ (Error) Mark SPAM as read")
                         logger.error(type(ex))
@@ -1534,7 +1573,7 @@ def report_hotmail(self, **kwargs):
                 # region Accessing 1st messages
                 logger.debug("Getting Subject SPAN")
                 first_mail = WebDriverWait(browser, wait_timeout).until(
-                    lambda driver: browser.find_element_by_css_selector('div.senderText'))
+                    lambda driver: browser.find_element_by_css_selector('span.lvHighlightSubjectClass'))
                 logger.debug("Clicking Subject SPAN")
                 first_mail.click()
                 WebDriverWait(browser, wait_timeout).until(
@@ -1675,11 +1714,11 @@ def report_hotmail(self, **kwargs):
                         pass
                     except TimeoutException:
                         logger.error("/!\ (Error) Add Contact / Click Links / Flag Mail Timed Out")
-                        break
+                        # break
                     except Exception as ex:
                         logger.error("/!\ (Error) Add Contact / Click Links / Flag Mail Error !")
                         logger.error(type(ex))
-                        break
+                        # break
                 # endregion
 
                 logger.info("(!) Done Add Contact / Click Links / Flag Mail\n")
@@ -1694,7 +1733,7 @@ def report_hotmail(self, **kwargs):
     except Exception as exc:
         # region Exceptions
         logger.error("#*#*#*#*#*#*#*#*#*#*#*#*#*#*#*#*#*#*#*#*#*#*#*#*#*#*#*#*#*#*#*#*#*#*#*#*")
-        logger.error("#*#*#*#*#*#*#*#*#*#*#*#*#*#*#*# OUPS !! #*#*#*#*#*#*#*#*#*#*#*#*#*#*#*#*")
+        logger.error("#*#*#*#*#*#*#*#*#*#*#*#*#*#*#*# !! OUPS !! #*#*#*#*#*#*#*#*#*#*#*#*#*#*#*#*")
         logger.error("#*#*#*#*#*#*#*#*#*#*#*#*#*#*#*#*#*#*#*#*#*#*#*#*#*#*#*#*#*#*#*#*#*#*#*#*")
         logger.error(type(exc))
         self.retry(exc=exc)
