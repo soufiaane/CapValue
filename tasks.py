@@ -17,7 +17,6 @@ import time
 logger = get_task_logger(__name__)
 
 
-# TODO-CVC Detect Mailbox language to optimize Timeout Exceptions !!
 # TODO-CVC Job option for browser
 
 @app.task(name='report_hotmail', bind=True, max_retries=3, default_retry_delay=1)
@@ -123,12 +122,33 @@ def report_hotmail(self, **kwargs):
 
         # region Check Version
         print("(!) Checking mail version")
-        print("Current URL : %s" % browser.current_url)
         if "outlook" in browser.current_url:
             print("(!) New Version")
             version = "new"
+            try:
+                settings_btn = WebDriverWait(browser, wait_timeout).until(
+                            lambda driver: browser.find_element_by_id("O365_MainLink_Settings"))
+                if settings_btn.get_attribute("title") == "Open the Settings menu to access personal and app settings":
+                    email_language = "English"
+                elif settings_btn.get_attribute("title") == "Ouvrir le menu Paramètres pour accéder aux paramètres personnels et à ceux des applications":
+                    email_language = "French"
+            except Exception as exx:
+                print("/!\ (Error) Getting Mailbox Language !")
+                email_language == 'Unknown'
+                print(type(exx))
         else:
             print("(!) Old Version")
+            try:
+                folders_h1 = WebDriverWait(browser, wait_timeout).until(
+                    lambda driver: browser.find_element_by_css_selector('h1.lnav_topItemLabel'))
+                if folders_h1.text == "Folders":
+                    email_language = "English"
+                elif folders_h1.text == "Dossiers":
+                    email_language = "French"
+            except Exception as exx:
+                print("/!\ (Error) Getting Mailbox Language !")
+                email_language == 'Unknown'
+                print(type(exx))
         # endregion
 
         # ***********************************************************************
@@ -194,14 +214,22 @@ def report_hotmail(self, **kwargs):
                         print("Getting Menu Button")
 
                         try:
-                            menu_btn = WebDriverWait(browser, wait_timeout).until(
-                                lambda driver: browser.find_element_by_xpath('//*[@title="More commands"]'))
-                            waiit()
-                            print("Click Menu")
-                            WebDriverWait(browser, wait_timeout).until(
-                                ec.visibility_of_element_located((By.XPATH, '//*[@title="More commands"]')))
-                            waiit()
-                            # TODO-CVC French version
+                            if email_language == "English":
+                                menu_btn = WebDriverWait(browser, wait_timeout).until(
+                                    lambda driver: browser.find_element_by_xpath('//*[@title="More commands"]'))
+                                waiit()
+                                print("Click Menu")
+                                WebDriverWait(browser, wait_timeout).until(
+                                    ec.visibility_of_element_located((By.XPATH, '//*[@title="More commands"]')))
+                                waiit()
+                            elif email_language == "French":
+                                menu_btn = WebDriverWait(browser, wait_timeout).until(
+                                    lambda driver: browser.find_element_by_xpath('//*[@title=" Autres commandes"]'))
+                                waiit()
+                                print("Click Menu")
+                                WebDriverWait(browser, wait_timeout).until(
+                                    ec.visibility_of_element_located((By.XPATH, '//*[@title=" Autres commandes"]')))
+                                waiit()
                         except TimeoutException:
                             menu_btn = WebDriverWait(browser, wait_timeout).until(
                                 lambda driver: browser.find_element_by_xpath('//*[@title="更多命令"]'))
@@ -251,7 +279,6 @@ def report_hotmail(self, **kwargs):
                         pass
                     except TimeoutException:
                         print("/!\ (Error) Timed Out")
-                        break
                     except Exception as ex:
                         print("/!\ (Error) Mark SPAM as read")
                         print(type(ex))
@@ -336,7 +363,6 @@ def report_hotmail(self, **kwargs):
                         pass
                     except TimeoutException:
                         print("/!\ (Error) Timed Out")
-                        break
                     except Exception as ex:
                         print("/!\ (Error) Mark as not SPAM")
                         print(type(ex))
@@ -423,7 +449,31 @@ def report_hotmail(self, **kwargs):
                         pass
                     except TimeoutException:
                         print("/!\ (Error) Timed Out")
-                        break
+                        # region Clicking MANS button
+                        WebDriverWait(browser, wait_timeout).until(
+                            ec.visibility_of_element_located((By.ID, 'MarkAsNotJunk')))
+                        waiit()
+                        not_spam_btn = WebDriverWait(browser, wait_timeout).until(
+                            lambda driver: browser.find_element_by_id('MarkAsNotJunk'))
+                        waiit()
+                        not_spam_btn.click()
+                        print("(!) 'Not Spam' Button Clicked !")
+                        try:
+                            WebDriverWait(browser, wait_timeout).until(
+                                ec.visibility_of_element_located((By.CSS_SELECTOR, 'div.c_h_flyingDots')))
+                            WebDriverWait(browser, wait_timeout).until(
+                                ec.invisibility_of_element_located((By.CSS_SELECTOR, 'div.c_h_flyingDots')))
+                        except TimeoutException:
+                            pass
+                        # region Checking if it was the last page
+                        try:
+                            browser.find_element_by_id("NoMsgs")
+                            still_results = False
+                            print("(!) Last page !")
+                        except NoSuchElementException:
+                            still_results = True
+                            # endregion
+                            # endregion
                     except Exception as ex:
                         print("/!\ (Error) Mark SPAM as safe!")
                         print(type(ex))
@@ -432,9 +482,7 @@ def report_hotmail(self, **kwargs):
 
                 print("(!) Done marking SPAM as safe\n")
             # endregion
-
             # endregion
-
             # ***********************************************************************
 
             # region Inbox Actions
@@ -481,14 +529,22 @@ def report_hotmail(self, **kwargs):
 
                         # region Clicking menu
                         try:
-                            menu_btn = WebDriverWait(browser, wait_timeout).until(
-                                lambda driver: browser.find_element_by_xpath('//*[@title="More commands"]'))
-                            waiit()
-                            print("Click Menu")
-                            WebDriverWait(browser, wait_timeout).until(
-                                ec.visibility_of_element_located((By.XPATH, '//*[@title="More commands"]')))
-                            waiit()
-                            # TODO-CVC French version
+                            if email_language == "English":
+                                menu_btn = WebDriverWait(browser, wait_timeout).until(
+                                    lambda driver: browser.find_element_by_xpath('//*[@title="More commands"]'))
+                                waiit()
+                                print("Click Menu")
+                                WebDriverWait(browser, wait_timeout).until(
+                                    ec.visibility_of_element_located((By.XPATH, '//*[@title="More commands"]')))
+                                waiit()
+                            elif email_language == "French":
+                                menu_btn = WebDriverWait(browser, wait_timeout).until(
+                                    lambda driver: browser.find_element_by_xpath('//*[@title=" Autres commandes"]'))
+                                waiit()
+                                print("Click Menu")
+                                WebDriverWait(browser, wait_timeout).until(
+                                    ec.visibility_of_element_located((By.XPATH, '//*[@title=" Autres commandes"]')))
+                                waiit()
                         except TimeoutException:
                             menu_btn = WebDriverWait(browser, wait_timeout).until(
                                 lambda driver: browser.find_element_by_xpath('//*[@title="更多命令"]'))
@@ -531,7 +587,7 @@ def report_hotmail(self, **kwargs):
                         pass
                     except TimeoutException:
                         print("/!\ (Error) Timed Out")
-                        break
+                        continue
                     except Exception as ex:
                         print("/!\ (Error) Mark SPAM as read")
                         print(type(ex))
@@ -549,11 +605,10 @@ def report_hotmail(self, **kwargs):
                 print("- Getting result for Subject: %s" % keyword)
                 waiit()
 
-                keyword_link_flag = WebDriverWait(browser, wait_timeout).until(lambda driver: str(browser.current_url)[
-                                                                                              :str(
-                                                                                                  browser.current_url).index(
-                                                                                                  '.com')] + '.com/?fid=flsearch&srch=1&skws=' + keyword + '&sdr=4&satt=0')
+                keyword_link_flag = str(browser.current_url)[:str(browser.current_url).index(
+                    '.com')] + '.com/?fid=flsearch&srch=1&skws=' + keyword + '&sdr=4&satt=0'
                 browser.get(keyword_link_flag)
+                waiit()
 
                 try:
                     browser.find_element_by_id("NoMsgs")
@@ -790,6 +845,8 @@ def report_hotmail(self, **kwargs):
                                     print("Going Back to Hotmail !")
                                     browser.switch_to.window(browser.window_handles[0])
                                     waiit()
+                                except NoSuchWindowException:
+                                    pass
                                 except Exception as ex:
                                     print("/!\ (Error) Switching to new Tab")
                                     print(type(ex))
@@ -845,55 +902,96 @@ def report_hotmail(self, **kwargs):
             print("(###) Starting actions for NEW e-mail version\n")
 
             # region Configure Mail BOX
-            # try:
-            #     waiit()
-            #     preview_pane = browser.find_element_by_css_selector("div.vResize")
-            #     if preview_pane.is_displayed():
-            #         print("- Mailbox not yet configured !")
-            #         print("- Configureing !")
-            #         print("- Getting settings button")
-            #         settings_btn = WebDriverWait(browser, wait_timeout).until(
-            #             lambda driver: browser.find_element_by_id("O365_MainLink_Settings"))
-            #         waiit()
-            #         print("- Clicking settings button")
-            #         settings_btn.click()
-            #         print("- Waiting for menu to show")
-            #         WebDriverWait(browser, wait_timeout).until(
-            #             ec.visibility_of_element_located((By.CSS_SELECTOR, "div.o365cs-nav-contextMenu")))
-            #         print("- Getting display settings")
-            #         display_settings = WebDriverWait(browser, wait_timeout).until(
-            #             lambda driver: browser.find_element_by_xpath('//*[@aria-label="Display settings"]'))
-            #         waiit()
-            #         print("- Clicking display settings")
-            #         display_settings.click()
-            #         print("- Waiting for display settings to shows")
-            #         WebDriverWait(browser, wait_timeout).until(
-            #             ec.visibility_of_element_located((By.CSS_SELECTOR, "div.panelPopupShadow")))
-            #         print("- Getting Hide reading pane option")
-            #         hide_pane = WebDriverWait(browser, wait_timeout).until(
-            #             lambda driver: browser.find_element_by_xpath('//*[@aria-label="Hide reading pane"]'))
-            #         waiit()
-            #         print("- Clicking Hide reading pane option")
-            #         hide_pane.click()
-            #         time.sleep(1)
-            #         print("- Getting save button")
-            #         ok_btn = WebDriverWait(browser, wait_timeout).until(
-            #             lambda driver: browser.find_element_by_xpath('//*[@aria-label="Save"]'))
-            #         waiit()
-            #         print("- Clicking save button")
-            #         ok_btn.click()
-            #         print("- Waiting for Settings pane to fade away")
-            #         WebDriverWait(browser, wait_timeout).until(
-            #             ec.invisibility_of_element_located((By.CSS_SELECTOR, "div.panelPopupShadow")))
-            #         # else:
-            #         print("- Mailbox already configured !")
-            # except NoSuchElementException:
-            #     print("- Mailbox already configured !")
-            #     pass
-            # except Exception as ex:
-            #     print("/!\ (Error) Check Display Settings")
-            #     print(type(ex))
-            # print("- Done configuring mailbox !\n")
+            try:
+                waiit()
+                preview_pane = browser.find_element_by_css_selector("div.vResize")
+                if email_language == "English":
+                    if preview_pane.is_displayed():
+                        print("- Mailbox not yet configured !")
+                        print("- Configureing !")
+                        print("- Getting settings button")
+                        settings_btn = WebDriverWait(browser, wait_timeout).until(
+                            lambda driver: browser.find_element_by_id("O365_MainLink_Settings"))
+                        waiit()
+                        print("- Clicking settings button")
+                        settings_btn.click()
+                        print("- Waiting for menu to show")
+                        WebDriverWait(browser, wait_timeout).until(
+                            ec.visibility_of_element_located((By.CSS_SELECTOR, "div.o365cs-nav-contextMenu")))
+                        print("- Getting display settings")
+                        display_settings = WebDriverWait(browser, wait_timeout).until(
+                            lambda driver: browser.find_element_by_xpath('//*[@aria-label="Display settings"]'))
+                        waiit()
+                        print("- Clicking display settings")
+                        display_settings.click()
+                        print("- Waiting for display settings to shows")
+                        WebDriverWait(browser, wait_timeout).until(
+                            ec.visibility_of_element_located((By.CSS_SELECTOR, "div.panelPopupShadow")))
+                        print("- Getting Hide reading pane option")
+                        hide_pane = WebDriverWait(browser, wait_timeout).until(
+                            lambda driver: browser.find_element_by_xpath('//*[@aria-label="Hide reading pane"]'))
+                        waiit()
+                        print("- Clicking Hide reading pane option")
+                        hide_pane.click()
+                        time.sleep(1)
+                        print("- Getting save button")
+                        ok_btn = WebDriverWait(browser, wait_timeout).until(
+                            lambda driver: browser.find_element_by_xpath('//*[@aria-label="Save"]'))
+                        waiit()
+                        print("- Clicking save button")
+                        ok_btn.click()
+                        print("- Waiting for Settings pane to fade away")
+                        WebDriverWait(browser, wait_timeout).until(
+                            ec.invisibility_of_element_located((By.CSS_SELECTOR, "div.panelPopupShadow")))
+                        # else:
+                        print("- Mailbox already configured !")
+                elif email_language == "French":
+                    if preview_pane.is_displayed():
+                        print("- Mailbox not yet configured !")
+                        print("- Configureing !")
+                        print("- Getting settings button")
+                        settings_btn = WebDriverWait(browser, wait_timeout).until(
+                            lambda driver: browser.find_element_by_id("O365_MainLink_Settings"))
+                        waiit()
+                        print("- Clicking settings button")
+                        settings_btn.click()
+                        print("- Waiting for menu to show")
+                        WebDriverWait(browser, wait_timeout).until(
+                            ec.visibility_of_element_located((By.CSS_SELECTOR, "div.o365cs-nav-contextMenu")))
+                        print("- Getting display settings")
+                        display_settings = WebDriverWait(browser, wait_timeout).until(
+                            lambda driver: browser.find_element_by_xpath('//*[@aria-label="Paramètres d\'affichage"]'))
+                        waiit()
+                        print("- Clicking display settings")
+                        display_settings.click()
+                        print("- Waiting for display settings to shows")
+                        WebDriverWait(browser, wait_timeout).until(
+                            ec.visibility_of_element_located((By.CSS_SELECTOR, "div.panelPopupShadow")))
+                        print("- Getting Hide reading pane option")
+                        hide_pane = WebDriverWait(browser, wait_timeout).until(
+                            lambda driver: browser.find_element_by_xpath('//*[@aria-label="Masquer le volet de lecture"]'))
+                        waiit()
+                        print("- Clicking Hide reading pane option")
+                        hide_pane.click()
+                        time.sleep(1)
+                        print("- Getting save button")
+                        ok_btn = WebDriverWait(browser, wait_timeout).until(
+                            lambda driver: browser.find_element_by_xpath('//*[@aria-label="Enregistrer"]'))
+                        waiit()
+                        print("- Clicking save button")
+                        ok_btn.click()
+                        print("- Waiting for Settings pane to fade away")
+                        WebDriverWait(browser, wait_timeout).until(
+                            ec.invisibility_of_element_located((By.CSS_SELECTOR, "div.panelPopupShadow")))
+                        # else:
+                        print("- Mailbox already configured !")
+            except NoSuchElementException:
+                print("- Mailbox already configured !")
+                pass
+            except Exception as ex:
+                print("/!\ (Error) Check Display Settings")
+                print(type(ex))
+            print("- Done configuring mailbox !\n")
             # endregion
 
             # ***********************************************************************
@@ -913,7 +1011,10 @@ def report_hotmail(self, **kwargs):
                 print("- Getting SPAM folder")
                 browser.get(spam_link)
                 waiit()
-                browser.find_element_by_xpath('//span[text()="Junk Email"]').click()
+                if email_language == "English":
+                    browser.find_element_by_xpath('//span[text()="Junk Email"]').click()
+                elif email_language == "French":
+                    browser.find_element_by_xpath('//span[text()="Courrier indésirable"]').click()
                 waiit()
                 time.sleep(1)
                 # endregion
@@ -925,19 +1026,32 @@ def report_hotmail(self, **kwargs):
                 print("Clicking filter button")
                 filter_btn.click()
                 print("Waiting for Unread button")
-                WebDriverWait(browser, wait_timeout).until(
-                    ec.visibility_of_element_located((By.XPATH, '//span[@aria-label="Unread"]')))
-                print("Getting for Unread button")
-                unread_btn = WebDriverWait(browser, wait_timeout).until(
-                    lambda driver: browser.find_element_by_xpath('//span[@aria-label="Unread"]'))
-                print("Clicking Unread button")
-                unread_btn.click()
+                if email_language == "English":
+                    WebDriverWait(browser, wait_timeout).until(
+                        ec.visibility_of_element_located((By.XPATH, '//span[@aria-label="Unread"]')))
+                    print("Getting for Unread button")
+                    unread_btn = WebDriverWait(browser, wait_timeout).until(
+                        lambda driver: browser.find_element_by_xpath('//span[@aria-label="Unread"]'))
+                    print("Clicking Unread button")
+                    unread_btn.click()
+                elif email_language == "French":
+                    WebDriverWait(browser, wait_timeout).until(
+                        ec.visibility_of_element_located((By.XPATH, '//span[@aria-label="Non lu"]')))
+                    print("Getting for Unread button")
+                    unread_btn = WebDriverWait(browser, wait_timeout).until(
+                        lambda driver: browser.find_element_by_xpath('//span[@aria-label="Non lu"]'))
+                    print("Clicking Unread button")
+                    unread_btn.click()
                 # endregion
 
                 # region Checking results
                 try:
-                    noresult_span = browser.find_element_by_xpath(
-                        '//span[text()="We didn\'t find anything to show here."]')  # TODO-CVC
+                    if email_language == "English":
+                        noresult_span = browser.find_element_by_xpath(
+                            '//span[text()="We didn\'t find anything to show here."]')
+                    elif email_language == "French":
+                        noresult_span = browser.find_element_by_xpath(
+                            '//span[text()="Nous n’avons trouvé aucun élément à afficher ici."]')
                     waiit()
                     no_results = noresult_span.is_displayed()
                 except NoSuchElementException:
@@ -955,11 +1069,14 @@ def report_hotmail(self, **kwargs):
                     try:
                         # region Checking results
                         try:
-                            noresult_span = browser.find_element_by_xpath(
-                                '//span[text()="We didn\'t find anything to show here."]')  # TODO-CVC
+                            if email_language == "English":
+                                noresult_span = browser.find_element_by_xpath(
+                                    '//span[text()="We didn\'t find anything to show here."]')
+                            elif email_language == "French":
+                                noresult_span = browser.find_element_by_xpath(
+                                    '//span[text()="Nous n’avons trouvé aucun élément à afficher ici."]')
                             waiit()
                             no_results = noresult_span.is_displayed()
-                            break
                         except NoSuchElementException:
                             no_results = False
                         except Exception as ex:
@@ -970,7 +1087,7 @@ def report_hotmail(self, **kwargs):
                         # endregion
 
                         # region Selecting alls messages
-                        print("(!) Marking INBOX as read for this page")
+                        print("(!) Marking SPAM as read for this page")
                         waiit()
                         WebDriverWait(browser, wait_timeout).until(ec.presence_of_all_elements_located((By.XPATH,
                                                                                                         '//*[@id="primaryContainer"]/div[4]/div/div[1]/div[2]/div[5]/div[2]/div[1]/div/div/div[3]/button')))
@@ -997,38 +1114,93 @@ def report_hotmail(self, **kwargs):
 
                         # region Clicking MAR button
                         print("Getting Menu button")
-                        menu_btn = WebDriverWait(browser, wait_timeout).until(
+                        if email_language == "English":
+                            menu_btn = WebDriverWait(browser, wait_timeout).until(
                             lambda driver: browser.find_element_by_xpath('//button[@title="More commands"]'))
-                        print("Clicking menu button")
-                        menu_btn.click()
-                        print("Waiting for MAR button")
-                        WebDriverWait(browser, wait_timeout).until(
-                            ec.visibility_of_element_located((By.XPATH, '//button[@aria-label="Mark as read (Q)"]')))
-                        print("Getting MAR button")
-                        mar_bttn = WebDriverWait(browser, wait_timeout).until(
-                            lambda driver: browser.find_element_by_xpath('//button[@aria-label="Mark as read (Q)"]'))
-                        print("Clicking MAR button")
-                        mar_bttn.click()
+                            print("Clicking menu button")
+                            menu_btn.click()
+                            print("Waiting for MAR button")
+                            WebDriverWait(browser, wait_timeout).until(
+                                ec.visibility_of_element_located((By.XPATH, '//button[@aria-label="Mark as read (Q)"]')))
+                            print("Getting MAR button")
+                            mar_bttn = WebDriverWait(browser, wait_timeout).until(
+                                lambda driver: browser.find_element_by_xpath('//button[@aria-label="Mark as read (Q)"]'))
+                            print("Clicking MAR button")
+                            mar_bttn.click()
+                        elif email_language == "French":
+                            menu_btn = WebDriverWait(browser, wait_timeout).until(
+                            lambda driver: browser.find_element_by_xpath('//button[@title="Autres commandes"]'))
+                            print("Clicking menu button")
+                            menu_btn.click()
+                            print("Waiting for MAR button")
+                            WebDriverWait(browser, wait_timeout).until(
+                                ec.visibility_of_element_located((By.XPATH, '//button[@aria-label="Marquer comme lu (Q)"]')))
+                            print("Getting MAR button")
+                            mar_bttn = WebDriverWait(browser, wait_timeout).until(
+                                lambda driver: browser.find_element_by_xpath('//button[@aria-label="Marquer comme lu (Q)"]'))
+                            print("Clicking MAR button")
+                            mar_bttn.click()
                         print("(!) Selection Marked as READ")
                         time.sleep(1)
                         # endregion
                     except StaleElementReferenceException:
                         pass
                     except TimeoutException:
-                        print("/!\ (Error) Mark SPAM as Read Timed Out")
-                        browser.find_element_by_xpath('//span[text()="Inbox"]').click()
-                        time.sleep(1)
-                        waiit()
-                        browser.find_element_by_xpath('//span[text()="Junk Email"]').click()
-                        waiit()
+                        if email_language == "English":
+                            print("/!\ (Error) Mark SPAM as Read Timed Out")
+                            browser.find_element_by_xpath('//span[text()="Inbox"]').click()
+                            time.sleep(1)
+                            waiit()
+                            browser.find_element_by_xpath('//span[text()="Junk Email"]').click()
+                            waiit()
+                        elif email_language == "French":
+                            print("/!\ (Error) Mark SPAM as Read Timed Out")
+                            browser.find_element_by_xpath('//span[text()="Boîte de réception"]').click()
+                            time.sleep(1)
+                            waiit()
+                            browser.find_element_by_xpath('//span[text()="Courrier indésirable"]').click()
+                            waiit()
+
+                        # region Filtering results
+                        print("Getting filter button")
+                        filter_btn = WebDriverWait(browser, wait_timeout).until(
+                            lambda driver: browser.find_element_by_xpath(
+                                '//*[@id="primaryContainer"]/div[4]/div/div[1]/div[2]/div[5]/div[2]/div[1]/div/div/div[3]/div/div[2]/button'))
+                        print("Clicking filter button")
+                        filter_btn.click()
+                        if email_language == "English":
+                            print("Waiting for Unread button")
+                            WebDriverWait(browser, wait_timeout).until(
+                                ec.visibility_of_element_located((By.XPATH, '//span[@aria-label="Unread"]')))
+                            print("Getting for Unread button")
+                            unread_btn = WebDriverWait(browser, wait_timeout).until(
+                                lambda driver: browser.find_element_by_xpath('//span[@aria-label="Unread"]'))
+                            print("Clicking Unread button")
+                            unread_btn.click()
+                            print("Done !")
+                        elif email_language == "French":
+                            print("Waiting for Unread button")
+                            WebDriverWait(browser, wait_timeout).until(
+                                ec.visibility_of_element_located((By.XPATH, '//span[@aria-label="Non lu"]')))
+                            print("Getting for Unread button")
+                            unread_btn = WebDriverWait(browser, wait_timeout).until(
+                                lambda driver: browser.find_element_by_xpath('//span[@aria-label="Non lu"]'))
+                            print("Clicking Unread button")
+                            unread_btn.click()
+                            print("Done !")
+                        # endregion
 
                         # region Checking results
                         try:
-                            noresult_span = browser.find_element_by_xpath(
-                                '//span[text()="We didn\'t find anything to show here."]')  # TODO-CVC
+                            if email_language == "English":
+                                noresult_span = browser.find_element_by_xpath(
+                                    '//span[text()="We didn\'t find anything to show here."]')
+                                break
+                            elif email_language == "French":
+                                noresult_span = browser.find_element_by_xpath(
+                                    '//span[text()="Nous n’avons trouvé aucun élément à afficher ici."]')
                             waiit()
                             no_results = noresult_span.is_displayed()
-                            break
                         except NoSuchElementException:
                             no_results = False
                         except Exception as ex:
@@ -1038,30 +1210,12 @@ def report_hotmail(self, **kwargs):
                             break
                         # endregion
 
-
-                        # region Filtering results
-                        print("Getting filter button")
-                        filter_btn = WebDriverWait(browser, wait_timeout).until(
-                            lambda driver: browser.find_element_by_xpath(
-                                '//*[@id="primaryContainer"]/div[4]/div/div[1]/div[2]/div[5]/div[2]/div[1]/div/div/div[3]/div/div[2]/button'))
-                        print("Clicking filter button")
-                        filter_btn.click()
-                        print("Waiting for Unread button")
-                        WebDriverWait(browser, wait_timeout).until(
-                            ec.visibility_of_element_located((By.XPATH, '//span[@aria-label="Unread"]')))
-                        print("Getting for Unread button")
-                        unread_btn = WebDriverWait(browser, wait_timeout).until(
-                            lambda driver: browser.find_element_by_xpath('//span[@aria-label="Unread"]'))
-                        print("Clicking Unread button")
-                        unread_btn.click()
-                        print("Done !")
-                        # endregion
                     except Exception as ex:
                         print("/!\ (Error) Mark SPAM as read")
                         print(type(ex))
                         break
                 # endregion
-                print("(!) Done marking as not SPAM !\n")
+                print("(!) Done marking SPAM as Read!\n")
             # endregion
 
             # region Mark as Not SPAM
@@ -1409,7 +1563,6 @@ def report_hotmail(self, **kwargs):
                             no_results = True
                             break
 
-
                         # region Selecting alls messages
                         print("(!) Marking INBOX as read for this page")
                         waiit()
@@ -1478,7 +1631,6 @@ def report_hotmail(self, **kwargs):
                         waiit()
                         browser.get(inbox_link)
                         waiit()
-
 
                         # region Checking results
                         try:
@@ -1730,9 +1882,9 @@ def report_hotmail(self, **kwargs):
 
                 print("(!) Done Add Contact / Click Links / Flag Mail\n")
                 # endregion
-                # endregion
+            # endregion
 
-                # endregion
+            # endregion
         # endregion
 
         return True
@@ -1746,17 +1898,17 @@ def report_hotmail(self, **kwargs):
         self.retry(exc=exc)
         # browser.save_screenshot(str(self.request.id) + ".png")
         # endregion
+    finally:
+        # region Finally
+        print("###************************************************************************###")
+        print('        (!) - Finished Actions for %s - (!)' % mail)
+        print("###************************************************************************###")
+        browser.quit()
+        # endregion
 
-    # region Finally
-    print("###************************************************************************###")
-    print('        (!) - Finished Actions for %s - (!)' % mail)
-    print("###************************************************************************###")
-    browser.quit()
-    # endregion
-
-    # user_agent = "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_8_4) AppleWebKit/537.36\
-    #  (KHTML, like Gecko) Chrome/29.0.1547.57 Safari/537.36"
-    # webdriver.DesiredCapabilities.PHANTOMJS["phantomjs.page.settings.userAgent"] = user_agent
-    # service_args = ['--proxy=%s:%s' % (proxy, port), '--proxy-type=http']
-    # browser = webdriver.PhantomJS(executable_path="phantomjs.exe")
-    # browser = webdriver.PhantomJS(executable_path="phantomjs.exe", service_args=service_args)
+        # user_agent = "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_8_4) AppleWebKit/537.36\
+        #  (KHTML, like Gecko) Chrome/29.0.1547.57 Safari/537.36"
+        # webdriver.DesiredCapabilities.PHANTOMJS["phantomjs.page.settings.userAgent"] = user_agent
+        # service_args = ['--proxy=%s:%s' % (proxy, port), '--proxy-type=http']
+        # browser = webdriver.PhantomJS(executable_path="phantomjs.exe")
+        # browser = webdriver.PhantomJS(executable_path="phantomjs.exe", service_args=service_args)
