@@ -1246,7 +1246,10 @@ def report_hotmail(self, **kwargs):
                     waiit()
                     print("Getting spam Count")
                     print("Getting Junk span")
-                    junk_span = browser.find_element_by_xpath('//span[@title="Junk Email"]')
+                    if email_language == "English":
+                        junk_span = browser.find_element_by_xpath('//span[@title="Junk Email"]')
+                    elif email_language == "French":
+                        junk_span = browser.find_element_by_xpath('//span[@title="Courrier indésirable"]')
                     print("%s" % junk_span.text)
                     spam_count = int(junk_span.find_element_by_xpath('../div[2]/span').text)
                 except ValueError:
@@ -1293,26 +1296,48 @@ def report_hotmail(self, **kwargs):
 
                         # region Clicking MANS button
                         try:
-                            print("Clicking Mark as not SPAM Button")
-                            print("Getting MANS button")
-                            mans_btn = WebDriverWait(browser, wait_timeout).until(
-                                lambda driver: browser.find_element_by_xpath(
-                                    '//button[@title="Move a message that isn\'t Junk to the Inbox"]'))
-                            waiit()
-                            print("Waiting for MANS button")
-                            WebDriverWait(browser, wait_timeout).until(ec.visibility_of_element_located(
-                                (By.XPATH, '//button[@title="Move a message that isn\'t Junk to the Inbox"]')))
-                            print("Clicking MANS button")
-                            mans_btn.click()
-                            print("Waiting for action to be performed")
-                            WebDriverWait(browser, wait_timeout).until(lambda driver: browser.find_element_by_xpath(
-                                '//*[@id="primaryContainer"]/div[4]/div/div[1]/div[2]/div[5]/div[2]/div[1]/div/div/div[3]/div/div[2]/div[1]/span').text == "Junk Email")
-                            print("Sending ESC key")
-                            ActionChains(browser).send_keys(Keys.ESCAPE).perform()
-                            print("Waiting for invisibility of element !")
-                            WebDriverWait(browser, wait_timeout).until(
-                                ec.invisibility_of_element_located((By.XPATH, '//*[@title="More commands"]')))
-                            print("- E-mail marked as not SPAM !")
+                            if email_language == "English":
+                                print("Clicking Mark as not SPAM Button")
+                                print("Getting MANS button")
+                                mans_btn = WebDriverWait(browser, wait_timeout).until(
+                                    lambda driver: browser.find_element_by_xpath(
+                                        '//button[@title="Move a message that isn\'t Junk to the Inbox"]'))
+                                waiit()
+                                print("Waiting for MANS button")
+                                WebDriverWait(browser, wait_timeout).until(ec.visibility_of_element_located(
+                                    (By.XPATH, '//button[@title="Move a message that isn\'t Junk to the Inbox"]')))
+                                print("Clicking MANS button")
+                                mans_btn.click()
+                                print("Waiting for action to be performed")
+                                WebDriverWait(browser, wait_timeout).until(lambda driver: browser.find_element_by_xpath(
+                                    '//*[@id="primaryContainer"]/div[4]/div/div[1]/div[2]/div[5]/div[2]/div[1]/div/div/div[3]/div/div[2]/div[1]/span').text == "Junk Email")
+                                print("Sending ESC key")
+                                ActionChains(browser).send_keys(Keys.ESCAPE).perform()
+                                print("Waiting for invisibility of element !")
+                                WebDriverWait(browser, wait_timeout).until(
+                                    ec.invisibility_of_element_located((By.XPATH, '//*[@title="More commands"]')))
+                                print("- E-mail marked as not SPAM !")
+                            elif email_language == "French":
+                                print("Clicking Mark as not SPAM Button")
+                                print("Getting MANS button")
+                                mans_btn = WebDriverWait(browser, wait_timeout).until(
+                                    lambda driver: browser.find_element_by_xpath(
+                                        '//button[@title="Déplacer un message légitime dans la boîte de réception"]'))
+                                waiit()
+                                print("Waiting for MANS button")
+                                WebDriverWait(browser, wait_timeout).until(ec.visibility_of_element_located(
+                                    (By.XPATH, '//button[@title="Déplacer un message légitime dans la boîte de réception"]')))
+                                print("Clicking MANS button")
+                                mans_btn.click()
+                                print("Waiting for action to be performed")
+                                WebDriverWait(browser, wait_timeout).until(lambda driver: browser.find_element_by_xpath(
+                                    '//*[@id="primaryContainer"]/div[4]/div/div[1]/div[2]/div[5]/div[2]/div[1]/div/div/div[3]/div/div[2]/div[1]/span').text == "Junk Email")
+                                print("Sending ESC key")
+                                ActionChains(browser).send_keys(Keys.ESCAPE).perform()
+                                print("Waiting for invisibility of element !")
+                                WebDriverWait(browser, wait_timeout).until(
+                                    ec.invisibility_of_element_located((By.XPATH, '//*[@title="Autres commandes"]')))
+                                print("- E-mail marked as not SPAM !")
                         except TimeoutException:
                             pass
                         print("Done !")
@@ -1323,7 +1348,10 @@ def report_hotmail(self, **kwargs):
                             waiit()
                             print("Getting spam Count")
                             print("Getting Junk span")
-                            junk_span = browser.find_element_by_xpath('//span[@title="Junk Email"]')
+                            if email_language == "English":
+                                junk_span = browser.find_element_by_xpath('//span[@title="Junk Email"]')
+                            elif email_language == "French":
+                                junk_span = browser.find_element_by_xpath('//span[@title="Courrier indésirable"]')
                             print("%s" % junk_span.text)
                             spam_count = int(junk_span.find_element_by_xpath('../div[2]/span').text)
                         except ValueError:
@@ -1381,7 +1409,10 @@ def report_hotmail(self, **kwargs):
                     waiit()
                     print("Getting spam Count")
                     print("Getting Junk span")
-                    junk_span = browser.find_element_by_xpath('//span[@title="Junk Email"]')
+                    if email_language == "English":
+                        junk_span = browser.find_element_by_xpath('//span[@title="Junk Email"]')
+                    elif email_language == "French":
+                        junk_span = browser.find_element_by_xpath('//span[@title="Courrier indésirable"]')
                     print("%s" % junk_span.text)
                     spam_count = int(junk_span.find_element_by_xpath('../div[2]/span').text)
                 except ValueError:
@@ -1425,8 +1456,12 @@ def report_hotmail(self, **kwargs):
                             pass
                         try:
                             print("Getting MANS button")
-                            mans_btn = WebDriverWait(browser, wait_timeout).until(
-                                lambda driver: browser.find_element_by_xpath('//span[text()="It\'s not spam"]'))
+                            if email_language == "English":
+                                mans_btn = WebDriverWait(browser, wait_timeout).until(
+                                    lambda driver: browser.find_element_by_xpath('//span[text()="It\'s not spam"]'))
+                            elif email_language == "French":
+                                mans_btn = WebDriverWait(browser, wait_timeout).until(
+                                    lambda driver: browser.find_element_by_xpath('//span[text()="Ceci n’est pas du courrier indésirable"]'))
 
                             print("Clicking MANS button")
                             # WebDriverWait(browser, wait_timeout).until(ec.visibility_of_element_located((By.XPATH, '//button[@title="Move a message that isn\'t Junk to the Inbox"]')))
@@ -1436,10 +1471,14 @@ def report_hotmail(self, **kwargs):
                         except TimeoutException:
                             print(type(ex))
                             print("Getting MANS button")
-                            mans_btn = WebDriverWait(browser, wait_timeout).until(
-                                lambda driver: browser.find_element_by_xpath(
-                                    '//button[@title="Move a message that isn\'t Junk to the Inbox"]'))
-
+                            if email_language == "English":
+                                mans_btn = WebDriverWait(browser, wait_timeout).until(
+                                    lambda driver: browser.find_element_by_xpath(
+                                        '//button[@title="Move a message that isn\'t Junk to the Inbox"]'))
+                            elif email_language == "French":
+                                mans_btn = WebDriverWait(browser, wait_timeout).until(
+                                    lambda driver: browser.find_element_by_xpath(
+                                        '//button[@title="Déplacer un message légitime dans la boîte de réception"]'))
                             print("Clicking MANS button")
                             # WebDriverWait(browser, wait_timeout).until(ec.visibility_of_element_located((By.XPATH, '//button[@title="Move a message that isn\'t Junk to the Inbox"]')))
                             if mans_btn.is_displayed():
@@ -1457,8 +1496,12 @@ def report_hotmail(self, **kwargs):
                         try:
                             waiit()
                             print("Getting spam Count")
-                            junk_span = WebDriverWait(browser, wait_timeout).until(
-                                lambda driver: browser.find_element_by_xpath('//span[@title="Junk Email"]'))
+                            if email_language == "English":
+                                junk_span = WebDriverWait(browser, wait_timeout).until(
+                                    lambda driver: browser.find_element_by_xpath('//span[@title="Junk Email"]'))
+                            elif email_language == "French":
+                                junk_span = WebDriverWait(browser, wait_timeout).until(
+                                    lambda driver: browser.find_element_by_xpath('//span[@title="Courrier indésirable"]'))
                             print("Getting Junk span")
                             spam_count = int(junk_span.find_element_by_xpath('../div[2]/span').text)
                         except ValueError:
