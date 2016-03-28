@@ -2,7 +2,7 @@ from __future__ import absolute_import
 
 from celery import Celery
 
-app = Celery('CapValue', broker='amqp://cvcadmin:CapValue2016@tools.cvc.ma/cvcHost')
+app = Celery('CapValue', broker='amqp://cvcadmin:CapValue2016@192.168.0.166/cvcHost')
 
 app.conf.update(
     CELERY_ACCEPT_CONTENT=['json'],
