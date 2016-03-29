@@ -19,6 +19,7 @@
     "ng-dialog": "0.5.6",
     "angular-spinners": "~3.1.2",
     "angular-socket-io": "^0.7.0",
-    "ng-alerts": "^1.0.4"
+    "ng-alerts": "^1.0.4",
+    "angular-loading-bar": "^0.9.0"
   }
 }

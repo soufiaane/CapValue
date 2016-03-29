@@ -20,7 +20,8 @@
             'ngDialog',
             'ngTable',
             'ngCookies',
-            'ui.router'
+            'ui.router',
+            'angular-loading-bar'
             //'btford.socket-io'
         ]).run(run);
 

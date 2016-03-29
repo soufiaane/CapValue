@@ -30,8 +30,14 @@
                 <div class="form-group">
                     <label for="EntitySelect"> Entity: </label>
                     <select name="EntitySelect" id="EntitySelect" ng-model="vm.selected_entity" ng-change="vm.ENTITYSelected()">
-                        <option ng-repeat="option in vm.entities"
-                                value="{$ option.id $}">{$ option.name $}
+                        <option value="1">
+                            <b>CVC 1</b>
+                        </option>
+                        <option value="2">
+                            <b>CVC 2</b>
+                        </option>
+                        <option value="3">
+                            <b>CVC 3</b>
                         </option>
                     </select>
                 </div>
