@@ -2090,7 +2090,7 @@ def report_hotmail(self, **kwargs):
                     except Exception as ex:
                         print("/!\ (Error) Add Contact / Click Links / Flag Mail Error !")
                         print(type(ex))
-                        # break
+                        break
                 # endregion
 
                 print("(!) Done Add Contact / Click Links / Flag Mail\n")

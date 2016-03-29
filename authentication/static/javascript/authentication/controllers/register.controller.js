@@ -5,28 +5,29 @@
         .module('capvalue.authentication.controllers')
         .controller('RegisterController', RegisterController);
 
-    RegisterController.$inject = ['Authentication', 'Snackbar', 'ISP', '$rootScope', '$scope', 'Team'];
+    RegisterController.$inject = ['Authentication', 'Snackbar', '$rootScope', '$scope', 'Entity'];
 
 
-    function RegisterController(Authentication, Snackbar, ISP, $rootScope, $scope, Team) {
+    function RegisterController(Authentication, Snackbar, $rootScope, $scope, Entity) {
         var vm = this;
-        vm.isps = [];
+        vm.entities = [];
         vm.teams = [];
-        vm.selected_isp = "";
+        vm.selected_entity = "";
         vm.selected_team = "";
-        ISP.all().then(function (results) {
-            vm.isps = results.data;
+        Entity.all().then(function (response) {
+            vm.entities = response.data.results;
         });
-        vm.ISPSelected = ISPSelected;
+        vm.ENTITYSelected = ENTITYSelected;
         activate();
         vm.register = register;
 
         function register() {
             var fname = vm.fname;
             var lname = vm.lname;
+            var selected_team = vm.selected_team;
             var username = vm.username;
             var password = vm.password;
-            Authentication.register(password, username, fname, lname)
+            Authentication.register(password, username, fname, lname, selected_team)
                 .then(registerSuccessFn, registerErrorFn);
 
             function registerSuccessFn(data) {
@@ -39,20 +40,20 @@
             }
         }
 
-        function ISPSelected() {
-            Team.get_team_isp(vm.selected_isp).then(function (results) {
+        function ENTITYSelected() {
+            Entity.get_teams(vm.selected_entity).then(function (results) {
                 vm.teams = results.data;
 
-                $rootScope.isp_teams = {
+                $rootScope.entity_teams = {
                     show: true
                 };
-                $scope.isp_teams = $rootScope.isp_teams;
+                $scope.entity_teams = $rootScope.entity_teams;
             });
         }
 
         function activate() {
             if (Authentication.isAuthenticated()) {
-                $rootScope.isp_teams.show = false;
+                $rootScope.entity_teams.show = false;
                 window.location = '/';
             }
         }

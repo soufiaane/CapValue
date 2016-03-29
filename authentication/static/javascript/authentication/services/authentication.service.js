@@ -30,12 +30,13 @@
             unauthenticate: unauthenticate
         };
 
-        function register(password, username, fname, lname) {
+        function register(password, username, fname, lname, selected_team) {
             return $http.post('api/v1/accounts/', {
                 first_name: fname,
                 last_name: lname,
                 password: password,
-                username: username
+                username: username,
+                selected_team: selected_team
             });
         }
 

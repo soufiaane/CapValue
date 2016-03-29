@@ -15,6 +15,7 @@
             'capvalue.utils',
             'capvalue.isp',
             'capvalue.team',
+            'capvalue.entity',
             'multiStepForm',
             'ngDialog',
             'ngTable',

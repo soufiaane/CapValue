@@ -1,7 +1,7 @@
 from django.contrib.auth import authenticate, login, logout
 from rest_framework import permissions, status, views, viewsets
 from rest_framework.response import Response
-
+from team.models import Team
 from authentication.models import Account
 from authentication.serializers import AccountSerializer
 
@@ -22,11 +22,16 @@ class AccountViewSet(viewsets.ModelViewSet):
 
     def create(self, request, *args, **kwargs):
         serializer = self.serializer_class(data=request.data)
-
         if serializer.is_valid():
-            Account.objects.create_user(**serializer.validated_data)
-            return Response(serializer.validated_data, status=status.HTTP_201_CREATED)
-
+            acc = Account.objects.create_user(**serializer.validated_data)
+            if request.data['selected_team']:
+                team_id = request.data['selected_team']
+                try:
+                    selected_team = Team.objects.get(pk=team_id)
+                    selected_team.members.add(acc)
+                except Exception as ex:
+                    print(Type(ex))
+            return Response(self.serializer_class(instance=acc).data, status=status.HTTP_201_CREATED)
         return Response({
             'status' : 'Bad request',
             'message': 'Account could not be created with received datata'
