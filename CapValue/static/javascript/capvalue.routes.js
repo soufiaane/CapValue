@@ -49,19 +49,7 @@
                 url: "/seed/create/",
                 controller: 'SeedCreateController',
                 controllerAs: 'vm',
-                templateUrl: '/static/templates/seed/create2.html'
-            })
-            .state('ProxyCreate', {
-                url: "/proxy/create/",
-                controller: 'ProxyCreateController',
-                controllerAs: 'vm',
-                templateUrl: '/static/templates/proxy/create2.html'
-            })
-            .state('ProxyList', {
-                url: "/proxy/list/",
-                controller: 'ProxyListController',
-                controllerAs: 'vm',
-                templateUrl: '/static/templates/proxy/list.html'
+                templateUrl: '/static/templates/seed/create.html'
             })
             .state('AccountsList', {
                 url: "/accounts/list/",

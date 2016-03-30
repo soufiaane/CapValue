@@ -2100,8 +2100,6 @@ def report_hotmail(self, **kwargs):
                 # endregion
         # endregion
 
-        return True
-
     except Exception as exc:
         # region Exceptions
         print("#*#*#*#*#*#*#*#*#*#*#*#*#*#*#*#*#*#*#*#*#*#*#*#*#*#*#*#*#*#*#*#*#*#*#*#*")

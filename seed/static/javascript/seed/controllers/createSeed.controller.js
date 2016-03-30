@@ -9,153 +9,41 @@
     function SeedCreateController(Seed, $state, Snackbar, Authentication) {
         var vm = this;
         activate();
-        vm.steps = [
-            {
-                templateUrl: '/static/templates/seed/create.info.html',
-                title: 'Infos'
-            },
-            {
-                templateUrl: '/static/templates/seed/create.maillist.html',
-                title: 'Email List'
-            },
-            {
-                templateUrl: '/static/templates/seed/create.proxy.html',
-                title: 'Proxy'
-            }
-        ];
         vm.seedList = {emails: {textarea: [], files: []}};
         vm.uploadedFiles = [];
-        vm.checkStep = checkStep;
-        vm.checkStep1 = checkStep1;
-        vm.checkStep2 = checkStep2;
-        vm.checkStep3 = checkStep3;
+        vm.validate = validate;
         vm.seedListInputBind = seedListInputBind;
         vm.processForm = processForm;
         //*******************************************************************************************************
-        //*******************************************************************************************************
-        function seedListInputBind(type) {
+        function seedListInputBind() {
             var data;
             var re_email = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
 
-            //Handles File Upload & Generating new upload input
-            //this is only when we call the function with type == file
-            if ((type === 'file') && vm.selectedFile) {
-                vm.uploadedFiles.push(vm.selectedFile);
-                vm.selectedFile = null;
-                document.getElementById("seedfile_import").value = "";
-            }
-            //*******************************************************************************************************
-
-            //Handles Parsing Logic When proxyType is Manual
-            if (vm.seedList.proxyType === "manual") {
-                //*******************************************************************************************************
-                //Handles the File Parsing Logic For Manual ProxyType
-                if (type === 'file') {
-                    for (var i = 0; i < vm.uploadedFiles.length; i++) {
-                        var imported_data = {filename: vm.uploadedFiles[i].name, emails: []};
-                        Papa.parse(vm.uploadedFiles[i],
-                            {
-                                step: function (results) {
-                                    if (results.data[0][0] && results.data[0][1] && re_email.test(results.data[0][0])) {
-                                        imported_data.emails.push({
-                                            email: results.data[0][0],
-                                            password: results.data[0][1]
-                                        });
-                                    }
-                                },
-                                complete: function () {
-                                    vm.seedList.emails.files.push(imported_data);
-                                    checkStep2();
-                                }
-                            });
-                    }
-                }
-                //******************************************************************************************************
-
-                //Handles the TextArea Parsing Logic For Manual ProxyType
-                else if (type !== 'file') {
-                    vm.seedList.emails["textarea"] = [];
-                    data = Papa.parse(vm.seedList.textarea_Input).data;
-                    for (var k = 0; k < data.length; k++) {
-                        if (data[k][0] && data[k][1] && re_email.test(data[k][0])) {
-                            vm.seedList.emails['textarea'].push({
-                                    'email': data[k][0],
-                                    'password': data[k][1],
-                                    'proxy': {
-                                        'ip': data[k][2] ? data[k][2] : '',
-                                        'port': data[k][2] ? data[k][3] : '',
-                                        'login': data[k][2] ? data[k][4] : '',
-                                        'pass': data[k][2] ? data[k][5] : ''
-                                    }
-                                }
-                            );
-                        }
-
-                    }
-                }
-                //******************************************************************************************************
-
-            }
-            //******************************************************************************************************
-
-            //Handles Parsing Logic When proxyType is Proxy or VPN
-            else if (vm.seedList.proxyType !== "manual") {
-                if (type === 'file') {
-                    for (var m = 0; m < vm.uploadedFiles.length; m++) {
-                        var imported_data2 = {filename: vm.uploadedFiles[m].name, emails: []};
-                        Papa.parse(vm.uploadedFiles[m],
-                            {
-                                step: function (results) {
-                                    if (results.data[0][0] && results.data[0][1] && re_email.test(results.data[0][0])) {
-                                        imported_data2.emails.push({
-                                            email: results.data[0][0],
-                                            password: results.data[0][1]
-                                        });
-                                    }
-                                },
-                                complete: function () {
-                                    vm.seedList.emails.files.push(imported_data2);
-                                    checkStep2();
-                                }
-                            });
-                    }
-                }
-                else if (type !== 'file') {
-                    vm.seedList.emails["textarea"] = [];
-                    data = Papa.parse(vm.seedList.textarea_Input).data;
-                    for (var l = 0; l < data.length; l++) {
-                        if (data[l].length === 2) {
-                            if (data[l][0] && data[l][1] && re_email.test(data[l][0])) {
-                                vm.seedList.emails['textarea'].push({
-                                    'email': data[l][0],
-                                    'password': data[l][1]
-                                });
+            vm.seedList.emails["textarea"] = [];
+            data = Papa.parse(vm.seedList.textarea_Input).data;
+            for (var k = 0; k < data.length; k++) {
+                if (data[k][0] && data[k][1] && re_email.test(data[k][0])) {
+                    vm.seedList.emails['textarea'].push({
+                            'email': data[k][0],
+                            'password': data[k][1],
+                            'proxy': {
+                                'ip': data[k][2] ? data[k][2] : '',
+                                'port': data[k][3] ? data[k][3] : '',
+                                'login': data[k][4] ? data[k][4] : '',
+                                'pass': data[k][5] ? data[k][5] : ''
                             }
                         }
-                    }
+                    );
                 }
             }
         }
 
-        function checkStep($nextStep, $getActiveIndex) {
+        function validate() {
             var element = document.getElementById("formErrors");
+            var errors = [];
             while (element.firstChild) {
                 element.removeChild(element.firstChild);
             }
-            var activeIndex = $getActiveIndex();
-            if (activeIndex === 1) {
-                checkStep1($nextStep);
-            }
-            else if (activeIndex === 2) {
-                checkStep2($nextStep);
-            }
-            else if (activeIndex === 3) {
-                checkStep3($nextStep);
-            }
-        }
-
-        function checkStep1($nextStep) {
-            var errors = [];
 
             if (!(vm.seedList.name)) {
                 errors.push({
@@ -163,14 +51,14 @@
                     error: 'Seed List Name is required !'
                 });
             }
-            if (!(vm.seedList.proxyType)) {
+            if (vm.seedList.emails === {textarea: [], files: []}) {
                 errors.push({
-                    name: 'seedList.proxyType',
-                    error: 'Seed List Proxy Type is required !'
+                    name: 'seedList.emails',
+                    error: 'Email list is empty !'
                 });
             }
             if (errors.length === 0) {
-                $nextStep();
+                return true;
             } else {
                 for (var index = 0; index < errors.length; index++) {
                     var errorHighlightStyle = "border-color: #dd4b39;border-style: solid; box-shadow: 0 0 8px #DD4B39;";
@@ -188,41 +76,14 @@
                         document.getElementById("seedlist_proxytype").setAttribute("style", errorHighlightStyle);
                     }
                 }
+                return false;
             }
-        }
-
-        function checkStep2($nextStep) {
-            var errors = [];
-
-            if (vm.seedList.emails === {textarea: [], files: []}) {
-                errors.push({
-                    name: 'seedList.emails',
-                    error: 'Email list is empty !'
-                });
-            }
-            if (!(vm.seedList.proxyType)) {
-                errors.push({
-                    name: 'seedList.proxyType',
-                    error: 'Seed List Proxy Type is required !'
-                });
-            }
-            if (errors.length === 0) {
-                $nextStep();
-            } else {
-                for (var index = 0; index < errors.length; index++) {
-
-                }
-            }
-        }
-
-        function checkStep3($nextStep) {
-            $nextStep();
         }
 
         function processForm() {
-            Seed.create(vm.seedList.name, vm.seedList.proxyType, vm.seedList.emails)
-                .then(createSeedSuccessFn, createSeedErrorFn);
-
+            if (validate() == true) {
+                Seed.create(vm.seedList.name, vm.seedList.emails).then(createSeedSuccessFn, createSeedErrorFn);
+            }
             function createSeedSuccessFn() {
                 Snackbar.show('Seed List Created Successfully');
                 $state.go($state.current, {}, {reload: true});

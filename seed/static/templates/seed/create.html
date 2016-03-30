@@ -2,106 +2,32 @@
     <div class="col-sm-8 col-sm-offset-2">
         <div id="form-container">
             <div class="page-header text-center" style="padding: 1px;">
-                <h2 style="color: #ffffff;">New job :</h2>
+                <h2 style="color: #ffffff;">New Seed :</h2>
             </div>
             <div class="jumbotron job-create">
-                <form id="seedCreate_form" ng-submit="vm.submitJob()"
+                <form id="seedCreate_form" ng-submit="vm.processForm()"
                       style="min-height: 100px; padding-bottom: 0" novalidate>
                     <table class="table table-responsive">
                         <tr style="width: 100px">
                             <td style="border: none;">
-                                <span class="pull-left">Keyword :</span>
+                                <span class="pull-left">Name :</span>
                             </td>
-                            <td style="border: none;" id="job_keyword">
-                                <input type="text" class="form-control" placeholder="Keyword..."
-                                       aria-describedby="sizing-addon1" ng-model="vm.job.keyword"
-                                       name="seedList.name">
+                            <td style="border: none;" id="seedlist_name">
+                                <input  id="seedlist_name" type="text" class="form-control" placeholder="Seed Name..."
+                                       aria-describedby="sizing-addon1" ng-model="vm.seedList.name" name="seedList.name">
                             </td>
                         </tr>
                     </table>
-                    <div class="box-body" style="padding-left: 100px;" id="job_actions">
-                        <table class="table table-responsive table-condensed">
-                            <tr style="width: 100px">
-                                <td style="border: none; padding: 0; width: 50%;" class="pull-left">
-                                    <label class="checkbox">
-                                        <input type="checkbox" ng-model="vm.job.actions[0].isChecked">
-                                        Mark spam as read.
-                                    </label>
-                                </td>
-                                <td style="border: none; padding: 0; width: 50%;" class="pull-left">
-                                    <label class="checkbox">
-                                        <input type="checkbox" ng-model="vm.job.actions[1].isChecked">
-                                        Not spam (spam to inbox).
-                                    </label>
-                                </td>
-                            </tr>
-                            <tr style="width: 100px">
-                                <td style="border: none; padding: 0; width: 50%;" class="pull-left">
-                                    <label class="checkbox">
-                                        <input type="checkbox" ng-model="vm.job.actions[4].isChecked">
-                                        Safe spam mail.
-                                    </label>
-                                </td>
-                                <td style="border: none; padding: 0; width: 50%;" class="pull-left">
-                                    <label class="checkbox">
-                                        <input type="checkbox" ng-model="vm.job.actions[2].isChecked">
-                                        Mark inbox as read.
-                                    </label>
-                                </td>
-                            </tr>
-                            <tr style="width: 100px">
-                                <td style="border: none; padding: 0; width: 50%;" class="pull-left">
-                                    <label class="checkbox">
-                                        <input type="checkbox" ng-model="vm.job.actions[5].isChecked">
-                                        Add contacts <b>INBOX</b>
-                                    </label>
-                                </td>
-                                <td style="border: none; padding: 0; width: 50%;" class="pull-left">
-                                    <label class="checkbox">
-                                        <input type="checkbox" ng-model="vm.job.actions[6].isChecked">
-                                        Click links <b>INBOX</b>
-                                    </label>
-                                </td>
-                            </tr>
-                            <tr style="width: 100px">
-                                <td style="border: none; padding: 0; width: 50%;" class="pull-left">
-                                    <label class="checkbox">
-                                        <input type="checkbox" ng-model="vm.job.actions[7].isChecked">
-                                        Flag Mails <b>INBOX</b>
-                                    </label>
-                                </td>
-                            </tr>
-                        </table>
-                    </div>
+                    <div class="form-group" style="color:#fff;">
+                        <label class="well"
+                               style="color:#1A2226;background-color:#EEEEEE;border-color:#EEEEEE;margin-bottom:10px;margin-top: 20px; padding: 2px;width: 100%;">Seed
+                            List
+                            <small>(Format: email,password OR email,password,proxy IP,proxy port)</small>
+                        </label>
 
-                    <div class="box-body">
-                        <div class="col-sm-12">
-                            <table class="table table-bordered table-hover dataTable" style="width: 100%;"
-                                   ng-table="vm.tableParams" show-filter="true" id="job_seed_list" ng-hide="loading"
-                                   ng-cloak>
-                                <tbody>
-                                <tr role="row" class="odd" ng-repeat="seed in $data" style="width: 100px;">
-                                    <td>
-                                        <input type="checkbox"
-                                               ng-click="vm.toggleSeedSelection(seed, seed.id)"
-                                               ng-checked="vm.findWithAttr(vm.job.selectedSeeds, 'id', seed.id) > -1">
-                                    </td>
-                                    <td title="'List Id'" filter="{ id: 'number'}" sortable="'id'">
-                                        {$ seed.id $}
-                                    </td>
-                                    <td title="'List Name'" filter="{ list_name: 'text'}" sortable="'list_name'">
-                                        {$ seed.list_name $}
-                                    </td>
-                                    <td title="'Count'">
-                                        {$ seed.emails.length $}
-                                    </td>
-                                </tr>
-                                </tbody>
-                            </table>
-                            <div ng-show="loading" class="text-center">
-                                <img id="mySpinner" src="/static/templates/dist/img/ajax-loader.gif"/>
-                            </div>
-                        </div>
+                        <textarea class="form-control" placeholder="Seed List (Format: email,password,proxy,port)"
+                                  rows="10" ng-model="vm.seedList.textarea_Input"
+                                  ng-change="vm.seedListInputBind()"></textarea>
                     </div>
                     <hr style="margin: 0;">
                     <hr style="margin: 0;">
@@ -109,7 +35,9 @@
                     <hr style="margin: 0;">
                     <div id="formErrors" class="col-xs-8 col-sm-offset-2"></div>
                     <div class="text-center">
-                        <button type="submit" class="btn btn-danger btn-block">Submit</button>
+                        <button type="submit" class="btn btn-success btn-block">
+                            Save <i class="fa fa-floppy-o"></i>
+                        </button>
                     </div>
                 </form>
             </div>

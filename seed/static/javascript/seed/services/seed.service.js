@@ -38,21 +38,17 @@
             return $http.get('/api/v1/emails/seed/' + seed_id + '/');
         }
 
-        function create(list_name, proxyType, emails) {
+        function create(list_name, emails) {
             var mails = [];
 
-            for (var i = 0; i < emails["files"].length; i++) {
-                mails.push(emails["files"][i]);
-            }
-
-            for (var l = 0; l < emails["textarea"].length; l++) {
-                mails.push(emails["textarea"][l]);
+            for (var i = 0; i < emails["textarea"].length; i++) {
+                mails.push(emails["textarea"][i]);
             }
 
             return $http.post('/api/v1/seeds/', {
                 emails: mails,
                 list_name: list_name,
-                proxyType: proxyType
+                proxyType: 'manual'
             });
         }
 

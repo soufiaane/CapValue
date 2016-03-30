@@ -5,16 +5,11 @@
         .module('capvalue.layout.controllers')
         .controller('MenuController', MenuController);
 
-    MenuController.$inject = ['Authentication', '$state', '$rootScope', '$scope'];
+    MenuController.$inject = ['Authentication'];
 
-    function MenuController(Authentication, $rootScope, $scope) {
+    function MenuController(Authentication) {
         var vm = this;
-        $rootScope.user_menu = false;
         vm.user = Authentication.getAuthenticatedAccount();
-        if (vm.user && vm.user.role == 'Manager'){
-            $rootScope.user_menu = true;
-            $scope.user_menu = $rootScope.user_menu
-        }
     }
 
     // region TODO-CVC remove from here
