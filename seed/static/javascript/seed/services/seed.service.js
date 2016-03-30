@@ -31,7 +31,7 @@
         }
 
         function get_seed(seed_id) {
-            return $http.get('/api/v1/seeds/');
+            return $http.get('/api/v1/seeds/' + seed_id + '/');
         }
 
         function get_seed_emails(seed_id) {

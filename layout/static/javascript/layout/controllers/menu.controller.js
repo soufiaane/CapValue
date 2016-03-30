@@ -67,7 +67,6 @@
     //Fix the fixed layout sidebar scroll bug
     fix_sidebar();
     // endregion
-
 })();
 
 

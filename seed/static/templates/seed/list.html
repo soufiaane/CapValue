@@ -23,34 +23,26 @@
                                 </colgroup>
                                 <tbody>
                                 <tr role="row" class="odd" ng-repeat="seed in $data">
-                                    <td title="'Id'" filter="{ id: 'number'}" sortable="'id'" style="width: 5%;"><a
-                                            href="#" ng-click="vm.openSeedDetails(seed.id)">{$ seed.id $}</a></td>
-                                    <td title="Name" ng-switch="vm.isEditing">
+                                    <td title="'Id'" filter="{ id: 'number'}" sortable="'id'" style="width: 5%;">
+                                        <!-- <a href="#" ng-click="vm.openSeedDetails(seed.id)">{$ seed.id $}</a> -->
+                                        {$ seed.id $}
+                                    </td>
+                                    <td title="'List Name'" ng-switch="vm.isEditing">
                                         <span ng-switch-default class="editable-text">{$ seed.name $}</span>
                                         <div class="controls" ng-switch-when="true">
-                                          <input type="text" ng-model="vm.originalSeed.name" class="editable-input form-control input-sm"  title=""/>
+                                          <input type="text" ng-model="vm.originalSeed.name" class="editable-input form-control input-sm" title=""/>
                                         </div>
                                     </td>
-                                    <td title="'Count'"><a href="#" ng-click="vm.openEmailDetails(seed.id)">
-                                        {$ seed.emails.length $}</a></td>
+                                    <td title="'Count'">
+                                        {$ seed.emails.length $}
+                                    </td>
                                     <td title="'Active'">##</td>
                                     <td title="'Inactive'">##</td>
                                     <td>
-                                        <button class="btn btn-primary btn-sm" ng-click="vm.save(seed)"
-                                                ng-if="vm.isEditing">
-                                            <span class="glyphicon glyphicon-ok"></span>
-                                        </button>
-                                        <button class="btn btn-default btn-sm" ng-click="vm.isEditing=false"
-                                                ng-if="vm.isEditing">
-                                            <span class="glyphicon glyphicon-remove"></span>
-                                        </button>
-
-                                        <button class="btn btn-default btn-sm" ng-click="vm.edit(seed)"
-                                                ng-if="!vm.isEditing">
+                                        <button class="btn btn-default btn-sm" ng-click="vm.openSeedDetails(seed.id)">
                                             <span class="glyphicon glyphicon-pencil"></span>
                                         </button>
-                                        <button class="btn btn-danger btn-sm" ng-click="vm.del(seed)"
-                                                ng-if="!vm.isEditing">
+                                        <button class="btn btn-danger btn-sm" ng-click="vm.del(seed)">
                                             <span class="glyphicon glyphicon-trash"></span>
                                         </button>
                                     </td>

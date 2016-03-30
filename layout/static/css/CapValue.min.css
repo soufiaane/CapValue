@@ -5304,3 +5304,6 @@ table.text-center, table.text-center td, table.text-center th {
     }
 }
 
+.ng-modal .ngdialog-content {
+    width: 90% !important;
+}

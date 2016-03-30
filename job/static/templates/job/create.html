@@ -10,7 +10,7 @@
                     <table class="table table-responsive">
                         <tr style="width: 100px">
                             <td style="border: none;">
-                                <span class="pull-left">Subject :</span>
+                                <span class="pull-left">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Subject :</span>
                             </td>
                             <td style="border: none;" id="job_keyword">
                                 <input type="text" class="form-control" placeholder="Subject..."
@@ -23,51 +23,100 @@
                         <table class="table table-responsive table-condensed">
                             <tr style="width: 100px">
                                 <td style="border: none; padding: 0; width: 50%;" class="pull-left">
-                                    <label class="checkbox">
+                                    <label class="checkbox pull-left" style="width: 50%;">
                                         <input type="checkbox" ng-model="vm.job.actions[0].isChecked">
                                         Mark spam as read.
                                     </label>
+                                    <label style="width: 50%;" class="pull-left">
+                                        <a href="#" tabindex="0" role="button" data-toggle="popover"
+                                           data-trigger="focus"
+                                           title="Mark spam as read."
+                                           data-content="And here's some amazing content. It's very engaging. Right?">
+                                            (?) </a>
+                                    </label>
                                 </td>
                                 <td style="border: none; padding: 0; width: 50%;" class="pull-left">
-                                    <label class="checkbox">
+                                    <label class="checkbox pull-left" style="width: 50%;">
                                         <input type="checkbox" ng-model="vm.job.actions[1].isChecked">
                                         Not spam (spam to inbox).
                                     </label>
+                                    <label style="width: 50%;" class="pull-left">
+                                        <a href="#" tabindex="0" role="button" data-toggle="popover"
+                                           data-trigger="focus"
+                                           title="Not spam (spam to inbox)."
+                                           data-content="And here's some amazing content. It's very engaging. Right?">
+                                            (?) </a>
+                                    </label>
                                 </td>
                             </tr>
                             <tr style="width: 100px">
                                 <td style="border: none; padding: 0; width: 50%;" class="pull-left">
-                                    <label class="checkbox">
+                                    <label class="checkbox pull-left" style="width: 50%;">
                                         <input type="checkbox" ng-model="vm.job.actions[4].isChecked">
                                         Safe spam mail.
                                     </label>
+                                    <label style="width: 50%;" class="pull-left">
+                                        <a href="#" tabindex="0" role="button" data-toggle="popover"
+                                           data-trigger="focus"
+                                           title="Safe spam mail."
+                                           data-content="And here's some amazing content. It's very engaging. Right?">
+                                            (?) </a>
+                                    </label>
                                 </td>
                                 <td style="border: none; padding: 0; width: 50%;" class="pull-left">
-                                    <label class="checkbox">
+                                    <label class="checkbox pull-left" style="width: 50%;">
                                         <input type="checkbox" ng-model="vm.job.actions[2].isChecked">
                                         Mark inbox as read.
                                     </label>
+                                    <label style="width: 50%;" class="pull-left">
+                                        <a href="#" tabindex="0" role="button" data-toggle="popover"
+                                           data-trigger="focus"
+                                           title="Mark inbox as read."
+                                           data-content="And here's some amazing content. It's very engaging. Right?">
+                                            (?) </a>
+                                    </label>
                                 </td>
                             </tr>
                             <tr style="width: 100px">
                                 <td style="border: none; padding: 0; width: 50%;" class="pull-left">
-                                    <label class="checkbox">
+                                    <label class="checkbox pull-left" style="width: 50%;">
                                         <input type="checkbox" ng-model="vm.job.actions[5].isChecked">
                                         Add contacts <b>INBOX</b>
                                     </label>
+                                    <label style="width: 50%;" class="pull-left">
+                                        <a href="#" tabindex="0" role="button" data-toggle="popover"
+                                           data-trigger="focus"
+                                           title="Add contacts <b>INBOX</b>."
+                                           data-content="And here's some amazing content. It's very engaging. Right?">
+                                            (?) </a>
+                                    </label>
                                 </td>
                                 <td style="border: none; padding: 0; width: 50%;" class="pull-left">
-                                    <label class="checkbox">
+                                    <label class="checkbox pull-left" style="width: 50%;">
                                         <input type="checkbox" ng-model="vm.job.actions[6].isChecked">
                                         Click links <b>INBOX</b>
+                                    </label>
+                                    <label style="width: 50%;" class="pull-left">
+                                        <a href="#" tabindex="0" role="button" data-toggle="popover"
+                                           data-trigger="focus"
+                                           title="Click links <b>INBOX</b>"
+                                           data-content="And here's some amazing content. It's very engaging. Right?">
+                                            (?) </a>
                                     </label>
                                 </td>
                             </tr>
                             <tr style="width: 100px">
                                 <td style="border: none; padding: 0; width: 50%;" class="pull-left">
-                                    <label class="checkbox">
+                                    <label class="checkbox pull-left" style="width: 50%;">
                                         <input type="checkbox" ng-model="vm.job.actions[7].isChecked">
                                         Flag Mails <b>INBOX</b>
+                                    </label>
+                                    <label style="width: 50%;" class="pull-left">
+                                        <a href="#" tabindex="0" role="button" data-toggle="popover"
+                                           data-trigger="focus"
+                                           title="Flag Mails <b>INBOX</b>."
+                                           data-content="And here's some amazing content. It's very engaging. Right?">
+                                            (?) </a>
                                     </label>
                                 </td>
                             </tr>
@@ -76,8 +125,16 @@
 
                     <div class="box-body">
                         <div class="col-sm-12">
-                            <table class="table table-bordered table-hover dataTable" style="width: 100%;"
-                                   ng-table="vm.tableParams" show-filter="true" id="job_seed_list" ng-hide="loading"
+                    <table class="table table-responsive">
+                        <tr style="width: 100px">
+                            <td style="border: none;">
+                                <span class="pull-left"><b>Seed List :</b></span>
+                            </td>
+                            <td style="border: none;"></td>
+                        </tr>
+                    </table>
+                            <table class="table table-hover dataTable" style="width: 100%"
+                                   ng-table="vm.tableParams" show-filter="false" id="job_seed_list" ng-hide="loading"
                                    ng-cloak>
                                 <tbody>
                                 <tr role="row" class="odd" ng-repeat="seed in $data" style="width: 100px;">
@@ -105,7 +162,7 @@
                     <div id="formErrors" class="col-xs-8 col-sm-offset-2"></div>
                     <div class="text-center">
                         <button type="submit" class="btn btn-success btn-block">
-                            Submit <i class="fa fa-floppy-o"></i>
+                            Submit <i class="fa fa-check-circle"></i>
                         </button>
                     </div>
                 </form>
@@ -114,4 +171,8 @@
     </div>
 </div>
 
-
+<script>
+    $(document).ready(function () {
+        $('[data-toggle="popover"]').popover();
+    });
+</script>
