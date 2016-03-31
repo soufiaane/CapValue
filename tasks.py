@@ -109,6 +109,13 @@ def report_hotmail(self, **kwargs):
             btn__next_verified.click()
             waiit()
             look_for_pub()
+            try:
+                email_blocked = browser.find_element_by_css_selector('div.serviceAbusePageContainer')
+                if email_blocked.is_displayed():
+                    browser.quit()
+                    return False
+            except NoSuchElementException:
+                pass
             print(browser.current_url)
             if 'https://account.live.com/' in browser.current_url:
                 browser.get(link)

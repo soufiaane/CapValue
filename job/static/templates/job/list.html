@@ -11,7 +11,7 @@
                 <div class="form-inline dt-bootstrap">
                     <div class="row">
                         <div class="col-sm-12">
-                            <table ng-table="vm.tableParams" class="table" show-filter="true" ng-hide="loading">
+                            <table ng-table="vm.tableParams" class="table" show-filter="false" ng-hide="loading">
                                 <tbody>
                                 <tr role="row" class="odd" ng-repeat="job in $data">
                                     <td title="'Id'" filter="{ id: 'text'}" sortable="'id'"><a href="#"
@@ -22,12 +22,19 @@
                                     </td>
                                     <td title="'Finished'">###</td>
                                     <td title="'Status'">{$ job.status $}</td>
-                                    <td title="'Keyword'">{$ job.keywords $}</td>
+                                    <td title="'Subject'">{$ job.subject $}</td>
                                     <td title="'Actions'">
                                        <div ng-bind-html="job.actions | split"></div>
                                     </td>
                                     <td title="'Processed'">##</td>
-                                    <td title="'Action'">??</td>
+                                    <td title="''">
+                                        <button class="btn btn-danger btn-sm" ng-click="vm.revokeJob(job.celery_id)">
+                                            <span class="glyphicon glyphicon-stop"></span>
+                                        </button>
+                                        <button class="btn btn-danger btn-sm" ng-click="vm.deleteJob(job.id)">
+                                            <span class="glyphicon glyphicon-trash"></span>
+                                        </button>
+                                    </td>
                                 </tr>
                                 </tbody>
                             </table>

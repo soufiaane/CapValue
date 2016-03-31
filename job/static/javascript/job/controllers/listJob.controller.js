@@ -11,8 +11,9 @@
         activate();
         var user = Authentication.getAuthenticatedAccount();
         vm.openJobDetails = openJobDetails;
+        vm.revokeJob = revokeJob;
+        vm.deleteJob = deleteJob;
         $scope.loading = true;
-
 
         vm.tableParams = new NgTableParams({
             page: 1,
@@ -58,6 +59,32 @@
                     $scope.detail_loading = false;
                     modal.close();
                 });
+        }
+
+        function revokeJob(celery_id){
+            Job.revoke_job(celery_id).then(SuccessRevokeJobtFn, ErrorRevokeJobtFn);
+
+            function SuccessRevokeJobtFn() {
+                Snackbar.show('Job stopped Successfully');
+                $state.go($state.current, {}, {reload: true});
+            }
+
+            function ErrorRevokeJobtFn() {
+                Snackbar.error('Error stopping Job !');
+            }
+        }
+
+        function deleteJob(job_id){
+            Job.delete_Job(job_id).then(SuccessDeleteJobtFn, ErrorDeleteJobtFn);
+
+            function SuccessDeleteJobtFn() {
+                Snackbar.show('Job deleted Successfully');
+                $state.go($state.current, {}, {reload: true});
+            }
+
+            function ErrorDeleteJobtFn() {
+                Snackbar.error('Error deleting Job !');
+            }
         }
 
         function activate() {

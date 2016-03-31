@@ -1,9 +1,7 @@
 import json
-
 from celery import group
-from rest_framework import viewsets, permissions, generics, status
+from rest_framework import viewsets, permissions, generics, status, views
 from rest_framework.response import Response
-
 from job.models import Job
 from job.models import Seed
 from job.serializers import JobSerializer
@@ -12,6 +10,9 @@ from mail.serializers import EmailSerializer
 from proxy.serializers import IPSerializer
 from seed.serializers import SeedSerializer
 from tasks import report_hotmail
+from celery.result import GroupResult
+from celeryTasks.celerySettings import app
+import signal
 
 
 class JobViewSet(viewsets.ModelViewSet):
@@ -47,8 +48,10 @@ class JobViewSet(viewsets.ModelViewSet):
                     pr.append(None)
         tas = group(
             report_hotmail.s(actions=actions, subject=subject, email=emm[i], proxy=pr[i]).set(queue=user.username) for i
-            in range(len(emm)))()
-        job.celery_id = tas.id
+            in range(len(emm)))
+        tas_results = tas.apply_async()
+        tas_results.save()
+        job.celery_id = tas_results.id
         job.status = "RN"
         job.save()
         return Response(self.serializer_class(instance=job).data, status=status.HTTP_201_CREATED)
@@ -69,42 +72,6 @@ class AccountJobViewSet(generics.ListCreateAPIView, viewsets.ViewSet):
         return Response(serializer.data, status=status.HTTP_200_OK)
 
 
-# TODO-CVC remove
-class JobView(generics.ListCreateAPIView):
-    def post(self, request, *args, **kwargs):
-        keywords = request.data.get('keywords', None)
-        seed_list = json.loads(request.data.get('seed_list', None))
-        actions = request.data.get('actions', None)
-        user = request.user
-        serialized = self.serializer_class(data={'keywords': keywords, 'actions': actions})
-        if serialized.is_valid():
-            job = Job.objects.create(keywords=keywords, actions=actions, user=user)
-            [job.seed_list.add(Seed.objects.get(pk=seed['id'])) for seed in seed_list]
-            job.save()
-            [seed.jobs.add(job) for seed in job.seed_list.all()]
-            job_ser = self.serializer_class(instance=job)
-            seed_ser = SeedSerializer(instance=job.seed_list.all(), many=True)
-            [[report_hotmail.apply_async((job_ser.data, email), queue='Test') for email in seed['emails']] for seed in
-             seed_ser.data]
-            job.status = "RN"
-            job.save()
-            return Response(job_ser.data, status=status.HTTP_201_CREATED)
-        return Response({
-            'status': 'Bad request',
-            'message': 'Job could not be created with received data.'
-        }, status=status.HTTP_400_BAD_REQUEST)
-
-    def get(self, request, *args, **kwargs):
-        queryset = self.filter_queryset(self.get_queryset())
-        # page = self.paginate_queryset(queryset)
-        # if page is not None:
-        #     serializer = self.get_serializer(page, many=True)
-        #     return self.get_paginated_response(serializer.data)
-
-        serializer = self.get_serializer(queryset, many=True)
-        return Response(serializer.data, status=status.HTTP_200_OK)
-
-
 class JobDetail(generics.RetrieveUpdateDestroyAPIView):
     def get(self, request, *args, **kwargs):
         pass
@@ -115,3 +82,17 @@ class JobDetail(generics.RetrieveUpdateDestroyAPIView):
     def put(self, request, *args, **kwargs):
         pass
 
+
+class RevokeJob(views.APIView):
+    permission_classes = permissions.IsAuthenticated,
+
+    def post(self, request, format=None):
+        group_id = request.data.get('celery_id', None)
+        if group_id:
+            app.control.revoke([task.id for task in GroupResult.restore(group_id)], terminate=True, signal=signal.SIGILL)
+            return Response(status=status.HTTP_200_OK)
+
+        return Response({
+            'status': 'Bad request',
+            'message': 'Job could not be stopped with received data.'
+        }, status=status.HTTP_400_BAD_REQUEST)

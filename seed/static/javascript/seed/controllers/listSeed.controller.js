@@ -10,6 +10,7 @@
         activate();
         var user = Authentication.getAuthenticatedAccount();
         vm.openSeedDetails = openSeedDetails;
+        vm.deleteSeed = deleteSeed;
         $scope.loading = true;
 
         vm.tableParams = new NgTableParams({
@@ -55,6 +56,19 @@
         function ErrorSeedListFn() {
             Snackbar.error('Error fetching Seed List');
             $scope.loading = false;
+        }
+
+        function deleteSeed(seed_id) {
+            Seed.dell(seed_id).then(SuccessDeleteSeedFn, ErrorDeleteSeedFn);
+
+            function SuccessDeleteSeedFn() {
+                Snackbar.show('Seed list deleted Successfully');
+                $state.go($state.current, {}, {reload: true});
+            }
+
+            function ErrorDeleteSeedFn() {
+                Snackbar.error('Error deleting Seed list !');
+            }
         }
 
 
