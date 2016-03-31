@@ -35,6 +35,8 @@
             ngDialog.openConfirm({
                 template: '/static/templates/seed/seed_detail.html',
                 className: 'ngdialog-theme-default ng-modal',
+                controller: 'SeedUpdateController',
+                controllerAs: 'vm',
                 scope: $scope, //Pass the scope object if you need to access in the template
                 closeByEscape: true,
                 closeByDocument: true,

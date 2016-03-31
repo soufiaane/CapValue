@@ -1,6 +1,52 @@
 <div ng-show="detail_loading" class="text-center" ng-cloak>
     <img id="mySpinner" src="/static/images/ajax-loader.gif" ng-show="detail_loading"/>
 </div>
-<div ng-hide="detail_loading" ng-cloak>
+<div class="row" ng-hide="detail_loading" ng-cloak>
     <pre ng-cloak>{$ selectedSeed $} </pre>
+    <div class="col-sm-8 col-sm-offset-2">
+        <div id="form-container">
+            <div class="page-header text-center" style="padding: 1px;">
+                <h2 style="color: #ffffff;">New Seed :</h2>
+            </div>
+            <div class="jumbotron job-create">
+                <form id="seedCreate_form" ng-submit="vm.processForm()"
+                      style="min-height: 100px; padding-bottom: 0" novalidate>
+                    <table class="table table-responsive">
+                        <tr style="width: 100px">
+                            <td style="border: none;">
+                                <span class="pull-left">Name :</span>
+                            </td>
+                            <td style="border: none;" id="seedlist_name">
+                                <input  id="seedlist_name" type="text" class="form-control" placeholder="Seed Name..."
+                                       aria-describedby="sizing-addon1" ng-model="vm.seedList.name" name="seedList.name">
+                            </td>
+                        </tr>
+                    </table>
+                    <div class="form-group" style="color:#fff;">
+                        <label class="well"
+                               style="color:#1A2226;background-color:#EEEEEE;border-color:#EEEEEE;margin-bottom:10px;margin-top: 20px; padding: 2px;width: 100%;">Seed
+                            List
+                            <small>Format: (email,password) OR (email,password,proxy IP,proxy port)</small>
+                        </label>
+
+                        <textarea class="form-control" placeholder="Seed List Format: (email,password) OR (email,password,proxy IP,proxy port)"
+                                  rows="10" ng-model="vm.seedList.textarea_Input"
+                                  ng-change="vm.seedListInputBind()"></textarea>
+                    </div>
+                    <hr style="margin: 0;">
+                    <hr style="margin: 0;">
+                    <hr style="margin: 0;">
+                    <hr style="margin: 0;">
+                    <div id="formErrors" class="col-xs-8 col-sm-offset-2"></div>
+                    <div class="text-center">
+                        <button type="submit" class="btn btn-success btn-block">
+                            Save <i class="fa fa-check-circle"></i>
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
 </div>
+
+
