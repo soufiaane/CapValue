@@ -27,7 +27,7 @@ INSTALLED_APPS = (
     'notifications',
     'compressor',
     'celeryTasks',
-    'mod_wsgi.server',
+    # 'mod_wsgi.server',
 )
 # endregion
 
@@ -70,7 +70,8 @@ REST_FRAMEWORK = {
     'DEFAULT_RENDERER_CLASSES': (
         'rest_framework.renderers.JSONRenderer',
         'rest_framework.renderers.BrowsableAPIRenderer',
-    )
+    ),
+    'DEFAULT_FILTER_BACKENDS': ('rest_framework.filters.DjangoFilterBackend',)
 }
 # endregion
 

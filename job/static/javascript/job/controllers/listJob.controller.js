@@ -3,15 +3,17 @@
     angular
         .module('capvalue.job.controllers')
         .controller('JobListController', JobListController);
-    JobListController.$inject = ['Job', 'Authentication', 'NgTableParams', 'Snackbar', '$state', '$scope', 'ngDialog'];
+    JobListController.$inject = ['Job', 'Authentication', 'NgTableParams', 'Snackbar', '$state', '$scope', 'ngDialog',
+        '$interval'];
 
 
-    function JobListController(Job, Authentication, NgTableParams, Snackbar, $state, $scope, ngDialog) {
+    function JobListController(Job, Authentication, NgTableParams, Snackbar, $state, $scope, ngDialog, $interval) {
         var vm = this;
         activate();
         var user = Authentication.getAuthenticatedAccount();
         vm.openJobDetails = openJobDetails;
         vm.revokeJob = revokeJob;
+        vm.updateJobs = updateJobs;
         vm.deleteJob = deleteJob;
         $scope.loading = true;
 
@@ -32,6 +34,10 @@
             },
             counts: []
         });
+
+        //$interval(function () {
+        //   vm.updateJobs(vm.tableParams);
+        //}, 30000);
 
         function ErrorJobListFn() {
             Snackbar.error('Error fetching Job List');
@@ -61,7 +67,7 @@
                 });
         }
 
-        function revokeJob(celery_id){
+        function revokeJob(celery_id) {
             Job.revoke_job(celery_id).then(SuccessRevokeJobtFn, ErrorRevokeJobtFn);
 
             function SuccessRevokeJobtFn() {
@@ -74,7 +80,7 @@
             }
         }
 
-        function deleteJob(job_id){
+        function deleteJob(job_id) {
             Job.delete_Job(job_id).then(SuccessDeleteJobtFn, ErrorDeleteJobtFn);
 
             function SuccessDeleteJobtFn() {
@@ -87,10 +93,26 @@
             }
         }
 
+        function updateJobs(params) {
+            var ignoreLoadingBar = (params.data.length > 0 ) ;
+            params.reload();
+
+            Job.updateJobStatus(params.data, ignoreLoadingBar).then(SuccessUpdateJobFn, ErrorUpdateJobFn);
+
+            function SuccessUpdateJobFn() {
+                console.log('SuccessUpdateJobFn');
+            }
+
+            function ErrorUpdateJobFn() {
+                console.log('ErrorUpdateJobFn');
+            }
+        }
+
         function activate() {
             if (!Authentication.isAuthenticated()) {
                 $state.go('Login');
             }
         }
+
     }
 })();

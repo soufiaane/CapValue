@@ -21,13 +21,15 @@
             return $http.get('/api/v1/seeds/');
         }
 
-        function get(username, page) {
-            if (page > 1) {
-                return $http.get('/api/v1/accounts/' + username + '/seed/?page=' + page);
-            }
-            else {
-                return $http.get('/api/v1/accounts/' + username + '/seed/');
-            }
+        function get(username, page, filter, sorting, count) {
+            var url = '/api/v1/accounts/' + username + '/seed/?page=' + page ;
+            if (filter.name){url += ('&name=' + filter.name);}
+            if (filter.id){url += ('&id=' + filter.id);}
+            if(sorting.name && sorting.name === "desc"){url += '&ordering=-name'; return $http.get(url);}
+            if(sorting.name && sorting.name === "asc"){url += '&ordering=name'; return $http.get(url);}
+            if(sorting.id && sorting.id === "desc"){url += '&ordering=-id'; return $http.get(url);}
+            if(sorting.id && sorting.id === "asc"){url += '&ordering=id'; return $http.get(url);}
+            return $http.get(url);
         }
 
         function get_seed(seed_id) {

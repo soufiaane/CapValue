@@ -13,6 +13,8 @@ from tasks import report_hotmail
 from celery.result import GroupResult
 from celeryTasks.celerySettings import app
 import signal
+from django.utils.six import BytesIO
+from rest_framework.parsers import JSONParser
 
 
 class JobViewSet(viewsets.ModelViewSet):
@@ -87,6 +89,31 @@ class RevokeJob(views.APIView):
     permission_classes = permissions.IsAuthenticated,
 
     def post(self, request, format=None):
+        group_id = request.data.get('celery_id', None)
+        if group_id:
+            app.control.revoke([task.id for task in GroupResult.restore(group_id)], terminate=True, signal=signal.SIGILL)
+            return Response(status=status.HTTP_200_OK)
+
+        return Response({
+            'status': 'Bad request',
+            'message': 'Job could not be stopped with received data.'
+        }, status=status.HTTP_400_BAD_REQUEST)
+
+
+class UpdateJobResults(views.APIView):
+    permission_classes = permissions.IsAuthenticated,
+    serializer_class = JobSerializer
+
+    def post(self, request, format=None):
+        model_jobs = []
+        req_jobs = request.data.get('jobs', None)
+        for req_job in req_jobs:
+            job = Job.objects.get(pk=req_job['id'])
+            results = GroupResult.restore(id=job.celery_id)
+            print("Successful: %s\n" % results.successful())
+            print("ready: %s\n" % results.ready())
+            print("completed count: %s\n" % results.completed_count())
+
         group_id = request.data.get('celery_id', None)
         if group_id:
             app.control.revoke([task.id for task in GroupResult.restore(group_id)], terminate=True, signal=signal.SIGILL)

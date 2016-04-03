@@ -14,12 +14,14 @@
             get: get,
             get_job: get_job,
             revoke_job: revoke_job,
+            updateJobStatus: updateJobStatus,
             delete_Job: delete_Job
         };
 
         function all() {
             return $http.get('/api/v1/jobs/');
         }
+
         function get_job(job_id) {
             return $http.get('/api/v1/jobs/');
         }
@@ -35,7 +37,7 @@
             });
         }
 
-        function delete_Job(job_id){
+        function delete_Job(job_id) {
             return $http.delete('/api/v1/jobs/' + job_id + '/');
         }
 
@@ -44,6 +46,14 @@
                 keywords: keyword,
                 seed_list: seed_list,
                 actions: actions
+            });
+        }
+
+        function updateJobStatus(jobs, ignoreLoadingBar) {
+            return $http.post('/api/v1/jobs/update_results/', {
+                jobs: jobs
+            }, {
+                ignoreLoadingBar: ignoreLoadingBar
             });
         }
     }

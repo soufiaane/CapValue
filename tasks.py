@@ -39,7 +39,7 @@ def report_hotmail(self, **kwargs):
             kwargs.get('actions', None), keyword, mail, pswd, proxy, port))
 
     version = "old"
-    wait_timeout = 15
+    wait_timeout = 20
     print('Job Started :')
 
     if proxy is not None and port is not None:
@@ -47,9 +47,11 @@ def report_hotmail(self, **kwargs):
         chrome_options.add_argument('--proxy-server=%s:%s' % (proxy, port))
         browser = webdriver.Chrome(executable_path="chromedriver", chrome_options=chrome_options)
     else:
+        chrome_options = webdriver.ChromeOptions()
+        chrome_options.add_argument('--no-startup-window')
         browser = webdriver.Chrome(executable_path="chromedriver")
     browser.maximize_window()
-
+    browser.set_window_position(-2000, 0)
     # endregion
 
     try:
@@ -81,10 +83,9 @@ def report_hotmail(self, **kwargs):
         print("- Opening Hotmail")
         browser.get(link)
 
-        inputs = browser.find_elements_by_tag_name('input')
-        login_champ = inputs[0]
-        pswd_champ = inputs[1]
-        login_btn = browser.find_element_by_xpath('//*[@name="SI"]')
+        login_champ = browser.find_element_by_name("loginfmt")
+        pswd_champ = browser.find_element_by_name("passwd")
+        login_btn = browser.find_element_by_id('idSIButton9')
 
         login_champ.send_keys(mail)
         print("- Sending Email : %s" % mail)
@@ -879,7 +880,7 @@ def report_hotmail(self, **kwargs):
                             bod = WebDriverWait(browser, wait_timeout).until(
                                 lambda driver: browser.find_elements_by_tag_name('body'))
                             waiit()
-                            bod[0].send_keys(Keys.CONTROL + ";")
+                            bod[0].send_keys(Keys.CONTROL + ".")
                             waiit()
                         time.sleep(1)
                         # endregion
@@ -917,38 +918,38 @@ def report_hotmail(self, **kwargs):
                         print("- Mailbox not yet configured !")
                         print("- Configureing !")
                         print("- Getting settings button")
-                        settings_btn = WebDriverWait(browser, wait_timeout).until(
+                        settings_btn = WebDriverWait(browser, 20).until(
                             lambda driver: browser.find_element_by_id("O365_MainLink_Settings"))
                         waiit()
                         print("- Clicking settings button")
                         settings_btn.click()
                         print("- Waiting for menu to show")
-                        WebDriverWait(browser, wait_timeout).until(
+                        WebDriverWait(browser, 20).until(
                             ec.visibility_of_element_located((By.CSS_SELECTOR, "div.o365cs-nav-contextMenu")))
                         print("- Getting display settings")
-                        display_settings = WebDriverWait(browser, wait_timeout).until(
+                        display_settings = WebDriverWait(browser, 20).until(
                             lambda driver: browser.find_element_by_xpath('//*[@aria-label="Display settings"]'))
                         waiit()
                         print("- Clicking display settings")
                         display_settings.click()
                         print("- Waiting for display settings to shows")
-                        WebDriverWait(browser, wait_timeout).until(
+                        WebDriverWait(browser, 20).until(
                             ec.visibility_of_element_located((By.CSS_SELECTOR, "div.panelPopupShadow")))
                         print("- Getting Hide reading pane option")
-                        hide_pane = WebDriverWait(browser, wait_timeout).until(
+                        hide_pane = WebDriverWait(browser, 20).until(
                             lambda driver: browser.find_element_by_xpath('//*[@aria-label="Hide reading pane"]'))
                         waiit()
                         print("- Clicking Hide reading pane option")
                         hide_pane.click()
                         time.sleep(1)
                         print("- Getting save button")
-                        ok_btn = WebDriverWait(browser, wait_timeout).until(
+                        ok_btn = WebDriverWait(browser, 20).until(
                             lambda driver: browser.find_element_by_xpath('//*[@aria-label="Save"]'))
                         waiit()
                         print("- Clicking save button")
                         ok_btn.click()
                         print("- Waiting for Settings pane to fade away")
-                        WebDriverWait(browser, wait_timeout).until(
+                        WebDriverWait(browser, 20).until(
                             ec.invisibility_of_element_located((By.CSS_SELECTOR, "div.panelPopupShadow")))
                         # else:
                         print("- Mailbox already configured !")
@@ -957,25 +958,25 @@ def report_hotmail(self, **kwargs):
                         print("- Mailbox not yet configured !")
                         print("- Configureing !")
                         print("- Getting settings button")
-                        settings_btn = WebDriverWait(browser, wait_timeout).until(
+                        settings_btn = WebDriverWait(browser, 20).until(
                             lambda driver: browser.find_element_by_id("O365_MainLink_Settings"))
                         waiit()
                         print("- Clicking settings button")
                         settings_btn.click()
                         print("- Waiting for menu to show")
-                        WebDriverWait(browser, wait_timeout).until(
+                        WebDriverWait(browser, 20).until(
                             ec.visibility_of_element_located((By.CSS_SELECTOR, "div.o365cs-nav-contextMenu")))
                         print("- Getting display settings")
-                        display_settings = WebDriverWait(browser, wait_timeout).until(
+                        display_settings = WebDriverWait(browser, 20).until(
                             lambda driver: browser.find_element_by_xpath('//*[@aria-label="Paramètres d\'affichage"]'))
                         waiit()
                         print("- Clicking display settings")
                         display_settings.click()
                         print("- Waiting for display settings to shows")
-                        WebDriverWait(browser, wait_timeout).until(
+                        WebDriverWait(browser, 20).until(
                             ec.visibility_of_element_located((By.CSS_SELECTOR, "div.panelPopupShadow")))
                         print("- Getting Hide reading pane option")
-                        hide_pane = WebDriverWait(browser, wait_timeout).until(
+                        hide_pane = WebDriverWait(browser, 20).until(
                             lambda driver: browser.find_element_by_xpath(
                                 '//*[@aria-label="Masquer le volet de lecture"]'))
                         waiit()
@@ -983,13 +984,13 @@ def report_hotmail(self, **kwargs):
                         hide_pane.click()
                         time.sleep(1)
                         print("- Getting save button")
-                        ok_btn = WebDriverWait(browser, wait_timeout).until(
+                        ok_btn = WebDriverWait(browser, 20).until(
                             lambda driver: browser.find_element_by_xpath('//*[@aria-label="Enregistrer"]'))
                         waiit()
                         print("- Clicking save button")
                         ok_btn.click()
                         print("- Waiting for Settings pane to fade away")
-                        WebDriverWait(browser, wait_timeout).until(
+                        WebDriverWait(browser, 20).until(
                             ec.invisibility_of_element_located((By.CSS_SELECTOR, "div.panelPopupShadow")))
                         # else:
                         print("- Mailbox already configured !")
@@ -2106,7 +2107,7 @@ def report_hotmail(self, **kwargs):
 
                 # endregion
         # endregion
-
+        return True
     except Exception as exc:
         # region Exceptions
         print("#*#*#*#*#*#*#*#*#*#*#*#*#*#*#*#*#*#*#*#*#*#*#*#*#*#*#*#*#*#*#*#*#*#*#*#*")

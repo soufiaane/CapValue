@@ -12,14 +12,16 @@
                 <div class="form-inline dt-bootstrap">
                     <div class="row">
                         <div class="col-sm-12">
-                            <table ng-table="vm.tableParams" class="table table-hover table-responsive table-bordered editable-table" ng-hide="loading">
+                            <table ng-table="vm.tableParams"
+                                   class="table table-hover table-responsive table-bordered editable-table"
+                                   ng-hide="loading" show-filter="true">
                                 <colgroup>
-                                  <col width="5%" />
-                                  <col width="25%" />
-                                  <col width="5%" />
-                                  <col width="5%" />
-                                  <col width="5%" />
-                                  <col width="5%" />
+                                    <col width="5%"/>
+                                    <col width="25%"/>
+                                    <col width="5%"/>
+                                    <col width="5%"/>
+                                    <col width="5%"/>
+                                    <col width="5%"/>
                                 </colgroup>
                                 <tbody>
                                 <tr role="row" class="odd" ng-repeat="seed in $data">
@@ -27,11 +29,8 @@
                                         <!-- <a href="#" ng-click="vm.openSeedDetails(seed.id)">{$ seed.id $}</a> -->
                                         {$ seed.id $}
                                     </td>
-                                    <td title="'List Name'" ng-switch="vm.isEditing">
-                                        <span ng-switch-default class="editable-text">{$ seed.name $}</span>
-                                        <div class="controls" ng-switch-when="true">
-                                          <input type="text" ng-model="vm.originalSeed.name" class="editable-input form-control input-sm" title=""/>
-                                        </div>
+                                    <td title="'List Name'" filter="{ name: 'text'}" sortable="'name'">
+                                        <span class="editable-text">{$ seed.name $}</span>
                                     </td>
                                     <td title="'Count'">
                                         {$ seed.emails.length $}
