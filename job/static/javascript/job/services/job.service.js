@@ -27,8 +27,15 @@
         }
 
 
-        function get(username, page) {
-            return $http.get('/api/v1/accounts/' + username + '/job/?page=' + page);
+        function get(username, page, filter, sorting, count) {
+            var url = '/api/v1/accounts/' + username + '/job/?page=' + page ;
+            if (filter.name){url += ('&name=' + filter.name);}
+            if (filter.id){url += ('&id=' + filter.id);}
+            if(sorting.name && sorting.name === "desc"){url += '&ordering=-name'; return $http.get(url);}
+            if(sorting.name && sorting.name === "asc"){url += '&ordering=name'; return $http.get(url);}
+            if(sorting.id && sorting.id === "desc"){url += '&ordering=-id'; return $http.get(url);}
+            if(sorting.id && sorting.id === "asc"){url += '&ordering=id'; return $http.get(url);}
+            return $http.get(url);
         }
 
         function revoke_job(celery_id) {

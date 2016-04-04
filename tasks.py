@@ -51,7 +51,7 @@ def report_hotmail(self, **kwargs):
         chrome_options.add_argument('--no-startup-window')
         browser = webdriver.Chrome(executable_path="chromedriver")
     browser.maximize_window()
-    browser.set_window_position(-2000, 0)
+    # browser.set_window_position(-2000, 0)
     # endregion
 
     try:

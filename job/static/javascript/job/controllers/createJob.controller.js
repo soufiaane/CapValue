@@ -35,7 +35,10 @@
         }, {
             getData: function (params) {
                 var page = params.page();
-                return Seed.get(user.username, page).then(function (results) {
+                var filter = params.filter();
+                var sorting = params.sorting();
+                var count = params.count();
+                return Seed.get(user.username, page, filter, sorting, count).then(function (results) {
                     params.total(results.data.count);
                     vm.seed_list_count = results.data.count;
                     params.data = results.data.results;

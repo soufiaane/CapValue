@@ -17,7 +17,8 @@
                                    ng-hide="loading" show-filter="true">
                                 <colgroup>
                                     <col width="5%"/>
-                                    <col width="25%"/>
+                                    <col width="15%"/>
+                                    <col width="5%"/>
                                     <col width="5%"/>
                                     <col width="5%"/>
                                     <col width="5%"/>
@@ -31,6 +32,9 @@
                                     </td>
                                     <td title="'List Name'" filter="{ name: 'text'}" sortable="'name'">
                                         <span class="editable-text">{$ seed.name $}</span>
+                                    </td>
+                                    <td title="'Entered'" filter="{ created_at: 'text'}" sortable="'created_at'">
+                                        {$ seed.created_at | date:'dd-MM-yyyy H:mm:ss' $}
                                     </td>
                                     <td title="'Count'">
                                         {$ seed.emails.length $}

@@ -11,14 +11,24 @@
                 <div class="form-inline dt-bootstrap">
                     <div class="row">
                         <div class="col-sm-12">
-                            <table ng-table="vm.tableParams" class="table" show-filter="false" ng-hide="loading">
+                            <table ng-table="vm.tableParams" class="table" show-filter="true" ng-hide="loading">
+                                <colgroup>
+                                    <col width="5%"/>
+                                    <col width="5%"/>
+                                    <col width="5%"/>
+                                    <col width="5%"/>
+                                    <col width="5%"/>
+                                    <col width="5%"/>
+                                    <col width="5%"/>
+                                    <col width="5%"/>
+                                </colgroup>
                                 <tbody>
                                 <tr role="row" class="odd" ng-repeat="job in $data">
-                                    <td title="'Id'" filter="{ id: 'text'}" sortable="'id'"><a href="#"
-                                                                                               ng-click="vm.openJobDetails(job.celery_id)">{$
-                                        job.celery_id $}</a></td>
-                                    <td title="'Entered'" filter="{ created_at: 'text'}" sortable="'created_at'">{$
-                                        job.created_at | date:'dd-MM-yyyy'$}
+                                    <td title="'Id'" filter="{ id: 'text'}" sortable="'id'">
+                                        <a href="#" ng-click="vm.openJobDetails(job.celery_id)">{$ job.id $}</a>
+                                    </td>
+                                    <td title="'Entered'" filter="{ Entered: 'text'}" sortable="'Entered'">
+                                        {$ job.created_at | date:'dd-MM-yyyy H:mm:ss' $}
                                     </td>
                                     <td title="'Finished'">###</td>
                                     <td title="'Status'">{$ job.status $}</td>
