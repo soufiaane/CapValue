@@ -17,3 +17,9 @@ class Mailer(AbstractUserRole):
     available_permissions = {
         'edit_pacient_file': True,
     }
+
+
+class Support(AbstractUserRole):
+    available_permissions = {
+        'edit_pacient_file': True,
+    }

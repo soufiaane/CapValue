@@ -9,6 +9,7 @@
 
     function NavbarController(Authentication, Team) {
         var vm = this;
+
         vm.logout = logout;
         vm.showIspLogo = false;
 

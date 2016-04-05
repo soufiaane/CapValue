@@ -1,0 +1,87 @@
+<div class="row">
+    <div class="col-xs-12">
+        <div class="box">
+            <div class="row">
+                <div class="col-md-4"></div>
+				<div class="col-md-4">
+				    <center><h1 class="title">Users Settings</h1></center>
+                    <br><br><br><br>
+				</div>
+			</div>
+            <div class="box-header">
+                <h3 class="box-title">Users List :&nbsp;&nbsp;&nbsp;<span class="badge label label-success" ng-cloak>
+                    {$ vm.seed_list_count $}
+                </span>
+                    <img id="mySpinner" src="/static/images/ajax-loader.gif" ng-show="loading"/>
+                </h3>
+            </div>
+            <!-- /.box-header -->
+            <div class="box-body">
+                <div class="form-inline dt-bootstrap">
+                    <div class="row">
+                        <div class="col-sm-12">
+                            <table ng-table="vm.tableParams"
+                                   class="table table-hover table-responsive table-bordered editable-table"
+                                   ng-hide="loading" show-filter="true">
+                                <colgroup>
+                                    <col width="2%"/>
+                                    <col width="10%"/>
+                                    <col width="10%"/>
+                                    <col width="10%"/>
+                                    <col width="5%"/>
+                                    <col width="10%"/>
+                                    <col width="5%"/>
+                                    <col width="10%"/>
+                                    <col width="10%"/>
+                                </colgroup>
+                                <tbody>
+                                <tr role="row" class="odd" ng-repeat="user in $data">
+                                    <td title="'Id'" filter="{ id: 'number'}" sortable="'id'" style="width: 5%;">
+                                        {$ user.id $}
+                                    </td>
+                                    <td title="'Username'" filter="{ username: 'text'}" sortable="'username'">
+                                        <img src="{$ user.profile_picture $}"  class="img-circle" alt="User Image" style="max-width: 25px;"/>
+                                        <span class="editable-text">{$ user.username $}</span>
+                                    </td>
+                                    <td title="'First Name'" filter="{ fname: 'text'}" sortable="'fname'">
+                                        <span class="editable-text">{$ user.first_name $}</span>
+                                    </td>
+                                    <td title="'Last Name'" filter="{ lname: 'text'}" sortable="'lname'">
+                                        <span class="editable-text">{$ user.last_name $}</span>
+                                    </td>
+                                    <td title="'Entity'" filter="{ entity: 'text'}" sortable="'entity'">
+                                        <span class="editable-text">{$ user.teams[0].entity[0] $}</span>
+                                    </td>
+                                    <td title="'Team'" filter="{ team: 'text'}" sortable="'team'">
+                                        <span class="editable-text">{$ user.teams[0].name $}</span>
+                                    </td>
+                                    <td title="'Role'" filter="{ role: 'text'}" sortable="'role'">
+                                        <span class="editable-text">{$ user.role[0] $}</span>
+                                    </td>
+                                    <td title="'Creation Date'" filter="{ created_at: 'text'}" sortable="'created_at'">
+                                        {$ user.created_at | date:'dd-MM-yyyy H:mm:ss' $}
+                                    </td>
+                                    <td>
+                                        <button class="btn btn-default btn-sm" ng-click="vm.openSeedDetails(seed.id)">
+                                            <span class="glyphicon glyphicon-pencil"></span>
+                                        </button>
+                                        <button class="btn btn-danger btn-sm" ng-click="vm.deleteSeed(seed.id)">
+                                            <span class="glyphicon glyphicon-trash"></span>
+                                        </button>
+                                        <button class="btn btn-info btn-sm" ng-click="vm.deleteSeed(seed.id)">
+                                            <span class="fa fa-sliders"></span>
+                                        </button>
+                                    </td>
+                                </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- /.box-body -->
+        </div>
+        <!-- /.box -->
+    </div>
+    <!-- /.col -->
+</div>

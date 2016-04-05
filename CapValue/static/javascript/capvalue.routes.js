@@ -56,6 +56,42 @@
                 controller: 'AccountListController',
                 controllerAs: 'vm',
                 templateUrl: '/static/templates/account/list.html'
+            })
+            .state('BlackListCheck', {
+                url: "/bulk/blcheck/",
+                controller: 'BlackListController',
+                controllerAs: 'vm',
+                templateUrl: '/static/templates/bulk/dnsbl.html'
+            })
+            .state('SpfCheck', {
+                url: "/bulk/spf/",
+                controller: 'SpfCheckController',
+                controllerAs: 'vm',
+                templateUrl: '/static/templates/bulk/spf.html'
+            })
+            .state('RdnsCheck', {
+                url: "/bulk/rdns/",
+                controller: 'RdnsCheckController',
+                controllerAs: 'vm',
+                templateUrl: '/static/templates/bulk/rdns.html'
+            })
+            .state('FindSubject', {
+                url: "/bulk/find_subject/",
+                controller: 'FindSubjectController',
+                controllerAs: 'vm',
+                templateUrl: '/static/templates/bulk/find_subject.html'
+            })
+            .state('IpNeghbours', {
+                url: "/bulk/ip_neghbours/",
+                controller: 'IpNeghboursController',
+                controllerAs: 'vm',
+                templateUrl: '/static/templates/bulk/ip_neghbours.html'
+            })
+            .state('usersAdmin', {
+                url: "/admin/users/",
+                controller: 'ManageAccountsController',
+                controllerAs: 'vm',
+                templateUrl: '/static/templates/authentication/users.html'
             });
         $urlRouterProvider.otherwise('/')
     }

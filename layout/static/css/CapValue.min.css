@@ -5307,3 +5307,16 @@ table.text-center, table.text-center td, table.text-center th {
 .ng-modal .ngdialog-content {
     width: 90% !important;
 }
+
+.navbar-custom-menu-left {
+    float: left !important;
+}
+
+.navbar-custom-menu-left > .navbar-nav > li > .dropdown-menu {
+    right: -133px !important;
+}
+
+.navbar-custom-menu-left > .navbar-nav > li > .btn-planning {
+    background-color: #FFFFFF !important;
+
+}

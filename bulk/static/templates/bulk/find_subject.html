@@ -1,0 +1,103 @@
+<div class="row">
+    <div class="col-md-10">
+        <div class="row">
+            <div class="col-md-4"></div>
+            <div class="col-md-4">
+                <div class="col-md-4"></div>
+                <center><h1 class="title">Yahoo Find Subject</h1></center>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-1"></div>
+            <div class="col-md-4">
+                <br>
+                <center><h3>Put your Emails and passwords <font color="red" size="4">*</font></h3><h5><font
+                        color="grey"><i>(Email,Password)</i></font></h5></center>
+                <form name="form1" method="POST" action="aaa.php" onsubmit="">
+                    <textarea class="form-control" rows="15" name="data"></textarea>
+                    <br>
+                    <label for="folder" class="col-sm-4 control-label">Folder to clean:</label>
+
+                    <div class="col-sm-5">
+                        <label class="radio-inline"><input type="radio" name="cfolder" value="INBOX">Inbox</label>
+                        <label class="radio-inline"><input type="radio" name="cfolder" value="Bulk Mail">Spam</label>
+                    </div>
+                    <div class="col-md-2"><font color="red">*</font></div>
+                    <br><br>
+                    <center>
+                        <button type="submit" class="btn btn-danger" formaction="clean.php">Clean mailboxes <span
+                                class="glyphicon glyphicon-trash"></span></button>
+                    </center>
+            </div>
+            <div class="col-md-1"></div>
+            <div class="col-md-4">
+                <br><br><br><br><br>
+
+                <div class="form-group">
+                    <label for="keyword" class="col-md-2 control-label">Keyword:</label>
+
+                    <div class="col-md-8">
+                        <input type="text" class="form-control" placeholder="Subject Keyword (case sensitive)"
+                               name="keyword">
+                    </div>
+                    <div class="col-md-2"><font color="red">*</font></div>
+                    <div class="col-md-8 col-md-offset-2"><h6><font color="grey"><i>For extract all messages please
+                        enter *</i></font></h6></div>
+                    <br><br><br><br>
+                    <label for="find" class="col-sm-2 control-label">Find:</label>
+
+                    <div class="col-sm-8">
+                        <select class="form-control" name="find">
+                            <option value="">Select the element to extract</option>
+                            <option value="ips">Ips</option>
+                            <option value="fromemail">FromEmail</option>
+                            <option value="messageid">Message-Id</option>
+                            <option value="from_ips">FromEmail & Ips</option>
+                            <option value="listid">List-Id</option>
+                            <option value="subject">Subject</option>
+                            <option value="fulllist_id">Full List-Id</option>
+                            <option value="reply_to">Reply To</option>
+                            <option value="sender">Sender</option>
+                            <option value="listid_ip">List-Id + IP</option>
+                            <option value="from_ip">From + IP's</option>
+                            <option value="from_fulllist_id">From + Full List-ID</option>
+                        </select>
+                    </div>
+                    <div class="col-md-2"><font color="red">*</font></div>
+                    <br><br><br>
+                    <label for="folder" class="col-sm-2 control-label">Folder:</label>
+
+                    <div class="col-sm-8">
+                        <label class="radio-inline"><input type="radio" name="folder" value="INBOX">Inbox</label>
+                        <label class="radio-inline"><input type="radio" name="folder" value="Bulk Mail">Spam</label>
+                    </div>
+                    <div class="col-md-2"><font color="red">*</font></div>
+                    <br><br><br>
+                    <label for="limit" class="col-sm-2 control-label">Start from:</label>
+
+                    <div class="col-sm-8">
+                        <input type="text" class="form-control" placeholder="Order of message to start extracting"
+                               name="sfrom">
+                    </div>
+                    <div class="col-md-2"><font color="red">*</font></div>
+                    <br><br><br>
+                    <label for="limit" class="col-sm-2 control-label">Limit:</label>
+
+                    <div class="col-sm-8">
+                        <input type="text" class="form-control" placeholder="Number of messages to extract"
+                               name="limit">
+                    </div>
+                    <br><br><br>
+                    <center>
+                        <button type="submit" class="btn btn-primary" formaction="script.php">Start searching <span
+                                class="glyphicon glyphicon-search"></span></button>
+                    </center>
+                    <br>
+                    <center><font color="red" size="2"><i>* : Required fields</i></font></center>
+                    </form>
+                </div>
+            </div>
+            <div class="col-md-1"></div>
+        </div>
+    </div>
+</div>

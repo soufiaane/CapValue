@@ -1,6 +1,6 @@
 from django.contrib.auth import update_session_auth_hash
 from rest_framework import serializers
-
+from team.serializers import TeamSerializer
 from authentication.models import Account
 
 
@@ -8,10 +8,11 @@ class AccountSerializer(serializers.ModelSerializer):
     password = serializers.CharField(write_only=True, required=False)
     confirm_password = serializers.CharField(write_only=True, required=False)
     role = serializers.SlugRelatedField(many=True, read_only=True, slug_field="name", source="groups")
+    teams = TeamSerializer(read_only=True, many=True)
 
     class Meta:
         model = Account
-        fields = ("id", "username", "first_name", "last_name", "role", "profile_picture", "created_at", "updated_at", "password", "confirm_password")
+        fields = ("id", "username", "first_name", "last_name", "role", "teams", "profile_picture", "created_at", "updated_at", "password", "confirm_password")
         read_only_fields = ("id", "created_at", "updated_at",)
 
         def update(self, instance, validated_data):

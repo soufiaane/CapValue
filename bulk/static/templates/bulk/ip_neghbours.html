@@ -1,0 +1,24 @@
+<div class="col-md-3 col-md-offset-2">
+    <center><h1 class="title">Ip neighbors</h1></center>
+    <br>
+
+    <form method="POST" action="script.php">
+        <center><h3>Put your Ip Adresses</h3></center>
+        <center><font color="grey">(Each ip in new line)</font></center>
+        <textarea class="form-control" rows="15" name="ips"></textarea>
+        <br>
+        <label for="cidr" class="col-md-3 control-label">CIDR:</label>
+
+        <div class="col-md-7">
+            <label class="radio-inline"><input type="radio" name="octet" value="1">/8</label>
+            <label class="radio-inline"><input type="radio" name="octet" value="2">/16</label>
+            <label class="radio-inline"><input type="radio" name="octet" value="3">/24</label>
+        </div>
+        <div class="col-md-2"><font color="red" size="2">*</font></div>
+        <br><br>
+        <center>
+            <button type="submit" class="btn btn-primary">Start searching <span
+                    class="glyphicon glyphicon-search"></span></button>
+        </center>
+    </form>
+</div>

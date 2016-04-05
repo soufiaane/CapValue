@@ -12,15 +12,46 @@
         <span class="sr-only">Toggle navigation</span>
     </a>
     <!-- Navbar Right Menu -->
+    <div class="navbar-custom-menu navbar-custom-menu-left">
+        <ul class="nav navbar-nav">
+            <li class="dropdown user user-menu">
+                <a class="dropdown-toggle" data-toggle="dropdown" href="#">
+                    <span class="hidden-xs">
+                        <i class="fa fa-lock"></i>&nbsp;&nbsp;Admin pannel&nbsp;<i class="fa fa-sort-desc"></i>
+                    </span>
+                </a>
+                <ul class="dropdown-menu">
+                    <li class="user-body">
+                        <a ui-sref="usersAdmin">Users</a>
+                    </li>
+                </ul>
+            </li>
+        </ul>
+    </div>
+    <div class="navbar-custom-menu navbar-custom-menu-left">
+        <ul class="nav navbar-nav">
+            <li class="dropdown user user-menu">
+                <a class="btn-planning" href="#">
+                    Planning&nbsp;<i class="fa fa-calendar"></i>
+                </a>
+            </li>
+        </ul>
+    </div>
+
     <div class="navbar-custom-menu">
 
         <ul class="nav navbar-nav">
             {% if user.is_authenticated %}
                 <!-- Notifications: style can be found in dropdown.less -->
                 <li>
-                    <h3 ng-show="vm.showIspLogo" style="margin: 10px;" ng-cloak>
-                        <span class="label label-default"><i
-                                class="{$ vm.isp.logo $}"></i>&nbsp;{$ vm.isp.name $}</span>
+                    <h3 style="margin: 10px;">
+                        <span class="label label-info">
+                            {$ vm.user.teams[0].entity[0] $}
+                        </span>
+                        &nbsp;-
+                        <span class="label label-default">
+                            <i class="{$ vm.user.teams[0].logo $}"></i>&nbsp; {$ vm.user.teams[0].name $}
+                        </span>
                     </h3>
                 </li>
                 <li class="dropdown notifications-menu">
@@ -28,45 +59,45 @@
                         <i class="fa fa-bell-o"></i>
                         <span class="label label-warning">0</span>
                     </a>
-                <!--    Notifications
-                    <ul class="dropdown-menu">
-                        <li class="header">You have 10 notifications</li>
-                        <li>
+                    <!--    Notifications
+                        <ul class="dropdown-menu">
+                            <li class="header">You have 10 notifications</li>
+                            <li>
 
-                            <ul class="menu">
-                                <li>
-                                    <a href="#">
-                                        <i class="fa fa-users text-aqua"></i> 5 new members joined today
-                                    </a>
-                                </li>
-                                <li>
-                                    <a href="#">
-                                        <i class="fa fa-warning text-yellow"></i> Very long description here that may
-                                        not
-                                        fit into the
-                                        page and may cause design problems
-                                    </a>
-                                </li>
-                                <li>
-                                    <a href="#">
-                                        <i class="fa fa-users text-red"></i> 5 new members joined
-                                    </a>
-                                </li>
-                                <li>
-                                    <a href="#">
-                                        <i class="fa fa-shopping-cart text-green"></i> 25 sales made
-                                    </a>
-                                </li>
-                                <li>
-                                    <a href="#">
-                                        <i class="fa fa-user text-red"></i> You changed your username
-                                    </a>
-                                </li>
-                            </ul>
-                        </li>
-                        <li class="footer"><a href="#">View all</a></li>
-                    </ul>
-                -->
+                                <ul class="menu">
+                                    <li>
+                                        <a href="#">
+                                            <i class="fa fa-users text-aqua"></i> 5 new members joined today
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a href="#">
+                                            <i class="fa fa-warning text-yellow"></i> Very long description here that may
+                                            not
+                                            fit into the
+                                            page and may cause design problems
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a href="#">
+                                            <i class="fa fa-users text-red"></i> 5 new members joined
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a href="#">
+                                            <i class="fa fa-shopping-cart text-green"></i> 25 sales made
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a href="#">
+                                            <i class="fa fa-user text-red"></i> You changed your username
+                                        </a>
+                                    </li>
+                                </ul>
+                            </li>
+                            <li class="footer"><a href="#">View all</a></li>
+                        </ul>
+                    -->
                 </li>
 
             {% endif %}
@@ -89,7 +120,8 @@
                         </li>
                         <!-- Menu Body -->
                         <li class="user-body">
-                            <div class="row"><!--
+                            <div class="row">
+                                <!--
                               <div class="col-xs-4 text-center">
                                 <a href="#">Followers</a>
                               </div>
@@ -105,11 +137,15 @@
                         <!-- Menu Footer-->
                         <li class="user-footer">
                             <div class="pull-left">
-                                <a href="/+{{ user.username }}/settings" class="btn btn-default btn-flat">Profile</a>
-                            </div>
-                            <div class="pull-right">
-                                <a href="javascript:void(0)" class="btn btn-default btn-flat" ng-click="vm.logout()">Sign
-                                    out</a>
+                                <a href="/+{{ user.username }}/settings" class="btn btn-default btn-flat">
+                                    Profile
+                                </a>
+                                <a href="/settings" class="btn btn-default btn-flat">
+                                    Food Order
+                                </a>
+                                <a href="javascript:void(0)" class="btn btn-default btn-flat" ng-click="vm.logout()">
+                                    Sign out
+                                </a>
                             </div>
                         </li>
                     </ul>

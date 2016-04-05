@@ -27,6 +27,10 @@ INSTALLED_APPS = (
     'notifications',
     'compressor',
     'celeryTasks',
+    'bulk',
+    'domain',
+    'spf',
+    'findSubject',
     # 'mod_wsgi.server',
 )
 # endregion

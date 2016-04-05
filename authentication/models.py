@@ -1,7 +1,6 @@
 from django.contrib.auth.models import AbstractBaseUser, BaseUserManager, PermissionsMixin
 from django.db import models
 from django_gravatar.helpers import get_gravatar_url
-
 from CapValue.roles import Mailer, Manager
 
 

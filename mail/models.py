@@ -1,7 +1,7 @@
 from django.db import models
-
 from authentication.models import Account
 from proxy.models import Proxy
+from isp.models import ISP
 
 
 class Email(models.Model):
@@ -10,7 +10,7 @@ class Email(models.Model):
     password = models.CharField(max_length=50, blank=True)
     proxy = models.ManyToManyField(Proxy, related_name="emails")
     isActive = models.BooleanField(default=True)
-    version = models.CharField(max_length=2, blank=True, default='1')
+    isp = models.ManyToManyField(ISP, related_name="emails")
 
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
