@@ -43,19 +43,19 @@
                                         <img src="{$ user.profile_picture $}"  class="img-circle" alt="User Image" style="max-width: 25px;"/>
                                         <span class="editable-text">{$ user.username $}</span>
                                     </td>
-                                    <td title="'First Name'" filter="{ fname: 'text'}" sortable="'fname'">
+                                    <td title="'First Name'" filter="{ first_name: 'text'}" sortable="'first_name'">
                                         <span class="editable-text">{$ user.first_name $}</span>
                                     </td>
-                                    <td title="'Last Name'" filter="{ lname: 'text'}" sortable="'lname'">
+                                    <td title="'Last Name'" filter="{ lname: 'last_name'}" sortable="'last_name'">
                                         <span class="editable-text">{$ user.last_name $}</span>
                                     </td>
-                                    <td title="'Entity'" filter="{ entity: 'text'}" sortable="'entity'">
+                                    <td title="'Entity'" filter="{ entity: 'entity'}" sortable="'entity'">
                                         <span class="editable-text">{$ user.teams[0].entity[0] $}</span>
                                     </td>
                                     <td title="'Team'" filter="{ team: 'text'}" sortable="'team'">
                                         <span class="editable-text">{$ user.teams[0].name $}</span>
                                     </td>
-                                    <td title="'Role'" filter="{ role: 'text'}" sortable="'role'">
+                                    <td title="'Role'" filter="{ role: 'role'}" sortable="'role'">
                                         <span class="editable-text">{$ user.role[0] $}</span>
                                     </td>
                                     <td title="'Creation Date'" filter="{ created_at: 'text'}" sortable="'created_at'">

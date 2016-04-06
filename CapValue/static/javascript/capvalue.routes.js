@@ -51,12 +51,6 @@
                 controllerAs: 'vm',
                 templateUrl: '/static/templates/seed/create.html'
             })
-            .state('AccountsList', {
-                url: "/accounts/list/",
-                controller: 'AccountListController',
-                controllerAs: 'vm',
-                templateUrl: '/static/templates/account/list.html'
-            })
             .state('BlackListCheck', {
                 url: "/bulk/blcheck/",
                 controller: 'BlackListController',
