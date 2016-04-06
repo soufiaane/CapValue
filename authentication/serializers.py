@@ -12,7 +12,8 @@ class AccountSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Account
-        fields = ("id", "username", "first_name", "last_name", "role", "teams", "profile_picture", "created_at", "updated_at", "password", "confirm_password")
+        fields = ("id", "username", "first_name", "last_name", "role", "teams", "profile_picture", "created_at",
+                  "updated_at", "password", "confirm_password")
         read_only_fields = ("id", "created_at", "updated_at",)
 
         def update(self, instance, validated_data):

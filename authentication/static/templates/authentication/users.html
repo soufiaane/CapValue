@@ -3,11 +3,11 @@
         <div class="box">
             <div class="row">
                 <div class="col-md-4"></div>
-				<div class="col-md-4">
-				    <center><h1 class="title">Users Settings</h1></center>
+                <div class="col-md-4">
+                    <center><h1 class="title">Users Settings</h1></center>
                     <br><br><br><br>
-				</div>
-			</div>
+                </div>
+            </div>
             <div class="box-header">
                 <h3 class="box-title">Users List :&nbsp;&nbsp;&nbsp;<span class="badge label label-success" ng-cloak>
                     {$ vm.seed_list_count $}
@@ -40,36 +40,53 @@
                                         {$ user.id $}
                                     </td>
                                     <td title="'Username'" filter="{ username: 'text'}" sortable="'username'">
-                                        <img src="{$ user.profile_picture $}"  class="img-circle" alt="User Image" style="max-width: 25px;"/>
+                                        <img src="{$ user.profile_picture $}" class="img-circle" alt="User Image"
+                                             style="max-width: 25px;"/>
                                         <span class="editable-text">{$ user.username $}</span>
                                     </td>
-                                    <td title="'First Name'" filter="{ first_name: 'text'}" sortable="'first_name'">
-                                        <span class="editable-text">{$ user.first_name $}</span>
+                                    <td title="'First Name'" filter="{ first_name: 'text'}" sortable="'first_name'" ng-switch="vm.isEditing">
+                                        <span ng-switch-default class="editable-text">{$ user.first_name $}</span>
+                                        <div class="controls" ng-switch-when="true">
+                                            <input type="number" name="money" ng-model="user.first_name"
+                                                   class="editable-input form-control input-sm" />
+                                        </div>
                                     </td>
                                     <td title="'Last Name'" filter="{ last_name: 'text'}" sortable="'last_name'">
                                         <span class="editable-text">{$ user.last_name $}</span>
                                     </td>
-                                    <td title="'Entity'" filter="{ entity: 'text'}" sortable="'entity'">
+                                    <td title="'Entity'" filter="{ entity: 'select'}" filter-data="vm.entities">
                                         <span class="editable-text">{$ user.teams[0].entity[0] $}</span>
                                     </td>
-                                    <td title="'Team'" filter="{ team: 'text'}" sortable="'team'">
+                                    <td title="'Team'" filter="{ team: 'select'}" filter-data="vm.teams">
                                         <span class="editable-text">{$ user.teams[0].name $}</span>
                                     </td>
-                                    <td title="'Role'" filter="{ role: 'text'}" sortable="'role'">
+                                    <td title="'Role'" filter="{ role: 'select'}" filter-data="vm.roles">
                                         <span class="editable-text">{$ user.role[0] $}</span>
                                     </td>
-                                    <td title="'Creation Date'" filter="{ created_at: 'text'}" sortable="'created_at'">
+                                    <td title="'Creation Date'" sortable="'created_at'">
                                         {$ user.created_at | date:'dd-MM-yyyy H:mm:ss' $}
                                     </td>
                                     <td>
-                                        <button class="btn btn-default btn-sm" ng-click="vm.openSeedDetails(seed.id)">
+                                        <button class="btn btn-default btn-sm" ng-click="vm.isEditing = true"
+                                                ng-if="!vm.isEditing">
                                             <span class="glyphicon glyphicon-pencil"></span>
                                         </button>
-                                        <button class="btn btn-danger btn-sm" ng-click="vm.deleteSeed(seed.id)">
+                                        <button class="btn btn-danger btn-sm" ng-click="vm.deleteSeed(seed.id)"
+                                                ng-if="!vm.isEditing">
                                             <span class="glyphicon glyphicon-trash"></span>
                                         </button>
-                                        <button class="btn btn-info btn-sm" ng-click="vm.deleteSeed(seed.id)">
+                                        <button class="btn btn-info btn-sm" ng-click="vm.deleteSeed(seed.id)"
+                                                ng-if="!vm.isEditing">
                                             <span class="fa fa-sliders"></span>
+                                        </button>
+
+                                        <button class="btn btn-primary btn-sm" ng-click="vm.save(row, rowForm)"
+                                                ng-if="vm.isEditing">
+                                            <span class="glyphicon glyphicon-ok"></span>
+                                        </button>
+                                        <button class="btn btn-default btn-sm" ng-click="vm.cancel(row, rowForm)"
+                                                ng-if="vm.isEditing">
+                                            <span class="glyphicon glyphicon-remove"></span>
                                         </button>
                                     </td>
                                 </tr>

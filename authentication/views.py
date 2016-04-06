@@ -5,6 +5,7 @@ from team.models import Team
 from authentication.models import Account
 from authentication.serializers import AccountSerializer
 import django_filters
+from django_filters import MethodFilter
 
 
 class AccountFilter(filters.FilterSet):
@@ -13,14 +14,34 @@ class AccountFilter(filters.FilterSet):
     name = django_filters.CharFilter(name="name", lookup_type='contains')
     first_name = django_filters.CharFilter(name="first_name", lookup_type='contains')
     last_name = django_filters.CharFilter(name="last_name", lookup_type='contains')
-    entity = django_filters.CharFilter(name="entity", lookup_type='contains')
-    team = django_filters.CharFilter(name="team", lookup_type='contains')
-    role = django_filters.CharFilter(name="role", lookup_type='contains')
-    created_at = django_filters.CharFilter(name="created_at", lookup_type='created_at')
+    teams = MethodFilter(action='teams_filter')
+    entity = MethodFilter(action='entity_filter')
+    role = MethodFilter(action='role_filter')
+    # role = django_filters.CharFilter(name="role", lookup_type='contains')
+
+    def teams_filter(self, queryset, value):
+        if hasattr(queryset, 'qs'):
+            return queryset.qs.filter(teams=value)
+        else:
+            return queryset.filter(teams=value)
+
+    def entity_filter(self, queryset, value):
+        if hasattr(queryset, 'qs'):
+            return queryset.qs.filter(teams__entity=value)
+        else:
+            return queryset.filter(teams__entity=value)
+
+    def role_filter(self, queryset, value):
+        if hasattr(queryset, 'qs'):
+            return queryset.qs.filter(groups__name=value)
+        else:
+            return queryset.filter(groups__name=value)
+
+    # team = django_filters.CharFilter(name="team", lookup_type='contains')
 
     class Meta:
         model = Account
-        fields = ['id', 'username', 'first_name', 'last_name', 'entity', 'team', 'role', 'created_at']
+        fields = ['id', 'username', 'first_name', 'last_name', 'entity', 'teams', 'role']
 
 
 class AccountViewSet(viewsets.ModelViewSet):
@@ -85,13 +106,13 @@ class LogoutView(views.APIView):
         return Response({}, status=status.HTTP_204_NO_CONTENT)
 
 
-class AccountProfileViewSet(views.APIView):
+class AccountProfileViewSet(generics.RetrieveAPIView, views.APIView):
     queryset = Account.objects.all()
     serializer_class = AccountSerializer
     permission_classes = permissions.AllowAny,
     filter_backends = (filters.DjangoFilterBackend,)
     filter_class = AccountFilter
-    ordering_fields = ('id', 'username', 'first_name', 'last_name', 'entity', 'team', 'role', 'created_at')
+    ordering_fields = ('id', 'username', 'first_name', 'last_name', 'entity', 'teams', 'role')
 
     def get_queryset(self):
         ordering = self.request.query_params.get('ordering', None)
@@ -99,19 +120,50 @@ class AccountProfileViewSet(views.APIView):
         username = self.request.query_params.get('username', None)
         first_name = self.request.query_params.get('first_name', None)
         last_name = self.request.query_params.get('last_name', None)
+        teams = self.request.query_params.get('team', None)
+        entity = self.request.query_params.get('entity', None)
+        role = self.request.query_params.get('role', None)
+        queryset = self.queryset
         if ordering:
-            queryset = self.queryset
-            queryset = queryset.order_by(ordering)
-        else:
-            queryset = self.queryset
+            queryset = self.queryset.order_by(ordering)
         if username:
-            queryset = AccountFilter({'username': username}, queryset=queryset)
+            if hasattr(queryset, 'qs'):
+                queryset = AccountFilter({'username': username}, queryset=queryset.qs)
+            else:
+                queryset = AccountFilter({'username': username}, queryset=queryset)
         if first_name:
-            queryset = AccountFilter({'first_name': first_name}, queryset=queryset)
+            if hasattr(queryset, 'qs'):
+                queryset = AccountFilter({'first_name': first_name}, queryset=queryset.qs)
+            else:
+                queryset = AccountFilter({'first_name': first_name}, queryset=queryset)
         if last_name:
-            queryset = AccountFilter({'last_name': last_name}, queryset=queryset)
+            if hasattr(queryset, 'qs'):
+                queryset = AccountFilter({'last_name': last_name}, queryset=queryset.qs)
+            else:
+                queryset = AccountFilter({'last_name': last_name}, queryset=queryset)
         if filter_id:
-            queryset = AccountFilter({'id': filter_id}, queryset=queryset)
+            if hasattr(queryset, 'qs'):
+                queryset = AccountFilter({'id': filter_id}, queryset=queryset.qs)
+            else:
+                queryset = AccountFilter({'id': filter_id}, queryset=queryset)
+        if entity:
+            if hasattr(queryset, 'qs'):
+                queryset = AccountFilter({'entity': entity}, queryset=queryset.qs)
+            else:
+                queryset = AccountFilter({'entity': entity}, queryset=queryset)
+        if teams:
+            if hasattr(queryset, 'qs'):
+                queryset = AccountFilter({'teams': teams}, queryset=queryset.qs)
+            else:
+                queryset = AccountFilter({'teams': teams}, queryset=queryset)
+
+        if role:
+            if hasattr(queryset, 'qs'):
+                queryset = AccountFilter({'role': role}, queryset=queryset.qs)
+            else:
+                queryset = AccountFilter({'role': role}, queryset=queryset)
+        if hasattr(queryset, 'qs'):
+            return queryset.qs
         return queryset
 
     def get(self, request, **kwargs):

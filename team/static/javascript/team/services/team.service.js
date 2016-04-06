@@ -20,7 +20,7 @@
         }
 
         function all() {
-            return $http.get('/api/v1/isps/');
+            return $http.get('/api/v1/teams/');
         }
 
         function get(username) {

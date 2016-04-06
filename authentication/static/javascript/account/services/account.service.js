@@ -23,7 +23,6 @@
             if (filter.entity) {url += ('&entity=' + filter.entity);}
             if (filter.team) {url += ('&team=' + filter.team);}
             if (filter.role) {url += ('&role=' + filter.role);}
-            if (filter.created_at) {url += ('&created_at=' + filter.created_at);}
             if (sorting.id && sorting.id === "desc") {url += '&ordering=-id'; return $http.get(url);}
             if (sorting.id && sorting.id === "asc") {url += '&ordering=id'; return $http.get(url);}
             if (sorting.username && sorting.username === "desc") {url += '&ordering=-username'; return $http.get(url);}
