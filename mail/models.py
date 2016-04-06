@@ -11,6 +11,7 @@ class Email(models.Model):
     proxy = models.ManyToManyField(Proxy, related_name="emails")
     isActive = models.BooleanField(default=True)
     isp = models.ManyToManyField(ISP, related_name="emails")
+    version = models.CharField(max_length=50, default='1')
 
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
