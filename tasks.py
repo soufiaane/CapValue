@@ -3,7 +3,7 @@ from __future__ import absolute_import
 from celery.utils.log import get_task_logger
 from selenium import webdriver
 from selenium.common.exceptions import NoSuchElementException, StaleElementReferenceException, TimeoutException, \
-    ElementNotVisibleException
+    ElementNotVisibleException, WebDriverException
 from selenium.webdriver.common.action_chains import ActionChains
 from selenium.webdriver.common.by import By
 from selenium.webdriver.common.keys import Keys
@@ -56,6 +56,13 @@ def report_hotmail(self, **kwargs):
 
     try:
         # region helper Functions
+        def checkFirstRunBtn():
+                    try:
+                        ConsumerFirstRunBtn = browser.find_element_by_class_name("__Microsoft_Owa_ConsumerFirstRun_templates_cs_4")
+                        ConsumerFirstRunBtn.click()
+                    except Exception as ex:
+                        pass
+
         def look_for_pub():
             try:
                 browser.find_element_by_css_selector('iframe.OutlookAppUpsellFrame')
@@ -918,39 +925,52 @@ def report_hotmail(self, **kwargs):
                         print("- Mailbox not yet configured !")
                         print("- Configureing !")
                         print("- Getting settings button")
+                        checkFirstRunBtn()
                         settings_btn = WebDriverWait(browser, 20).until(
                             lambda driver: browser.find_element_by_id("O365_MainLink_Settings"))
                         waiit()
                         print("- Clicking settings button")
+                        checkFirstRunBtn()
                         settings_btn.click()
                         print("- Waiting for menu to show")
+                        checkFirstRunBtn()
                         WebDriverWait(browser, 20).until(
                             ec.visibility_of_element_located((By.CSS_SELECTOR, "div.o365cs-nav-contextMenu")))
+                        checkFirstRunBtn()
                         print("- Getting display settings")
                         display_settings = WebDriverWait(browser, 20).until(
                             lambda driver: browser.find_element_by_xpath('//*[@aria-label="Display settings"]'))
+                        checkFirstRunBtn()
                         waiit()
+                        checkFirstRunBtn()
                         print("- Clicking display settings")
                         display_settings.click()
+                        checkFirstRunBtn()
                         print("- Waiting for display settings to shows")
                         WebDriverWait(browser, 20).until(
                             ec.visibility_of_element_located((By.CSS_SELECTOR, "div.panelPopupShadow")))
+                        checkFirstRunBtn()
                         print("- Getting Hide reading pane option")
                         hide_pane = WebDriverWait(browser, 20).until(
                             lambda driver: browser.find_element_by_xpath('//*[@aria-label="Hide reading pane"]'))
+                        checkFirstRunBtn()
                         waiit()
                         print("- Clicking Hide reading pane option")
                         hide_pane.click()
+                        checkFirstRunBtn()
                         time.sleep(1)
                         print("- Getting save button")
                         ok_btn = WebDriverWait(browser, 20).until(
                             lambda driver: browser.find_element_by_xpath('//*[@aria-label="Save"]'))
+                        checkFirstRunBtn()
                         waiit()
                         print("- Clicking save button")
                         ok_btn.click()
+                        checkFirstRunBtn()
                         print("- Waiting for Settings pane to fade away")
                         WebDriverWait(browser, 20).until(
                             ec.invisibility_of_element_located((By.CSS_SELECTOR, "div.panelPopupShadow")))
+                        checkFirstRunBtn()
                         # else:
                         print("- Mailbox already configured !")
                 elif email_language == "French":
@@ -958,27 +978,33 @@ def report_hotmail(self, **kwargs):
                         print("- Mailbox not yet configured !")
                         print("- Configureing !")
                         print("- Getting settings button")
+                        checkFirstRunBtn()
                         settings_btn = WebDriverWait(browser, 20).until(
                             lambda driver: browser.find_element_by_id("O365_MainLink_Settings"))
                         waiit()
                         print("- Clicking settings button")
                         settings_btn.click()
+                        checkFirstRunBtn()
                         print("- Waiting for menu to show")
                         WebDriverWait(browser, 20).until(
                             ec.visibility_of_element_located((By.CSS_SELECTOR, "div.o365cs-nav-contextMenu")))
                         print("- Getting display settings")
                         display_settings = WebDriverWait(browser, 20).until(
                             lambda driver: browser.find_element_by_xpath('//*[@aria-label="Paramètres d\'affichage"]'))
+                        checkFirstRunBtn()
                         waiit()
                         print("- Clicking display settings")
                         display_settings.click()
+                        checkFirstRunBtn()
                         print("- Waiting for display settings to shows")
                         WebDriverWait(browser, 20).until(
                             ec.visibility_of_element_located((By.CSS_SELECTOR, "div.panelPopupShadow")))
+                        checkFirstRunBtn()
                         print("- Getting Hide reading pane option")
                         hide_pane = WebDriverWait(browser, 20).until(
                             lambda driver: browser.find_element_by_xpath(
                                 '//*[@aria-label="Masquer le volet de lecture"]'))
+                        checkFirstRunBtn()
                         waiit()
                         print("- Clicking Hide reading pane option")
                         hide_pane.click()
@@ -986,20 +1012,23 @@ def report_hotmail(self, **kwargs):
                         print("- Getting save button")
                         ok_btn = WebDriverWait(browser, 20).until(
                             lambda driver: browser.find_element_by_xpath('//*[@aria-label="Enregistrer"]'))
+                        checkFirstRunBtn()
                         waiit()
                         print("- Clicking save button")
                         ok_btn.click()
                         print("- Waiting for Settings pane to fade away")
+                        checkFirstRunBtn()
                         WebDriverWait(browser, 20).until(
                             ec.invisibility_of_element_located((By.CSS_SELECTOR, "div.panelPopupShadow")))
+                        checkFirstRunBtn()
                         # else:
                         print("- Mailbox already configured !")
             except NoSuchElementException:
                 print("- Mailbox already configured !")
                 pass
-            except Exception as ex:
+            except Exception as exc:
                 print("/!\ (Error) Check Display Settings")
-                print(type(ex))
+                print(type(exc))
             print("- Done configuring mailbox !\n")
             # endregion
 
@@ -1915,12 +1944,8 @@ def report_hotmail(self, **kwargs):
                     lambda driver: browser.find_element_by_css_selector('span.lvHighlightSubjectClass'))
                 print("Clicking Subject SPAN")
                 first_mail.click()
-                if email_language == "English":
-                    WebDriverWait(browser, wait_timeout).until(
-                        ec.visibility_of_element_located((By.XPATH, '//button[@title="Reply"]')))
-                elif email_language == "French":
-                    WebDriverWait(browser, wait_timeout).until(
-                        ec.visibility_of_element_located((By.XPATH, '//button[@title="Répondre"]')))
+                WebDriverWait(browser, wait_timeout).until(
+                    ec.visibility_of_element_located((By.CLASS_NAME, '_rp_r1')))
                 print("Done!")
                 # endregion
 
