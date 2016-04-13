@@ -84,7 +84,7 @@
             });
         }
 
-        function cancel() {
+        function cancel(row, rowForm) {
             vm.isEditing = false;
         }
     }

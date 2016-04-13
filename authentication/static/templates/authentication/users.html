@@ -20,9 +20,8 @@
                 <div class="form-inline dt-bootstrap">
                     <div class="row">
                         <div class="col-sm-12">
-                            <table ng-table="vm.tableParams"
-                                   class="table table-hover table-responsive table-bordered editable-table"
-                                   ng-hide="loading" show-filter="true">
+                            <table class="table table-hover table-responsive table-bordered editable-table"
+                                    ng-table="vm.tableParams" ng-hide="loading" show-filter="true" ng-form="vm.tableForm">
                                 <colgroup>
                                     <col width="2%"/>
                                     <col width="10%"/>
@@ -35,22 +34,27 @@
                                     <col width="10%"/>
                                 </colgroup>
                                 <tbody>
-                                <tr role="row" class="odd" ng-repeat="user in $data">
+                                <tr role="row" class="odd" ng-repeat="user in $data" ng-form="rowForm">
                                     <td title="'Id'" filter="{ id: 'number'}" sortable="'id'" style="width: 5%;">
                                         {$ user.id $}
                                     </td>
+
                                     <td title="'Username'" filter="{ username: 'text'}" sortable="'username'">
                                         <img src="{$ user.profile_picture $}" class="img-circle" alt="User Image"
                                              style="max-width: 25px;"/>
                                         <span class="editable-text">{$ user.username $}</span>
                                     </td>
+
                                     <td title="'First Name'" filter="{ first_name: 'text'}" sortable="'first_name'" ng-switch="vm.isEditing">
                                         <span ng-switch-default class="editable-text">{$ user.first_name $}</span>
+
                                         <div class="controls" ng-switch-when="true">
-                                            <input type="number" name="money" ng-model="user.first_name"
+                                            <input type="text" name="money" ng-model="user.first_name"
                                                    class="editable-input form-control input-sm" />
                                         </div>
+
                                     </td>
+
                                     <td title="'Last Name'" filter="{ last_name: 'text'}" sortable="'last_name'">
                                         <span class="editable-text">{$ user.last_name $}</span>
                                     </td>
