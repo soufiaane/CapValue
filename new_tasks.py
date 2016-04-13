@@ -244,6 +244,31 @@ def get_inbox_count_new(browser):
     finally:
         print("[!] INBOX count is: %s" % str(inbox_count))
         return inbox_count
+
+
+def select_all_msgs_new(browser):
+    print("(!) Marking INBOX as read for this page")
+    wait_for_page(browser)
+    WebDriverWait(browser, wait_timeout).until(ec.presence_of_all_elements_located((By.XPATH,
+        '//*[@id="primaryContainer"]/div[4]/div/div[1]/div[2]/div[5]/div[2]/div[1]/div/div/div[3]/button')))
+    print("Getting All Msgs checkbox")
+    wait_for_page(browser)
+    chk_bx_bttn = WebDriverWait(browser, wait_timeout).until(lambda driver: browser.find_element_by_xpath(
+            '//*[@id="primaryContainer"]/div[4]/div/div[1]/div[2]/div[5]/div[2]/div[1]/div/div/div[3]'))
+    wait_for_page(browser)
+    print("Select all Msgs")
+    print("Defining hover action")
+    hover = ActionChains(browser).move_to_element(chk_bx_bttn)
+    print("Hover over the checkbox")
+    hover.perform()
+    print("Hover Done")
+    print("Waiting for visibility")
+    WebDriverWait(browser, wait_timeout).until(ec.visibility_of_element_located((By.XPATH,
+        '//*[@id="primaryContainer"]/div[4]/div/div[1]/div[2]/div[5]/div[2]/div[1]/div/div/div[3]/button')))
+    print("Element is visible")
+    print("Clicking Checkbox")
+    chk_bx_bttn.find_element_by_tag_name("button").click()
+    wait_for_page(browser)
 # endregion
 
 
@@ -1592,30 +1617,7 @@ def report_new_version(browser, actions):
         # region looping through results
         while get_inbox_count_new(browser) > 0:
             try:
-                # region Selecting alls messages
-                print("(!) Marking INBOX as read for this page")
-                wait_for_page(browser)
-                WebDriverWait(browser, wait_timeout).until(ec.presence_of_all_elements_located((By.XPATH,
-                    '//*[@id="primaryContainer"]/div[4]/div/div[1]/div[2]/div[5]/div[2]/div[1]/div/div/div[3]/button')))
-                print("Getting All Msgs checkbox")
-                wait_for_page(browser)
-                chk_bx_bttn = WebDriverWait(browser, wait_timeout).until(lambda driver: browser.find_element_by_xpath(
-                        '//*[@id="primaryContainer"]/div[4]/div/div[1]/div[2]/div[5]/div[2]/div[1]/div/div/div[3]'))
-                wait_for_page(browser)
-                print("Select all Msgs")
-                print("Defining hover action")
-                hover = ActionChains(browser).move_to_element(chk_bx_bttn)
-                print("Hover over the checkbox")
-                hover.perform()
-                print("Hover Done")
-                print("Waiting for visibility")
-                WebDriverWait(browser, wait_timeout).until(ec.visibility_of_element_located((By.XPATH,
-                    '//*[@id="primaryContainer"]/div[4]/div/div[1]/div[2]/div[5]/div[2]/div[1]/div/div/div[3]/button')))
-                print("Element is visible")
-                print("Clicking Checkbox")
-                chk_bx_bttn.find_element_by_tag_name("button").click()
-                wait_for_page(browser)
-                # endregion
+                select_all_msgs_new(browser)
 
                 # region Clicking MAR button
                 if email_language == "English":
