@@ -14,7 +14,7 @@ import time
 logger = get_task_logger(__name__)
 link = 'http://www.hotmail.com'
 version = "old"
-wait_timeout = 60
+wait_timeout = 15
 email_language = 'Unknown'
 inbox_count = 0
 
@@ -360,7 +360,7 @@ def access_first_mail_new(browser):
     WebDriverWait(browser, wait_timeout).until(ec.visibility_of_element_located(
         (By.CSS_SELECTOR, 'span.lvHighlightSubjectClass')))
     first_mail.click()
-    WebDriverWait(browser, wait_timeout).until(ec.visibility_of_element_located((By.CLASS_NAME, '_rp_r1')))
+    WebDriverWait(browser, wait_timeout).until(ec.visibility_of_element_located((By.CLASS_NAME, '_rp_01')))
 
 
 def flag_mail_new(browser, actions):
@@ -521,18 +521,16 @@ def check_if_no_results_new(browser):
     no_results = True
     try:
         if email_language == "English":
-            noresult_span = browser.find_element_by_xpath('//span[text()="We didn\'t find anything to show here."]')
+            browser.find_element_by_xpath('//span[text()="We didn\'t find anything to show here."]')
         else:
-            noresult_span = browser.find_element_by_xpath('//span[text()="Nous n’avons trouvé aucun élément à '
-                                                          'afficher ici."]')
-        wait_for_page(browser)
-        no_results = noresult_span.is_displayed()
+            browser.find_element_by_xpath('//span[text()="Nous n’avons trouvé aucun élément à afficher ici."]')
     except NoSuchElementException:
         no_results = False
     except Exception as ex:
         print("/!\ (Error) Getting SPAM Results")
         print(type(ex))
     finally:
+        wait_for_page(browser)
         return no_results
 
 
@@ -556,9 +554,11 @@ def get_spam_count_new(browser):
         print("Getting spam Count")
         print("Getting Junk span")
         if email_language == "English":
-            junk_span = browser.find_element_by_xpath('//span[@title="Junk Email"]')
+            junk_span = WebDriverWait(browser, wait_timeout).\
+                until(lambda driver: browser.find_element_by_xpath('//span[@title="Junk Email"]'))
         else:
-            junk_span = browser.find_element_by_xpath('//span[@title="Courrier indésirable"]')
+            junk_span = WebDriverWait(browser, wait_timeout).\
+                until(lambda driver: browser.find_element_by_xpath('//span[@title="Courrier indésirable"]'))
         print("%s" % junk_span.text)
         spam_count = int(junk_span.find_element_by_xpath('../div[2]/span').text)
     except ValueError:
@@ -1404,7 +1404,7 @@ def report_new_version(browser, actions, subject):
                                 '//button[@title="Move a message that isn\'t Junk to the Inbox"]'))
                         wait_for_page(browser)
                         print("Waiting for MANS button")
-                        WebDriverWait(browser, wait_timeout).until(ec.visibility_of_element_located(
+                        WebDriverWait(browser, 3).until(ec.visibility_of_element_located(
                             (By.XPATH, '//button[@title="Move a message that isn\'t Junk to the Inbox"]')))
                         print("Clicking MANS button")
                         mans_btn.click()
@@ -1414,7 +1414,7 @@ def report_new_version(browser, actions, subject):
                         print("Sending ESC key")
                         ActionChains(browser).send_keys(Keys.ESCAPE).perform()
                         print("Waiting for invisibility of element !")
-                        WebDriverWait(browser, wait_timeout).until(
+                        WebDriverWait(browser, 3).until(
                             ec.invisibility_of_element_located((By.XPATH, '//*[@title="More commands"]')))
                         print("[-] E-mail marked as not SPAM !")
                     else:
@@ -1425,7 +1425,7 @@ def report_new_version(browser, actions, subject):
                                 '//button[@title="Déplacer un message légitime dans la boîte de réception"]'))
                         wait_for_page(browser)
                         print("Waiting for MANS button")
-                        WebDriverWait(browser, wait_timeout).until(ec.visibility_of_element_located(
+                        WebDriverWait(browser, 3).until(ec.visibility_of_element_located(
                             (By.XPATH,
                              '//button[@title="Déplacer un message légitime dans la boîte de réception"]')))
                         print("Clicking MANS button")
@@ -1436,7 +1436,7 @@ def report_new_version(browser, actions, subject):
                         print("Sending ESC key")
                         ActionChains(browser).send_keys(Keys.ESCAPE).perform()
                         print("Waiting for invisibility of element !")
-                        WebDriverWait(browser, wait_timeout).until(
+                        WebDriverWait(browser, 3).until(
                             ec.invisibility_of_element_located((By.XPATH, '//*[@title="Autres commandes"]')))
                         print("[-] E-mail marked as not SPAM !")
                 except TimeoutException:
@@ -1444,10 +1444,20 @@ def report_new_version(browser, actions, subject):
                 print("Done !")
                 # endregion
 
-                browser.get(inbox_link)
-                wait_for_page(browser)
-                browser.get(spam_link)
-                wait_for_page(browser)
+                if email_language == "English":
+                    print("/!\ (Error) Mark SPAM as Read Time Out")
+                    browser.find_element_by_xpath('//span[text()="Inbox"]').click()
+                    time.sleep(1)
+                    wait_for_page(browser)
+                    browser.find_element_by_xpath('//span[text()="Junk Email"]').click()
+                    wait_for_page(browser)
+                else:
+                    print("/!\ (Error) Mark SPAM as Read Time Out")
+                    browser.find_element_by_xpath('//span[text()="Boîte de réception"]').click()
+                    time.sleep(1)
+                    wait_for_page(browser)
+                    browser.find_element_by_xpath('//span[text()="Courrier indésirable"]').click()
+                    wait_for_page(browser)
 
             except StaleElementReferenceException:
                 pass
