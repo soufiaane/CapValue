@@ -1,8 +1,28 @@
 from new_tasks import report_hotmail
 import requests, datetime
 from openpyxl import Workbook
+from celery import group
+import time
 
 
+tas = group(report_hotmail.s(actions='', subject='Anniversaire', proxy=None,
+                             email={'login': 'juliannadauermy5880@hotmail.com', 'password': 'WEmy5612'})
+            .set(queue='smghanen') for i in range(1))
+
+tas_results = tas.apply_async()
+time.sleep(60)
+for tas_result in tas_results:
+    print(tas_result.state)
+
+
+# report_hotmail(actions='RS,NS,SS,RI,FM', subject='Anniversaire', email={'login': 'jonathan13247@hotmail.com', 'password': 'cvc22016'}, proxy=None)
+# report_hotmail(actions='RS,NS,SS,RI,FM', subject='Anniversaire', email={'login': 'juliannadauermy5880@hotmail.com', 'password': 'WEmy5612'}, proxy=None)
+# report_hotmail(actions='FM,AC', subject='Anniversaire', email={'login': 'marthalexandrexh1730@hotmail.com', 'password': 'GCxh2312'}, proxy=None)
+# report_hotmail(actions='SS', subject='Art', email={'login': 'report-serv2@hotmail.com', 'password': 'capvalue2016'}, proxy=None)
+# report_hotmail(actions='SS', subject='Art', email={'login': 'test-soufyane26@hotmail.com', 'password': 'capvalue2016'}, proxy=None)
+# report_hotmail.apply_async(kwargs={'actions':'RS,NS,SS,RI,FM', 'subject':'Anniversaire', 'proxy':None,
+#                            'email':{'login': 'juliannadauermy5880@hotmail.com', 'password': 'WEmy5612'}},
+#                            queue='smghanen')
 def get_planning(date=datetime.date.today() + datetime.timedelta(days=1)):
     wb = Workbook()
     ws = wb.active
@@ -19,7 +39,7 @@ def get_planning(date=datetime.date.today() + datetime.timedelta(days=1)):
 
     i = 5
     for team in teams:
-        print(("*"*25 + "%s" + "*"*25) % team.get("team_name", None))
+        print(("*" * 25 + "%s" + "*" * 25) % team.get("team_name", None))
         members = requests.post(url, data={"what": "getmembers", "team": team.get("team", None)}).json()
         for member in members:
             member_name = member.get("name", None)
@@ -32,11 +52,4 @@ def get_planning(date=datetime.date.today() + datetime.timedelta(days=1)):
             i += 1
     wb.save("sample.xlsx")
 
-get_planning()
-# report_hotmail(actions='FM', subject='Anniversaire', email={'login': 'juliannadauermy5880@hotmail.com', 'password': 'WEmy5612'}, proxy=None)
-# report_hotmail(actions='FM,AC', subject='Anniversaire', email={'login': 'marthalexandrexh1730@hotmail.com', 'password': 'GCxh2312'}, proxy=None)
-# report_hotmail(actions='SS', subject='Art', email={'login': 'report-serv2@hotmail.com', 'password': 'capvalue2016'}, proxy=None)
-# report_hotmail(actions='SS', subject='Art', email={'login': 'test-soufyane26@hotmail.com', 'password': 'capvalue2016'}, proxy=None)
-# report_hotmail.apply_async(kwargs={'actions': 'NS,RI', 'subject': 'ssf',
-#                                    'email': {'login': 'mbennett900@hotmail.com', 'password': 'cvc22015'},
-#                                    'proxy': None}, queue='smghanen')
+# get_planning()

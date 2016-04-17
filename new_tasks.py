@@ -554,10 +554,10 @@ def get_spam_count_new(browser):
         print("Getting spam Count")
         print("Getting Junk span")
         if email_language == "English":
-            junk_span = WebDriverWait(browser, wait_timeout).\
+            junk_span = WebDriverWait(browser, wait_timeout). \
                 until(lambda driver: browser.find_element_by_xpath('//span[@title="Junk Email"]'))
         else:
-            junk_span = WebDriverWait(browser, wait_timeout).\
+            junk_span = WebDriverWait(browser, wait_timeout). \
                 until(lambda driver: browser.find_element_by_xpath('//span[@title="Courrier indésirable"]'))
         print("%s" % junk_span.text)
         spam_count = int(junk_span.find_element_by_xpath('../div[2]/span').text)
@@ -569,6 +569,109 @@ def get_spam_count_new(browser):
     finally:
         print("[!] SPAM count is : %s" % str(spam_count))
         return spam_count
+
+
+def safe_spam_new(browser, spam_link, inbox_link):
+    while get_spam_count_new(browser) > 0:
+        try:
+            # region Accessing 1st messages
+            logger.debug("Getting Subject SPAN")
+            first_mail = WebDriverWait(browser, wait_timeout).until(
+                lambda driver: browser.find_element_by_xpath('//div[@unselectable="on"]/div/span'))
+            logger.debug("Done ! Subject is ==> %s" % first_mail.text)
+            logger.debug("Clicking Subject SPAN")
+            if first_mail.is_displayed():
+                first_mail.click()
+            # endregion
+
+            # region Clicking MANS button
+            try:
+                logger.debug("Getting Show Content button")
+                show_content_btn = WebDriverWait(browser, 5).until(lambda driver: browser.find_element_by_xpath(
+                    '//*[@id="primaryContainer"]/div[4]/div/div[1]/div[2]/div[5]/div[2]/div[4]/div[2]/div/div[1]/div[4]'
+                    '/div[2]/div[4]/div[2]/div[1]/div[1]/div[2]/div[10]/div[2]/div/div/div/div/div[2]/div/a[2]'))
+
+                logger.debug("Clicking Show Content")
+                if show_content_btn.is_displayed():
+                    show_content_btn.click()
+                    logger.debug("[-] 'Show content' button clicked")
+            except TimeoutException:
+                logger.debug("! 'Show content' button not found !")
+
+            try:
+                logger.debug("Getting MANS button")
+                if email_language == "English":
+                    mans_btn = WebDriverWait(browser, 5).until(
+                        lambda driver: browser.find_element_by_xpath('//span[text()="It\'s not spam"]'))
+                else:
+                    mans_btn = WebDriverWait(browser, 5).until(
+                        lambda driver: browser.find_element_by_xpath(
+                            '//span[text()="Ceci n’est pas du courrier indésirable"]'))
+
+                logger.debug("Clicking MANS button")
+                if mans_btn.is_displayed():
+                    mans_btn.click()
+                    logger.debug("[-] 'Not SPAM' button clicked")
+                else:
+                    logger.debug("Getting MANS button")
+                    if email_language == "English":
+                        mans_btn = WebDriverWait(browser, 5).until(
+                            lambda driver: browser.find_element_by_xpath(
+                                '//button[@title="Move a message that isn\'t Junk to the Inbox"]'))
+                    else:
+                        mans_btn = WebDriverWait(browser, 5).until(
+                            lambda driver: browser.find_element_by_xpath(
+                                '//button[@title="Déplacer un message légitime dans la boîte de réception"]'))
+                    logger.debug("Clicking MANS button")
+                    # WebDriverWait(browser, wait_timeout).until(ec.visibility_of_element_located((By.XPATH, '//button[@title="Move a message that isn\'t Junk to the Inbox"]')))
+                    if mans_btn.is_displayed():
+                        mans_btn.click()
+                        logger.debug("[-] 'Not SPAM' button clicked")
+                        logger.debug("Waiting for action to be performed")
+                        WebDriverWait(browser, wait_timeout).until(ec.staleness_of(first_mail))
+                        logger.debug("Done !")
+                        logger.debug("[-] Mark SPAM as Safe Button is Clicked")
+            except TimeoutException:
+                logger.debug("Getting MANS button")
+                if email_language == "English":
+                    mans_btn = WebDriverWait(browser, wait_timeout).until(
+                        lambda driver: browser.find_element_by_xpath(
+                            '//button[@title="Move a message that isn\'t Junk to the Inbox"]'))
+                else:
+                    mans_btn = WebDriverWait(browser, wait_timeout).until(
+                        lambda driver: browser.find_element_by_xpath(
+                            '//button[@title="Déplacer un message légitime dans la boîte de réception"]'))
+                logger.debug("Clicking MANS button")
+                if mans_btn.is_displayed():
+                    mans_btn.click()
+                    logger.debug("[-] 'Not SPAM' button clicked")
+                    logger.debug("Waiting for action to be performed")
+                    WebDriverWait(browser, wait_timeout).until(ec.staleness_of(first_mail))
+                    logger.debug("Done !")
+                    logger.debug("[-] Mark SPAM as Safe Button is Clicked")
+            logger.debug("[!] Getting Next Mail")
+            # endregion
+
+        except StaleElementReferenceException:
+            pass
+        except TimeoutException:
+            if email_language == "English":
+                print("/!\ (Error) Mark SPAM as Read Time Out")
+                browser.find_element_by_xpath('//span[text()="Inbox"]').click()
+                time.sleep(2)
+                wait_for_page(browser)
+                browser.find_element_by_xpath('//span[text()="Junk Email"]').click()
+            else:
+                print("/!\ (Error) Mark SPAM as Read Time Out")
+                browser.find_element_by_xpath('//span[text()="Boîte de réception"]').click()
+                time.sleep(2)
+                wait_for_page(browser)
+                browser.find_element_by_xpath('//span[text()="Courrier indésirable"]').click()
+            wait_for_page(browser)
+        except Exception as ex:
+            logger.debug("/!\ (Error) Mark SPAM as Safe")
+            print(type(ex))
+            raise
 
 
 # endregion
@@ -1382,11 +1485,8 @@ def report_new_version(browser, actions, subject):
     if ('NS' in actions) and ('SS' not in actions):
         print("[+] Mark as not SPAM action")
 
-        # region Controllers Settings
         if 'RS' in actions:
             access_spam_folder_new(browser, spam_link)
-
-        # endregion
 
         # region looping through pages
         while get_spam_count_new(browser) > 0:
@@ -1475,187 +1575,8 @@ def report_new_version(browser, actions, subject):
 
     # region Mark SPAM as Safe
     if 'SS' in actions:
-        # region Controllers Settings
         print("[+] Mark SPAM as Safe Actions")
-        wait_for_page(browser)
-        spam_link = str(browser.current_url)[
-                    :str(browser.current_url).index('.com')] + '.com/owa/#path=/mail/junkemail'
-        inbox_link = spam_link.replace("/junkemail", "/inbox")
-
-        # region Accessing SPAM folder
-        try:
-            print("[-] Getting SPAM folder")
-            browser.get(inbox_link)
-            wait_for_page(browser)
-            browser.get(spam_link)
-            wait_for_page(browser)
-        except Exception as ex:
-            print("/!\ (Error) Accessing SPAM folder")
-            print(type(ex))
-        # endregion
-
-        # region Checking results
-        spam_count = 0
-        try:
-            wait_for_page(browser)
-            print("Getting spam Count")
-            print("Getting Junk span")
-            if email_language == "English":
-                junk_span = browser.find_element_by_xpath('//span[@title="Junk Email"]')
-            else:
-                junk_span = browser.find_element_by_xpath('//span[@title="Courrier indésirable"]')
-            print("%s" % junk_span.text)
-            spam_count = int(junk_span.find_element_by_xpath('../div[2]/span').text)
-        except ValueError:
-            pass
-        except Exception as ex:
-            print("/!\ (Error) Getting SPAM Count")
-            print(type(ex))
-            spam_count = 0
-        print("[!] SPAM count is : %s" % str(spam_count))
-        # endregion
-
-        # endregion
-
-        # region looping through pages
-        while spam_count > 0:
-            try:
-                try:
-                    wait_for_page(browser)
-                    print("Getting spam Count")
-                    print("Getting Junk span")
-                    if email_language == "English":
-                        junk_span = browser.find_element_by_xpath('//span[@title="Junk Email"]')
-                    else:
-                        junk_span = browser.find_element_by_xpath('//span[@title="Courrier indésirable"]')
-                    print("%s" % junk_span.text)
-                    spam_count = int(junk_span.find_element_by_xpath('../div[2]/span').text)
-                except ValueError:
-                    pass
-                except Exception as ex:
-                    print("/!\ (Error) Getting SPAM Count")
-                    print(type(ex))
-                    spam_count = 0
-                print("[!] SPAM count is : %s" % str(spam_count))
-
-                # region Accessing 1st messages
-                print("Getting Subject SPAN")
-                first_mail = WebDriverWait(browser, wait_timeout).until(
-                    lambda driver: browser.find_element_by_xpath('//div[@unselectable="on"]/div/span'))
-                print("Done ! Subject is ==> %s" % first_mail.text)
-                print("Clicking Subject SPAN")
-                if first_mail.is_displayed():
-                    first_mail.click()
-                # endregion
-
-                # region Clicking MANS button
-                try:
-                    print("Getting Show Content button")
-                    show_content_btn = WebDriverWait(browser, 5).until(
-                        lambda driver: browser.find_element_by_xpath(
-                            '//*[@id="primaryContainer"]/div[4]/div/div[1]/div[2]/div[5]/div[2]/div[4]/div[2]/div/div[1]/div[4]/div[2]/div[4]/div[2]/div[1]/div[1]/div[2]/div[10]/div[2]/div/div/div/div/div[2]/div/a[2]'))
-                    print("Clicking Show Content")
-                    # WebDriverWait(browser, wait_timeout).until(ec.visibility_of_element_located((By.XPATH, '//*[@id="primaryContainer"]/div[4]/div/div[1]/div[2]/div[5]/div[2]/div[4]/div[2]/div/div[1]/div[4]/div[2]/div[4]/div[2]/div[1]/div[1]/div[2]/div[10]/div[2]/div/div/div/div/div[2]/div/a[2]')))
-                    if show_content_btn.is_displayed():
-                        show_content_btn.click()
-                        print("[-] 'Show content' button clicked")
-                except TimeoutException:
-                    print("! 'Show content' button not found !")
-                except Exception as ex:
-                    print("/!\ (Error) Clicking 'Show content' button")
-                    print(type(ex))
-                try:
-                    print("Getting MANS button")
-                    if email_language == "English":
-                        mans_btn = WebDriverWait(browser, 5).until(
-                            lambda driver: browser.find_element_by_xpath('//span[text()="It\'s not spam"]'))
-                    else:
-                        mans_btn = WebDriverWait(browser, 5).until(
-                            lambda driver: browser.find_element_by_xpath(
-                                '//span[text()="Ceci n’est pas du courrier indésirable"]'))
-
-                    print("Clicking MANS button")
-                    # WebDriverWait(browser, wait_timeout).until(ec.visibility_of_element_located((By.XPATH, '//button[@title="Move a message that isn\'t Junk to the Inbox"]')))
-                    if mans_btn.is_displayed():
-                        mans_btn.click()
-                        print("[-] 'Not SPAM' button clicked")
-                    else:
-                        print("Getting MANS button")
-                        if email_language == "English":
-                            mans_btn = WebDriverWait(browser, 5).until(
-                                lambda driver: browser.find_element_by_xpath(
-                                    '//button[@title="Move a message that isn\'t Junk to the Inbox"]'))
-                        else:
-                            mans_btn = WebDriverWait(browser, 5).until(
-                                lambda driver: browser.find_element_by_xpath(
-                                    '//button[@title="Déplacer un message légitime dans la boîte de réception"]'))
-                        print("Clicking MANS button")
-                        # WebDriverWait(browser, wait_timeout).until(ec.visibility_of_element_located((By.XPATH, '//button[@title="Move a message that isn\'t Junk to the Inbox"]')))
-                        if mans_btn.is_displayed():
-                            mans_btn.click()
-                            print("[-] 'Not SPAM' button clicked")
-                            print("Waiting for action to be performed")
-                            WebDriverWait(browser, wait_timeout).until(ec.staleness_of(first_mail))
-                            print("Done !")
-                            print("[-] Mark SPAM as Safe Button is Clicked")
-                except TimeoutException:
-                    print("Getting MANS button")
-                    if email_language == "English":
-                        mans_btn = WebDriverWait(browser, wait_timeout).until(
-                            lambda driver: browser.find_element_by_xpath(
-                                '//button[@title="Move a message that isn\'t Junk to the Inbox"]'))
-                    else:
-                        mans_btn = WebDriverWait(browser, wait_timeout).until(
-                            lambda driver: browser.find_element_by_xpath(
-                                '//button[@title="Déplacer un message légitime dans la boîte de réception"]'))
-                    print("Clicking MANS button")
-                    # WebDriverWait(browser, wait_timeout).until(ec.visibility_of_element_located((By.XPATH, '//button[@title="Move a message that isn\'t Junk to the Inbox"]')))
-                    if mans_btn.is_displayed():
-                        mans_btn.click()
-                        print("[-] 'Not SPAM' button clicked")
-                        print("Waiting for action to be performed")
-                        WebDriverWait(browser, wait_timeout).until(ec.staleness_of(first_mail))
-                        print("Done !")
-                        print("[-] Mark SPAM as Safe Button is Clicked")
-                print("[!] Getting Next Mail")
-                # endregion
-
-                # region Checking if it was the last page
-                try:
-                    wait_for_page(browser)
-                    print("Getting spam Count")
-                    if email_language == "English":
-                        junk_span = WebDriverWait(browser, wait_timeout).until(
-                            lambda driver: browser.find_element_by_xpath('//span[@title="Junk Email"]'))
-                    else:
-                        junk_span = WebDriverWait(browser, wait_timeout).until(
-                            lambda driver: browser.find_element_by_xpath(
-                                '//span[@title="Courrier indésirable"]'))
-                    print("Getting Junk span")
-                    spam_count = int(junk_span.find_element_by_xpath('../div[2]/span').text)
-                except ValueError:
-                    spam_count = 0
-                except Exception as ex:
-                    print("/!\ (Error) Getting SPAM Count")
-                    print(type(ex))
-                    spam_count = 0
-                print("[!] New SPAM count is : %s" % str(spam_count))
-                # endregion
-
-            except StaleElementReferenceException:
-                pass
-            except TimeoutException:
-                print("/!\ (Error) Mark SPAM as Safe  Timed Out")
-                browser.get(inbox_link)
-                wait_for_page(browser)
-                browser.get(spam_link)
-                wait_for_page(browser)
-                continue
-            except Exception as ex:
-                print("/!\ (Error) Mark SPAM as Safe")
-                print(type(ex))
-        # endregion
-
+        safe_spam_new(browser, spam_link, inbox_link)
         print("[!] Done marking SPAM as Safe !\n")
     # endregion
 
@@ -1789,7 +1710,7 @@ def report_new_version(browser, actions, subject):
 # endregion
 
 
-@app.task(name='report_hotmail', bind=True, max_retries=3, default_retry_delay=1)
+@app.task(name='report_hotmail', bind=True)
 def report_hotmail(self, **kwargs):
     # region Settings
     actions = str(kwargs.get('actions', None)).split(',')
@@ -1822,53 +1743,53 @@ def report_hotmail(self, **kwargs):
     print("\n******\nStarting JOB for :\n*-Actions: %s\n*-Subject: %s\n*-Email: %s\n*-Password: %s\n*-Proxy: %s\n*-"
           "Port: %s\n******\n" % (kwargs.get('actions', None), keyword, mail, pswd, proxy, port))
 
-    try:
-        print('[+] Opening Hotmail')
+    # try:
+    print('[+] Opening Hotmail')
+    browser.get(link)
+    print('[!] Hotmail Opened')
+
+    print("[+] Starting Connection")
+    connect(browser, mail, pswd)
+    print("[!] End Connection")
+
+    print("[+] Checking if Account is blocked")
+    check_if_verified(browser)
+    print("[!] End account blocked check")
+
+    if 'https://account.live.com/' in browser.current_url:
         browser.get(link)
-        print('[!] Hotmail Opened')
 
-        print("[+] Starting Connection")
-        connect(browser, mail, pswd)
-        print("[!] End Connection")
+    print("[+] Checking email version")
+    check_version(browser)
+    print("[!] End checking email version")
 
-        print("[+] Checking if Account is blocked")
-        check_if_verified(browser)
-        print("[!] End account blocked check")
+    print("[+] Checking email language")
+    check_email_language(browser)
+    print("[!] End checking email language")
 
-        if 'https://account.live.com/' in browser.current_url:
-            browser.get(link)
+    if email_language == "old":
+        print("(###) Starting actions for OLD e-mail version\n")
+        report_old_version(browser, actions)
+    else:
+        print("(###) Starting actions for NEW e-mail version\n")
 
-        print("[+] Checking email version")
-        check_version(browser)
-        print("[!] End checking email version")
+        print("[+] Setting mailbox display")
+        configure_mailbox(browser)
+        print("[+] End setting mailbox display")
 
-        print("[+] Checking email language")
-        check_email_language(browser)
-        print("[!] End checking email language")
-
-        if email_language == "old":
-            print("(###) Starting actions for OLD e-mail version\n")
-            report_old_version(browser, actions)
-        else:
-            print("(###) Starting actions for NEW e-mail version\n")
-
-            print("[+] Setting mailbox display")
-            configure_mailbox(browser)
-            print("[+] End setting mailbox display")
-
-            print("[+] Starting Actions")
-            report_new_version(browser, actions, keyword)
-            print("[+] End Actions")
-    except Exception as exc:
-        # region Exceptions
-        print("#*#*#*#*#*#*#*#*#*#*#*#*#*#*#*#*#*#*#*#*#*#*#*#*#*#*#*#*#*#*#*#*#*#*#*#*")
-        print("#*#*#*#*#*#*#*#*#*#*#*#*#*#*#*# !! OUPS !! #*#*#*#*#*#*#*#*#*#*#*#*#*#*#*#*")
-        print("#*#*#*#*#*#*#*#*#*#*#*#*#*#*#*#*#*#*#*#*#*#*#*#*#*#*#*#*#*#*#*#*#*#*#*#*")
-        print(type(exc))
-        self.retry(exc=exc)
-        # endregion
-    finally:
-        print("###************************************************************************###")
-        print('        [!] [-] Finished Actions for %s [-] (!)' % mail)
-        print("###************************************************************************###")
-        browser.quit()
+        print("[+] Starting Actions")
+        report_new_version(browser, actions, keyword)
+        print("[+] End Actions")
+    # except Exception as exc:
+    #     # region Exceptions
+    #     print("#*#*#*#*#*#*#*#*#*#*#*#*#*#*#*#*#*#*#*#*#*#*#*#*#*#*#*#*#*#*#*#*#*#*#*#*")
+    #     print("#*#*#*#*#*#*#*#*#*#*#*#*#*#*#*# !! OUPS !! #*#*#*#*#*#*#*#*#*#*#*#*#*#*#*#*")
+    #     print("#*#*#*#*#*#*#*#*#*#*#*#*#*#*#*#*#*#*#*#*#*#*#*#*#*#*#*#*#*#*#*#*#*#*#*#*")
+    #     print(type(exc))
+    #     browser.quit()
+    #     raise self.retry(exc=exc)
+    #     # endregion
+    print("###************************************************************************###")
+    print('        [!] [-] Finished Actions for %s [-] (!)' % mail)
+    print("###************************************************************************###")
+    browser.quit()
