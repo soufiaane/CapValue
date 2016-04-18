@@ -48,11 +48,14 @@
             return $http.delete('/api/v1/jobs/' + job_id + '/');
         }
 
-        function create(keyword, seed_list, actions) {
+        function create(keyword, seed_list, actions, wait_timeout, hide_browser, concurrency) {
             return $http.post('/api/v1/jobs/', {
                 keywords: keyword,
                 seed_list: seed_list,
-                actions: actions
+                actions: actions,
+                wait_timeout:wait_timeout,
+                hide_browser:hide_browser,
+                concurrency:concurrency
             });
         }
 

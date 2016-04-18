@@ -1,20 +1,20 @@
-import json
-from celery import group
 from rest_framework import viewsets, permissions, generics, status, views
-from rest_framework.response import Response
-from job.models import Job
-from job.models import Seed
-from job.serializers import JobSerializer
-from mail.models import Email
-from mail.serializers import EmailSerializer
-from proxy.serializers import IPSerializer
-from seed.serializers import SeedSerializer
-from tasks import report_hotmail
-from celery.result import GroupResult
-from celeryTasks.celerySettings import app
-import signal
-from django.utils.six import BytesIO
 from rest_framework.parsers import JSONParser
+from rest_framework.response import Response
+from mail.serializers import EmailSerializer
+from seed.serializers import SeedSerializer
+from celeryTasks.celerySettings import app
+from proxy.serializers import IPSerializer
+from job.serializers import JobSerializer
+from celery.result import GroupResult
+from django.utils.six import BytesIO
+from tasks import report_hotmail
+from mail.models import Email
+from job.models import Seed
+from job.models import Job
+from celery import group
+import signal
+import json
 
 
 class JobViewSet(viewsets.ModelViewSet):
@@ -24,7 +24,12 @@ class JobViewSet(viewsets.ModelViewSet):
     def create(self, request, *args, **kwargs):
         subject = request.data.get('keywords', None)
         actions = request.data.get('actions', None)
+        wait_timeout = int(request.data.get('wait_timeout', None))
+        hide_browser = bool(request.data.get('hide_browser', False))
+        cc = str(request.data.get('concurrency', 1))
         user = request.user
+        qq = user.username + cc
+
         seed_list = json.loads(request.data.get('seed_list', None))
         job = Job.objects.create(subject=subject, actions=actions, owner=user)
         [job.seeds.add(Seed.objects.get(pk=seed['id'])) for seed in seed_list]
@@ -49,8 +54,8 @@ class JobViewSet(viewsets.ModelViewSet):
                 else:
                     pr.append(None)
         tas = group(
-            report_hotmail.s(actions=actions, subject=subject, email=emm[i], proxy=pr[i]).set(queue=user.username) for i
-            in range(len(emm)))
+            report_hotmail.s(actions=actions, subject=subject, email=emm[i], proxy=pr[i], wait_timeout=wait_timeout,
+                             hide_browser=hide_browser).set(queue=qq) for i in range(len(emm)))
         tas_results = tas.apply_async()
         tas_results.save()
         job.celery_id = tas_results.id
@@ -91,7 +96,8 @@ class RevokeJob(views.APIView):
     def post(self, request, format=None):
         group_id = request.data.get('celery_id', None)
         if group_id:
-            app.control.revoke([task.id for task in GroupResult.restore(group_id)], terminate=True, signal=signal.SIGILL)
+            app.control.revoke([task.id for task in GroupResult.restore(group_id)], terminate=True,
+                               signal=signal.SIGILL)
             return Response(status=status.HTTP_200_OK)
 
         return Response({
@@ -116,7 +122,8 @@ class UpdateJobResults(views.APIView):
 
         group_id = request.data.get('celery_id', None)
         if group_id:
-            app.control.revoke([task.id for task in GroupResult.restore(group_id)], terminate=True, signal=signal.SIGILL)
+            app.control.revoke([task.id for task in GroupResult.restore(group_id)], terminate=True,
+                               signal=signal.SIGILL)
             return Response(status=status.HTTP_200_OK)
 
         return Response({

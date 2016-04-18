@@ -10,7 +10,7 @@
                     <table class="table table-responsive">
                         <tr style="width: 100px">
                             <td style="border: none;">
-                                <span class="pull-left">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Subject :</span>
+                                <span class="pull-left"><b>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Subject :</b></span>
                             </td>
                             <td style="border: none;" id="job_keyword">
                                 <input type="text" class="form-control" placeholder="Subject..."
@@ -53,7 +53,7 @@
                                 <td style="border: none; padding: 0; width: 50%;" class="pull-left">
                                     <label class="checkbox pull-left" style="width: 85%;">
                                         <input type="checkbox" ng-model="vm.job.actions[4].isChecked">
-                                        Mark emails content as safe/trusted  <b style="color: #D73925;">(SPAM)</b>.
+                                        Mark emails content as safe/trusted <b style="color: #D73925;">(SPAM)</b>.
                                     </label>
                                     <label style="width: 15%;" class="pull-right">
                                         <a href="#" tabindex="0" role="button" data-toggle="popover"
@@ -109,7 +109,7 @@
                                 <td style="border: none; padding: 0; width: 50%;" class="pull-left">
                                     <label class="checkbox pull-left" style="width: 85%;">
                                         <input type="checkbox" ng-model="vm.job.actions[7].isChecked">
-                                        Mark emails as Flaged  <b style="color: #00A65A;">(INBOX)</b>.
+                                        Mark emails as Flaged <b style="color: #00A65A;">(INBOX)</b>.
                                     </label>
                                     <label style="width: 15%;" class="pull-right">
                                         <a href="#" tabindex="0" role="button" data-toggle="popover"
@@ -125,14 +125,15 @@
 
                     <div class="box-body">
                         <div class="col-sm-12">
-                    <table class="table table-responsive">
-                        <tr style="width: 100px">
-                            <td style="border: none;">
-                                <span class="pull-left"><b>Seed List :</b></span>
-                            </td>
-                            <td style="border: none;"></td>
-                        </tr>
-                    </table>
+                            <table class="table table-responsive">
+                                <tr style="width: 100px">
+                                    <td style="border: none;">
+                                        <span class="pull-left"><b>Seed List :</b></span>
+                                    </td>
+                                    <td style="border: none;"></td>
+                                </tr>
+                            </table>
+
                             <table class="table table-hover dataTable" style="width: 100%"
                                    ng-table="vm.tableParams" show-filter="true" id="job_seed_list" ng-hide="loading"
                                    ng-cloak>
@@ -155,6 +156,60 @@
                             </div>
                         </div>
                     </div>
+
+
+                    <div class="box-body">
+                        <div class="col-sm-12">
+                            <table class="table table-responsive">
+                                <tr style="width: 100px">
+                                    <td style="border: none;">
+                                        <span class="pull-left"><b>Settings :</b></span>
+                                    </td>
+                                    <td style="border: none;"></td>
+                                </tr>
+                            </table>
+                    <div class="box-body">
+                        <table class="table table-responsive table-condensed">
+                            <tr style="width: 100px">
+
+                                <td style="border: none; padding: 0; width: 20%;" class="pull-left">
+                                    <div class="input-group input-group-sm">
+                                      <span class="input-group-addon" id="sizing-addon3">Time out</span>
+                                      <input type="number" class="form-control" placeholder="Time out" aria-describedby="sizing-addon3" value="15" min="0" max="120" ng-model="vm.wait_timeout">
+                                      <span class="input-group-addon" id="sizing-addon3">s</span>
+                                    </div>
+                                </td>
+
+                                <td style="border: none; padding: 0; width: 20%;" class="pull-left">&nbsp;</td>
+
+                                <td style="border: none; padding: 0; width: 20%;" class="pull-left">
+                                    <div class="input-group input-group-sm">
+                                      <span class="input-group-addon" id="sizing-addon3"># Nav</span>
+                                      <input type="number" class="form-control" placeholder="# Nav" aria-describedby="sizing-addon3" value="1"  min="1" max="4" ng-model="vm.concurrency">
+                                        <span class="input-group-addon" id="sizing-addon3">
+                                            ?
+                                        </span>
+                                    </div>
+                                </td>
+
+                                <td style="border: none; padding: 0; width: 20%;" class="pull-left">&nbsp;</td>
+
+                                <td style="border: none; padding: 0; width: 20%;" class="pull-left">
+                                    <div class="input-group">
+                                      <span class="input-group-addon">
+                                        <input type="checkbox" id="hide_navs" ng-model="vm.hide_browser">
+                                      </span>
+                                        <label for="hide_navs" class="form-control">Hide Navs</label>
+                                    </div>
+                                </td>
+
+                            </tr>
+                        </table>
+                    </div>
+
+                        </div>
+                    </div>
+
                     <hr style="margin: 0;">
                     <hr style="margin: 0;">
                     <hr style="margin: 0;">

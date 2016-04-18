@@ -8,7 +8,9 @@
     function JobCreateController(Job, Seed, Authentication, $state, NgTableParams, Snackbar, $scope) {
         var vm = this;
         activate();
-
+        vm.concurrency = 1;
+        vm.wait_timeout = 15;
+        vm.hide_browser = false;
         vm.job = {
             selectedSeeds: [], actions: [
                 {name: "RS", isChecked: true},
@@ -139,7 +141,7 @@
 
         function submitJob() {
             if (isValid()) {
-                Job.create(vm.job.keyword, JSON.stringify(vm.job.selectedSeeds), vm.selected_actions).then(createJobSuccessFn, createJobErrorFn);
+                Job.create(vm.job.keyword, JSON.stringify(vm.job.selectedSeeds), vm.selected_actions, vm.wait_timeout, vm.hide_browser, vm.concurrency).then(createJobSuccessFn, createJobErrorFn);
             }
 
             function createJobSuccessFn() {

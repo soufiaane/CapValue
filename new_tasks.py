@@ -14,8 +14,8 @@ import time
 logger = get_task_logger(__name__)
 link = 'http://www.hotmail.com'
 version = "old"
-wait_timeout = 15
-email_language = 'Unknown'
+wait_timeout = 0
+email_language = 'English'
 inbox_count = 0
 
 
@@ -198,16 +198,726 @@ def configure_mailbox(browser):
     except Exception as exc:
         print(type(exc))
         print("/!\ (Error) Check Display Settings")
+# endregion
 
+
+# region Old Version
+
+# region MailBox Functions
+def access_spam_folder_old(browser, spam_link):
+    try:
+        wait_for_page(browser)
+        browser.get(spam_link)
+        wait_for_page(browser)
+    except Exception as ex:
+        print("/!\ (Error) Accessink SPAM folder ")
+        print(type(ex))
+        raise
+
+
+def open_menu_old(browser):
+    try:
+        if email_language == "English":
+            menu_btn = WebDriverWait(browser, wait_timeout).until(
+                lambda driver: browser.find_element_by_xpath('//*[@title="More commands"]'))
+            wait_for_page(browser)
+            logger.debug("[#] Click Menu")
+            WebDriverWait(browser, wait_timeout).until(
+                ec.visibility_of_element_located((By.XPATH, '//*[@title="More commands"]')))
+            wait_for_page(browser)
+        else:
+            menu_btn = WebDriverWait(browser, wait_timeout).until(
+                lambda driver: browser.find_element_by_xpath('//*[@title=" Autres commandes"]'))
+            wait_for_page(browser)
+            logger.debug("[#] Click Menu")
+            WebDriverWait(browser, wait_timeout).until(
+                ec.visibility_of_element_located((By.XPATH, '//*[@title=" Autres commandes"]')))
+            wait_for_page(browser)
+    except TimeoutException:
+        menu_btn = WebDriverWait(browser, wait_timeout).until(
+            lambda driver: browser.find_element_by_xpath('//*[@title="更多命令"]'))
+        wait_for_page(browser)
+        logger.debug("[#] Click Menu")
+        WebDriverWait(browser, wait_timeout).until(ec.visibility_of_element_located((By.XPATH, '//*[@title="更多命令"]')))
+        wait_for_page(browser)
+
+    menu_btn.click()
+    WebDriverWait(browser, wait_timeout).until(ec.visibility_of_element_located((By.ID, 'MarkAsRead')))
+
+
+def select_all_msgs_old(browser):
+    wait_for_page(browser)
+    WebDriverWait(browser, wait_timeout).until(ec.visibility_of_element_located((By.CSS_SELECTOR, 'li.FilterSelector')))
+    logger.debug("Getting All Msgs checkbox")
+    wait_for_page(browser)
+    chk_bx_bttn = WebDriverWait(browser, wait_timeout).until(lambda driver: browser.find_element_by_id('msgChkAll'))
+    wait_for_page(browser)
+    logger.debug("Select all Msgs")
+    chk_bx_bttn.click()
+    wait_for_page(browser)
+    logger.debug("CheckBox is clicked !")
+# endregion
+
+
+def report_old_version(browser, actions, keyword):
+    spam_link = str(browser.current_url)[:str(browser.current_url).index('.com')] + '.com/?fid=fljunk'
+    keyword_link = str(browser.current_url)[:str(browser.current_url).index(
+            '.com')] + '.com/?fid=flsearch&srch=1&skws=' + keyword + '&scat=1&sdr=4&satt=0'
+
+    # region Spam Actions
+    if ('RS' in actions) or ('NS' in actions) or ('SS' in actions):
+        wait_for_page(browser)
+        access_spam_folder_old(browser, spam_link)
+
+    # region Mark Spam as read
+    if ('RS' in actions) and ('SS' not in actions):  #
+        print("[+] Read SPAM Actions")
+
+        # region Controllers Settings
+        try:
+            wait_for_page(browser)
+            browser.find_element_by_id("NoMsgs")
+            last_page_checked = True
+            print("[!] SPAM folder is empty, Skipping read SPAM actions!")
+        except NoSuchElementException:
+            wait_for_page(browser)
+            next_page_disabled = WebDriverWait(browser, wait_timeout).until(
+                lambda driver: browser.find_element_by_css_selector('div.NextPageDisabled'))
+            last_page = next_page_disabled.is_displayed()
+            last_page_checked = False
+        # endregion
+
+        # region looping through pages
+        while not last_page_checked:
+            try:
+                select_all_msgs_old(browser)
+
+                open_menu_old(browser)
+
+                # region Clicking MAR button
+                logger.debug("[#] Clicking Mark as Read Button")
+                mar_btn = WebDriverWait(browser, wait_timeout).until(
+                    lambda driver: browser.find_element_by_id('MarkAsRead'))
+                wait_for_page(browser)
+                mar_btn.click()
+                try:
+                    WebDriverWait(browser, wait_timeout).until(
+                        ec.visibility_of_element_located((By.CSS_SELECTOR, 'div.c_h_flyingDots')))
+                    WebDriverWait(browser, wait_timeout).until(
+                        ec.invisibility_of_element_located((By.CSS_SELECTOR, 'div.c_h_flyingDots')))
+                except TimeoutException:
+                    pass
+                # endregion
+
+                # region Checking if it was the last page
+                last_page_checked = last_page if last_page else False
+                next_page_link = WebDriverWait(browser, wait_timeout).until(
+                    lambda driver: browser.find_element_by_id('nextPageLink'))
+                if next_page_link.is_displayed():
+                    logger.debug("Accessing Next Page")
+                    wait_for_page(browser)
+                    next_page_link.click()
+                    wait_for_page(browser)
+                    WebDriverWait(browser, wait_timeout).until(
+                        ec.invisibility_of_element_located((By.CSS_SELECTOR, 'div.SelPrompt')))
+                next_page_disabled = browser.find_element_by_css_selector('div.NextPageDisabled')
+                last_page = next_page_disabled.is_displayed()
+                # endregion
+
+            except StaleElementReferenceException:
+                pass
+            except TimeoutException:
+                pass
+            except Exception as ex:
+                print("/!\ (Error) Mark SPAM as read")
+                print(type(ex))
+                raise
+        # endregion
+
+        print("[!] Done marking SPAM as read\n")
+
+    # endregion
+
+    # region Mark as Not SPAM
+    if ('NS' in actions) and ('SS' not in actions):  # Not SPAM
+        print("[+] Mark as Not SPAM Actions")
+
+        if 'RS' in actions:
+            access_spam_folder_old(browser, spam_link)
+
+        # region Controllers Settings
+        wait_for_page(browser)
+
+        try:
+            browser.find_element_by_id("NoMsgs")
+            still_results = False
+        except NoSuchElementException:
+            still_results = True
+        # endregion
+
+        # region looping through pages
+        while still_results:
+            try:
+                select_all_msgs_old(browser)
+
+                # region Clicking MANS button
+                WebDriverWait(browser, wait_timeout).until(
+                    ec.visibility_of_element_located((By.ID, 'MarkAsNotJunk')))
+                wait_for_page(browser)
+                not_spam_btn = WebDriverWait(browser, wait_timeout).until(
+                    lambda driver: browser.find_element_by_id('MarkAsNotJunk'))
+                wait_for_page(browser)
+                not_spam_btn.click()
+                logger.debug("[!] 'Not Spam' Button Clicked !")
+                try:
+                    WebDriverWait(browser, wait_timeout).until(
+                        ec.visibility_of_element_located((By.CSS_SELECTOR, 'div.c_h_flyingDots')))
+                    WebDriverWait(browser, wait_timeout).until(
+                        ec.invisibility_of_element_located((By.CSS_SELECTOR, 'div.c_h_flyingDots')))
+                except TimeoutException:
+                    pass
+                # endregion
+
+                # region Checking if it was the last page
+                try:
+                    browser.find_element_by_id("NoMsgs")
+                    still_results = False
+                    print("[!] Last page !")
+                except NoSuchElementException:
+                    still_results = True
+                # endregion
+                pass
+            except StaleElementReferenceException:
+                pass
+            except TimeoutException:
+                pass
+            except Exception as ex:
+                print("/!\ (Error) Mark as not SPAM")
+                print(type(ex))
+                raise
+        # endregion
+
+        print("[!] Done marking e-mails as not spam\n")
+    # endregion
+
+    # region Mark SPAM as SAFE
+    if 'SS' in actions:
+        print("[+] Mark SPAM as safe actions :")
+
+        # region Controllers Settings
+        wait_for_page(browser)
+
+        try:
+            browser.find_element_by_id("NoMsgs")
+            still_results = False
+        except NoSuchElementException:
+            still_results = True
+        # endregion
+
+        # region looping through mails
+        while still_results:
+            try:
+
+                # region Accessing first mail
+                wait_for_page(browser)
+                print("Getting Email List Group !")
+                WebDriverWait(browser, wait_timeout).until(
+                    ec.visibility_of_element_located((By.CSS_SELECTOR, 'ul.mailList')))
+                email_list = WebDriverWait(browser, wait_timeout).until(
+                    lambda driver: browser.find_element_by_css_selector('ul.mailList'))
+                print("Getting All Emails from Group")
+                wait_for_page(browser)
+                emails = email_list.find_elements_by_tag_name('li')
+                print("[-] Clicking the first e-mail")
+                wait_for_page(browser)
+                emails[0].click()
+                WebDriverWait(browser, wait_timeout).until(
+                    ec.presence_of_element_located((By.CSS_SELECTOR, 'div.ReadMsgContainer')))
+                wait_for_page(browser)
+                # endregion
+
+                # region Clicking SS button
+                wait_for_page(browser)
+                WebDriverWait(browser, wait_timeout).until(
+                    ec.visibility_of_element_located((By.CSS_SELECTOR, 'a.sfUnjunkItems')))
+                safe_link = WebDriverWait(browser, wait_timeout).until(
+                    lambda driver: browser.find_element_by_css_selector('a.sfUnjunkItems'))
+                wait_for_page(browser)
+                safe_link.click()
+                logger.debug("[-] E-mail marked as Safe")
+                try:
+                    WebDriverWait(browser, wait_timeout).until(
+                        ec.invisibility_of_element_located((By.CSS_SELECTOR, 'a.sfUnjunkItems')))
+                except TimeoutException:
+                    pass
+
+                wait_for_page(browser)
+                # endregion
+
+                # region Checking if it was the last page
+                try:
+                    browser.find_element_by_id("NoMsgs")
+                    still_results = False
+                    print("[!] Last page !")
+                except NoSuchElementException:
+                    still_results = True
+                # endregion
+
+                pass
+            except StaleElementReferenceException:
+                pass
+            except TimeoutException:
+                print("/!\ (Error) Timed Out")
+                # region Clicking MANS button
+                WebDriverWait(browser, wait_timeout).until(
+                    ec.visibility_of_element_located((By.ID, 'MarkAsNotJunk')))
+                wait_for_page(browser)
+                not_spam_btn = WebDriverWait(browser, wait_timeout).until(
+                    lambda driver: browser.find_element_by_id('MarkAsNotJunk'))
+                wait_for_page(browser)
+                not_spam_btn.click()
+                print("[!] 'Not Spam' Button Clicked !")
+                try:
+                    WebDriverWait(browser, wait_timeout).until(
+                        ec.visibility_of_element_located((By.CSS_SELECTOR, 'div.c_h_flyingDots')))
+                    WebDriverWait(browser, wait_timeout).until(
+                        ec.invisibility_of_element_located((By.CSS_SELECTOR, 'div.c_h_flyingDots')))
+                except TimeoutException:
+                    pass
+
+                # region Checking if it was the last page
+                try:
+                    browser.find_element_by_id("NoMsgs")
+                    still_results = False
+                    print("[!] Last page !")
+                except NoSuchElementException:
+                    still_results = True
+                # endregion
+
+                pass
+                # endregion
+            except Exception as ex:
+                print("/!\ (Error) Mark SPAM as safe!")
+                print(type(ex))
+                raise
+        # endregion
+
+        print("[!] Done marking SPAM as safe\n")
+    # endregion
+
+    # endregion
+
+    # region Inbox Actions
+
+    # region Mark inbox as Read
+    if ('RI' in actions) and ('CL' not in actions) and ('AC' not in actions):
+
+        # region Controllers Settings
+        print("[+] Mark INBOX as read Actions")
+        print("[-] Getting unread messages for Subject: %s" % keyword)
+        wait_for_page(browser)
+
+        browser.get(keyword_link)
+        wait_for_page(browser)
+
+        try:
+            browser.find_element_by_id("NoMsgs")
+            still_results = False
+        except NoSuchElementException:
+            still_results = True
+        # endregion
+
+        # region Looping through messages
+        while still_results:
+            try:
+
+                # region Selecting alls messages
+                print("[-] Marking INBOX as read for this page")
+                wait_for_page(browser)
+                WebDriverWait(browser, wait_timeout).until(
+                    ec.visibility_of_element_located((By.CSS_SELECTOR, 'li.FilterSelector')))
+                print("Getting All Msgs checkbox")
+                wait_for_page(browser)
+                chk_bx_bttn = WebDriverWait(browser, wait_timeout).until(
+                    lambda driver: browser.find_element_by_id('msgChkAll'))
+                wait_for_page(browser)
+                print("Select all Msgs")
+                chk_bx_bttn.click()
+                wait_for_page(browser)
+                print("CheckBox is clicked !")
+                # endregion
+
+                # region Clicking menu
+                try:
+                    if email_language == "English":
+                        menu_btn = WebDriverWait(browser, wait_timeout).until(
+                            lambda driver: browser.find_element_by_xpath('//*[@title="More commands"]'))
+                        wait_for_page(browser)
+                        print("Click Menu")
+                        WebDriverWait(browser, wait_timeout).until(
+                            ec.visibility_of_element_located((By.XPATH, '//*[@title="More commands"]')))
+                        wait_for_page(browser)
+                    else:
+                        menu_btn = WebDriverWait(browser, wait_timeout).until(
+                            lambda driver: browser.find_element_by_xpath('//*[@title=" Autres commandes"]'))
+                        wait_for_page(browser)
+                        print("Click Menu")
+                        WebDriverWait(browser, wait_timeout).until(
+                            ec.visibility_of_element_located((By.XPATH, '//*[@title=" Autres commandes"]')))
+                        wait_for_page(browser)
+                except TimeoutException:
+                    menu_btn = WebDriverWait(browser, wait_timeout).until(
+                        lambda driver: browser.find_element_by_xpath('//*[@title="更多命令"]'))
+                    wait_for_page(browser)
+                    print("Click Menu")
+                    WebDriverWait(browser, wait_timeout).until(
+                        ec.visibility_of_element_located((By.XPATH, '//*[@title="更多命令"]')))
+                    wait_for_page(browser)
+                menu_btn.click()
+                # endregion
+
+                # region Clicking MAR button
+                print("[-] Clicking Mark as Read Button")  # TODO-CVC
+                mar_btn = WebDriverWait(browser, wait_timeout).until(
+                    lambda driver: browser.find_element_by_id('MarkAsRead'))
+                wait_for_page(browser)
+                WebDriverWait(browser, wait_timeout).until(
+                    ec.visibility_of_element_located((By.ID, 'MarkAsRead')))
+                mar_btn.click()
+                try:
+                    WebDriverWait(browser, wait_timeout).until(
+                        ec.visibility_of_element_located((By.CSS_SELECTOR, 'div.c_h_flyingDots')))
+                    WebDriverWait(browser, wait_timeout).until(
+                        ec.invisibility_of_element_located((By.CSS_SELECTOR, 'div.c_h_flyingDots')))
+                except TimeoutException:
+                    pass
+                print("Done !")
+                # endregion
+
+                # region Checking if it was the last page
+                try:
+                    browser.find_element_by_id("NoMsgs")
+                    still_results = False
+                    print("[!] Last page !")
+                except NoSuchElementException:
+                    still_results = True
+                    # endregion
+
+            except StaleElementReferenceException:
+                pass
+            except TimeoutException:
+                print("/!\ (Error) Timed Out")
+                continue
+            except Exception as ex:
+                print("/!\ (Error) Mark SPAM as read")
+                print(type(ex))
+                break
+        # endregion
+
+        print("[!] Done marking INBOX as read\n")
+    # endregion
+
+    # region Flag mail
+    if ('FM' in actions) and ('AC' not in actions) and ('CL' not in actions):
+
+        # region Controllers Settings
+        print("[+] Flag INBOX Actions")
+        print("[-] Getting result for Subject: %s" % keyword)
+        wait_for_page(browser)
+
+        keyword_link_flag = str(browser.current_url)[:str(browser.current_url).index(
+            '.com')] + '.com/?fid=flsearch&srch=1&skws=' + keyword + '&sdr=4&satt=0'
+        browser.get(keyword_link_flag)
+        wait_for_page(browser)
+
+        try:
+            browser.find_element_by_id("NoMsgs")
+            last_page_checked_flag = True
+        except NoSuchElementException:
+            wait_for_page(browser)
+            next_page_disabled_flag = WebDriverWait(browser, wait_timeout).until(
+                lambda driver: browser.find_element_by_css_selector('div.NextPageDisabled'))
+            last_page_flag = next_page_disabled_flag.is_displayed()
+            last_page_checked_flag = False
+        # endregion
+
+        # region Looping through pages
+        while not last_page_checked_flag:
+            try:
+
+                # region Selecting alls messages
+                print("[-] Flaging Mails for this Page !")
+                wait_for_page(browser)
+                messages_ul = WebDriverWait(browser, wait_timeout).until(
+                    lambda driver: browser.find_element_by_css_selector('ul.mailList'))
+                wait_for_page(browser)
+                messages = messages_ul.find_elements_by_tag_name('li')
+                # endregion
+
+                # region Clicking through messages
+                for i in range(len(messages)):
+                    try:
+                        flag = messages[i].find_element_by_css_selector('img.ia_i_p_1')
+                        wait_for_page(browser)
+                        flag.click()  # TODO-CVC Count this
+                        wait_for_page(browser)
+                        time.sleep(1)
+                        print("[-] E-mail flagged")
+                    except NoSuchElementException:
+                        pass
+                # endregion
+
+                # region Checking if it was the last page
+                last_page_checked_flag = last_page_flag if last_page_flag else False
+                next_page_link = WebDriverWait(browser, wait_timeout).until(
+                    lambda driver: browser.find_element_by_id('nextPageLink'))
+                if next_page_link.is_displayed():
+                    wait_for_page(browser)
+                    next_page_link.click()
+                    wait_for_page(browser)
+                    print("[!] Accessing Next Page")
+                    try:
+                        WebDriverWait(browser, wait_timeout).until(
+                            ec.visibility_of_element_located((By.CSS_SELECTOR, 'div.c_h_flyingDots')))
+                        WebDriverWait(browser, wait_timeout).until(
+                            ec.invisibility_of_element_located((By.CSS_SELECTOR, 'div.c_h_flyingDots')))
+                    except TimeoutException:
+                        pass
+                next_page_disabled_flag = browser.find_element_by_css_selector('div.NextPageDisabled')
+                last_page_flag = next_page_disabled_flag.is_displayed()
+                print("Last page : %s" % last_page_flag)
+                # endregion
+
+            except StaleElementReferenceException:
+                pass
+            except TimeoutException:
+                print("/!\ (Error) Timed Out")
+                break
+            except Exception as ex:
+                print("/!\ (Error) Flag INBOX  Error")
+                print(type(ex))
+                break
+        # endregion
+
+        print("[!] Done Flaging Mails\n")
+    # endregion
+
+    # region Add Contact  / Click Links / Flag Mail
+    if ('AC' in actions) or ('CL' in actions):
+
+        # region Controllers Settings
+        print("[+] Add Contact / Click Links / Flag Mail Actions: ")
+        print("[-] Open Mail per Mil for Actions !")
+        print("[-] Getting result for Subject : %s" % keyword)
+        wait_for_page(browser)
+
+        keyword_link_ac = WebDriverWait(browser, wait_timeout).until(lambda driver: str(browser.current_url)[
+                                                                                    :str(
+                                                                                        browser.current_url).index(
+                                                                                        '.com')] + '.com/?fid=flsearch&srch=1&skws=' + keyword + '&sdr=4&satt=0')
+        browser.get(keyword_link_ac)
+
+        try:
+            wait_for_page(browser)
+            browser.find_element_by_id("NoMsgs")
+            last_page_checked_ac = True
+            print("[!] INBOX folder is empty")
+            print("[!] Skipping Add Contact / Click Links / Flag Mail actions")
+        except NoSuchElementException:
+            wait_for_page(browser)
+            next_page_disabled_ac = WebDriverWait(browser, wait_timeout).until(
+                lambda driver: browser.find_element_by_css_selector('div.NextPageDisabled'))
+            last_page_ac = next_page_disabled_ac.is_displayed()
+            last_page_checked_ac = False
+        # endregion
+
+        # region Accessing first mail!
+        if not last_page_checked_ac:
+            wait_for_page(browser)
+            print("Getting Email List Group !")
+            WebDriverWait(browser, wait_timeout).until(
+                ec.visibility_of_element_located((By.CSS_SELECTOR, 'ul.mailList')))
+            email_list = WebDriverWait(browser, wait_timeout).until(
+                lambda driver: browser.find_element_by_css_selector('ul.mailList'))
+            print("Getting All Emails from Group")
+            wait_for_page(browser)
+            emails = email_list.find_elements_by_tag_name('li')
+            print("Clicking the First Email")
+            wait_for_page(browser)
+            time.sleep(1)
+            emails[0].click()
+            WebDriverWait(browser, wait_timeout).until(
+                ec.presence_of_element_located((By.CSS_SELECTOR, 'div.ReadMsgContainer')))
+            wait_for_page(browser)
+        # endregion
+
+        # region Looping through mails
+        while not last_page_checked_ac:
+            try:
+
+                # region Flag Mail
+                if 'FM' in actions:
+                    try:
+                        print("Flag Mail Action :")
+                        print("Getting Flag Mail")
+                        wait_for_page(browser)
+                        message_header = WebDriverWait(browser, wait_timeout).until(
+                            lambda driver: browser.find_elements_by_css_selector('div.MessageHeaderItem'))
+                        wait_for_page(browser)
+                        flag = message_header[3].find_element_by_css_selector('img.ia_i_p_1')
+                        print("Clicking Flag !")
+                        flag.click()
+                        time.sleep(1)
+                        wait_for_page(browser)
+                        print("[-] E-mail Flagged !")  # TODO-CVC To count
+                    except NoSuchElementException:
+                        print("[!] Email already Flagged !")
+                        pass
+                    except Exception as ex:
+                        print("/!\ (Error) Flag mail !")
+                        print(type(ex))
+                # endregion
+
+                # region Trust email Content
+                try:
+                    print("Trust Email Content")
+                    safe_btn = browser.find_element_by_css_selector('a.sfMarkAsSafe')
+                    wait_for_page(browser)
+                    safe_btn.click()
+                    print("[-] E-mail content trusted !")
+                    wait_for_page(browser)
+                    WebDriverWait(browser, wait_timeout).until(
+                        ec.invisibility_of_element_located((By.CSS_SELECTOR, 'a.sfMarkAsSafe')))
+                except NoSuchElementException:
+                    print("Email Content is Safe")
+                    pass
+                except Exception as ex:
+                    print("/!\ (Error) Trust Email Error !")
+                    print(type(ex))
+                # endregion
+
+                # region Add Contact
+                if 'AC' in actions:
+                    print("Add to Contact Action :")
+                    try:
+                        wait_for_page(browser)
+                        print("Getting 'Add to Contact' Link")
+                        add_contact_link = browser.find_element_by_css_selector('a.AddContact')
+                        print("Clicking 'Add to Contact' Link")
+                        wait_for_page(browser)
+
+                        if (str(add_contact_link.text) == "Add to contacts") or (
+                                    str(add_contact_link.text) == "Ajouter aux contacts") or (
+                                    str(add_contact_link.text) == "添加至联系人"):
+                            add_contact_link.click()
+                            print("[-] From-Email added to contacts")
+                            wait_for_page(browser)
+                            try:
+                                WebDriverWait(browser, wait_timeout).until(
+                                    ec.visibility_of_element_located((By.CSS_SELECTOR, 'div.c_h_flyingDots')))
+                                WebDriverWait(browser, wait_timeout).until(
+                                    ec.invisibility_of_element_located((By.CSS_SELECTOR, 'div.c_h_flyingDots')))
+                            except TimeoutException:
+                                pass
+                    except NoSuchElementException:
+                        print("Link Not Found !")
+                        print('[!] Contact Already Exist')
+                        pass
+                    except Exception as ex:
+                        print("/!\ (Error) Add Contact")
+                        print(type(ex))
+                # endregion
+
+                # region Click Links
+                if 'CL' in actions:
+                    wait_for_page(browser)
+                    print("Clicking the Link Action :")
+                    print("Getting the Mail 'Body'")
+                    body1 = WebDriverWait(browser, wait_timeout).until(
+                        lambda driver: browser.find_element_by_css_selector('div.readMsgBody'))
+                    body = body1.find_elements_by_tag_name('div')
+                    try:
+                        print("Getting the Link in the Mail !")
+                        lnk = body[0].find_elements_by_tag_name('a')[1]
+                    except Exception as ex:
+                        print("[!] Link Not Found")
+                        lnk = None
+                        print(type(ex))
+                    wait_for_page(browser)
+                    if lnk is not None:
+                        try:
+                            print("link is Found : %s" % lnk.get_attribute('href'))
+                            wait_for_page(browser)
+                            print("Clicking the Link")
+                            lnk.click()
+                            print("[-] Link clicked ! ==> (%s)" % lnk.get_attribute('href'))
+                            WebDriverWait(browser, wait_timeout).until(
+                                lambda driver: len(browser.window_handles) > 1)
+                            print("New Tab Opened !")
+                            wait_for_page(browser)
+                            print("Switching to the new Tab !")
+                            browser.switch_to.window(browser.window_handles[1])
+                            wait_for_page(browser)
+                            print("Link Loaded")
+                            print("Closing !")
+                            browser.close()
+                            wait_for_page(browser)
+                            print("Going Back to Hotmail !")
+                            browser.switch_to.window(browser.window_handles[0])
+                            wait_for_page(browser)
+                        except NoSuchWindowException:
+                            pass
+                        except Exception as ex:
+                            print("/!\ (Error) Switching to new Tab")
+                            print(type(ex))
+                # endregion
+
+                # region Checking if it was the last page
+                last_page_checked_ac = last_page_ac if last_page_ac else False
+                next_btn = WebDriverWait(browser, wait_timeout).until(
+                    lambda driver: browser.find_element_by_css_selector('a.rmNext'))
+                wait_for_page(browser)
+                next_btn_img = next_btn.find_element_by_tag_name('img')
+                wait_for_page(browser)
+                next_btn_attributes = next_btn_img.get_attribute('class')
+                wait_for_page(browser)
+                if str(next_btn_attributes).endswith('_d'):
+                    last_page_ac = True
+                    print("[!] Last page")
+                else:
+                    last_page_ac = False
+                wait_for_page(browser)
+                if not last_page_ac:
+                    print("[!] Getting next e-mail ...")
+                    bod = WebDriverWait(browser, wait_timeout).until(
+                        lambda driver: browser.find_elements_by_tag_name('body'))
+                    wait_for_page(browser)
+                    bod[0].send_keys(Keys.CONTROL + ".")
+                    wait_for_page(browser)
+                time.sleep(1)
+                # endregion
+
+            except StaleElementReferenceException:
+                pass
+            except TimeoutException:
+                print("/!\ -(Error) Add Contact / Click Links / Flag Mail Timed Out")
+                break
+            except Exception as ex:
+                print("/!\ (Error) Add Contact and/or Click Links Error !")
+                print(type(ex))
+                break
+        # endregion
+        print("[!] Done Add Contact / Click Links / Flag Mail\n")
+    # endregion
+    # endregion
+    pass
 
 # endregion
 
 
+# region New Version
+
 # region MailBox Functions
-def mark_as_read_new(browser):
-    pass  # TODO-CVC
-
-
 def filter_unread_new(browser):
     print("[-] Getting filter button")
     filter_btn = WebDriverWait(browser, wait_timeout).until(lambda driver: browser.find_element_by_xpath(
@@ -673,752 +1383,9 @@ def safe_spam_new(browser, spam_link, inbox_link):
             print(type(ex))
             raise
 
-
 # endregion
 
 
-# region Old Version
-def report_old_version(browser, actions):
-    # region Spam Actions
-
-    # region Mark Spam as read
-    if ('RS' in actions) and ('SS' not in actions):  #
-
-        # region Controllers Settings
-        print("[+] Read SPAM Actions")
-        wait_for_page(browser)
-        try:
-            wait_for_page(browser)
-            spam_link = str(browser.current_url)[:str(browser.current_url).index('.com')] + '.com/?fid=fljunk'
-            print("[-] Accessink SPAM folder : %s" % spam_link)
-            browser.get(spam_link)
-            wait_for_page(browser)
-        except Exception as ex:
-            print("/!\ (Error) Accessink SPAM folder ")
-            print(type(ex))
-
-        try:
-            wait_for_page(browser)
-            browser.find_element_by_id("NoMsgs")
-            last_page_checked = True
-            print("[!] SPAM folder is empty, Skipping read SPAM actions!")
-        except NoSuchElementException:
-            wait_for_page(browser)
-            next_page_disabled = WebDriverWait(browser, wait_timeout).until(
-                lambda driver: browser.find_element_by_css_selector('div.NextPageDisabled'))
-            last_page = next_page_disabled.is_displayed()
-            last_page_checked = False
-        # endregion
-
-        # region looping through pages
-        while not last_page_checked:
-            try:
-
-                # region Selecting alls messages
-                print("[-] Marking SPAM as read for this page")
-                wait_for_page(browser)
-                WebDriverWait(browser, wait_timeout).until(
-                    ec.visibility_of_element_located((By.CSS_SELECTOR, 'li.FilterSelector')))
-                print("Getting All Msgs checkbox")
-                wait_for_page(browser)
-                chk_bx_bttn = WebDriverWait(browser, wait_timeout).until(
-                    lambda driver: browser.find_element_by_id('msgChkAll'))
-                wait_for_page(browser)
-                print("Select all Msgs")
-                chk_bx_bttn.click()
-                wait_for_page(browser)
-                print("CheckBox is clicked !")
-                # endregion
-
-                # region Clicking menu
-                print("Getting Menu Button")
-
-                try:
-                    if email_language == "English":
-                        menu_btn = WebDriverWait(browser, wait_timeout).until(
-                            lambda driver: browser.find_element_by_xpath('//*[@title="More commands"]'))
-                        wait_for_page(browser)
-                        print("Click Menu")
-                        WebDriverWait(browser, wait_timeout).until(
-                            ec.visibility_of_element_located((By.XPATH, '//*[@title="More commands"]')))
-                        wait_for_page(browser)
-                    else:
-                        menu_btn = WebDriverWait(browser, wait_timeout).until(
-                            lambda driver: browser.find_element_by_xpath('//*[@title=" Autres commandes"]'))
-                        wait_for_page(browser)
-                        print("Click Menu")
-                        WebDriverWait(browser, wait_timeout).until(
-                            ec.visibility_of_element_located((By.XPATH, '//*[@title=" Autres commandes"]')))
-                        wait_for_page(browser)
-                except TimeoutException:
-                    menu_btn = WebDriverWait(browser, wait_timeout).until(
-                        lambda driver: browser.find_element_by_xpath('//*[@title="更多命令"]'))
-                    wait_for_page(browser)
-                    print("Click Menu")
-                    WebDriverWait(browser, wait_timeout).until(
-                        ec.visibility_of_element_located((By.XPATH, '//*[@title="更多命令"]')))
-                    wait_for_page(browser)
-
-                menu_btn.click()
-                WebDriverWait(browser, wait_timeout).until(
-                    ec.visibility_of_element_located((By.ID, 'MarkAsRead')))
-                # endregion
-
-                # region Clicking MAR button
-                print("+ Clicking Mark as Read Button")  # TODO-CVC Counter
-                mar_btn = WebDriverWait(browser, wait_timeout).until(
-                    lambda driver: browser.find_element_by_id('MarkAsRead'))
-                wait_for_page(browser)
-                mar_btn.click()
-                try:
-                    WebDriverWait(browser, wait_timeout).until(
-                        ec.visibility_of_element_located((By.CSS_SELECTOR, 'div.c_h_flyingDots')))
-                    WebDriverWait(browser, wait_timeout).until(
-                        ec.invisibility_of_element_located((By.CSS_SELECTOR, 'div.c_h_flyingDots')))
-                except TimeoutException:
-                    pass
-                print("Done !")
-                # endregion
-
-                # region Checking if it was the last page
-                last_page_checked = last_page if last_page else False
-                next_page_link = WebDriverWait(browser, wait_timeout).until(
-                    lambda driver: browser.find_element_by_id('nextPageLink'))
-                if next_page_link.is_displayed():
-                    print("Accessing Next Page")
-                    wait_for_page(browser)
-                    next_page_link.click()
-                    wait_for_page(browser)
-                    WebDriverWait(browser, wait_timeout).until(
-                        ec.invisibility_of_element_located((By.CSS_SELECTOR, 'div.SelPrompt')))
-                next_page_disabled = browser.find_element_by_css_selector('div.NextPageDisabled')
-                last_page = next_page_disabled.is_displayed()
-                # endregion
-
-            except StaleElementReferenceException:
-                pass
-            except TimeoutException:
-                print("/!\ (Error) Timed Out")
-            except Exception as ex:
-                print("/!\ (Error) Mark SPAM as read")
-                print(type(ex))
-                break
-        # endregion
-
-        print("[!] Done marking SPAM as read\n")
-
-    # endregion
-
-    # region Mark as Not SPAM
-    if ('NS' in actions) and ('SS' not in actions):  # Not SPAM
-
-        # region Controllers Settings
-        print("[+] Mark as Not SPAM Actions")
-        wait_for_page(browser)
-
-        try:
-            wait_for_page(browser)
-            spam_link = str(browser.current_url)[:str(browser.current_url).index('.com')] + '.com/?fid=fljunk'
-            browser.get(spam_link)
-            wait_for_page(browser)
-        except Exception as ex:
-            print("/!\ (Error) Accessink SPAM folder ")
-            print(type(ex))
-
-        try:
-            browser.find_element_by_id("NoMsgs")
-            still_results = False
-        except NoSuchElementException:
-            still_results = True
-        # endregion
-
-        # region looping through pages
-        while still_results:
-            try:
-
-                # region Selecting alls messages
-                print("[-] Marking as not SPAM for this page")
-                wait_for_page(browser)
-                WebDriverWait(browser, wait_timeout).until(
-                    ec.visibility_of_element_located((By.CSS_SELECTOR, 'li.FilterSelector')))
-                print("Getting All Msgs checkbox")
-                wait_for_page(browser)
-                chk_bx_bttn = WebDriverWait(browser, wait_timeout).until(
-                    lambda driver: browser.find_element_by_id('msgChkAll'))
-                wait_for_page(browser)
-                print("Select all Msgs")
-                chk_bx_bttn.click()
-                wait_for_page(browser)
-                print("CheckBox is clicked !")
-                # endregion
-
-                # region Clicking MANS button
-                WebDriverWait(browser, wait_timeout).until(
-                    ec.visibility_of_element_located((By.ID, 'MarkAsNotJunk')))
-                wait_for_page(browser)
-                not_spam_btn = WebDriverWait(browser, wait_timeout).until(
-                    lambda driver: browser.find_element_by_id('MarkAsNotJunk'))
-                wait_for_page(browser)
-                not_spam_btn.click()
-                print("[!] 'Not Spam' Button Clicked !")
-                try:
-                    WebDriverWait(browser, wait_timeout).until(
-                        ec.visibility_of_element_located((By.CSS_SELECTOR, 'div.c_h_flyingDots')))
-                    WebDriverWait(browser, wait_timeout).until(
-                        ec.invisibility_of_element_located((By.CSS_SELECTOR, 'div.c_h_flyingDots')))
-                except TimeoutException:
-                    pass
-                # endregion
-
-                # region Checking if it was the last page
-                try:
-                    browser.find_element_by_id("NoMsgs")
-                    still_results = False
-                    print("[!] Last page !")
-                except NoSuchElementException:
-                    still_results = True
-                    # endregion
-
-            except StaleElementReferenceException:
-                pass
-            except TimeoutException:
-                print("/!\ (Error) Timed Out")
-            except Exception as ex:
-                print("/!\ (Error) Mark as not SPAM")
-                print(type(ex))
-                break
-        # endregion
-
-        print("[!] Done marking e-mails as not spam\n")
-    # endregion
-
-    # region Mark SPAM as SAFE
-    if 'SS' in actions:
-
-        # region Controllers Settings
-        print("[+] Mark SPAM as safe actions :")
-        wait_for_page(browser)
-        print("[-] Getting SPAM Folder")
-
-        try:
-            wait_for_page(browser)
-            spam_link = str(browser.current_url)[:str(browser.current_url).index('.com')] + '.com/?fid=fljunk'
-            print("Accessink SPAM folder : %s" % spam_link)
-            browser.get(spam_link)
-            wait_for_page(browser)
-        except Exception as ex:
-            print("/!\ (ERROR) Accessink SPAM folder")
-            print(type(ex))
-
-        try:
-            browser.find_element_by_id("NoMsgs")
-            still_results = False
-        except NoSuchElementException:
-            still_results = True
-        # endregion
-
-        # region looping through mails
-        while still_results:
-            try:
-
-                # region Accessing first mail
-                wait_for_page(browser)
-                print("Getting Email List Group !")
-                WebDriverWait(browser, wait_timeout).until(
-                    ec.visibility_of_element_located((By.CSS_SELECTOR, 'ul.mailList')))
-                email_list = WebDriverWait(browser, wait_timeout).until(
-                    lambda driver: browser.find_element_by_css_selector('ul.mailList'))
-                print("Getting All Emails from Group")
-                wait_for_page(browser)
-                emails = email_list.find_elements_by_tag_name('li')
-                print("[-] Clicking the first e-mail")
-                wait_for_page(browser)
-                emails[0].click()
-                WebDriverWait(browser, wait_timeout).until(
-                    ec.presence_of_element_located((By.CSS_SELECTOR, 'div.ReadMsgContainer')))
-                wait_for_page(browser)
-                # endregion
-
-                # region Clicking SS button
-                wait_for_page(browser)
-                WebDriverWait(browser, wait_timeout).until(
-                    ec.visibility_of_element_located((By.CSS_SELECTOR, 'a.sfUnjunkItems')))
-                safe_link = WebDriverWait(browser, wait_timeout).until(
-                    lambda driver: browser.find_element_by_css_selector('a.sfUnjunkItems'))
-                wait_for_page(browser)
-                safe_link.click()
-                print("[-] E-mail marked as Safe")  # TODO-CVC
-                try:
-                    WebDriverWait(browser, wait_timeout).until(
-                        ec.invisibility_of_element_located((By.CSS_SELECTOR, 'a.sfUnjunkItems')))
-                except TimeoutException:
-                    pass
-                wait_for_page(browser)
-                # endregion
-
-                # region Checking if it was the last page
-                try:
-                    browser.find_element_by_id("NoMsgs")
-                    still_results = False
-                    print("[!] Last page !")
-                except NoSuchElementException:
-                    still_results = True
-                    # endregion
-
-            except StaleElementReferenceException:
-                pass
-            except TimeoutException:
-                print("/!\ (Error) Timed Out")
-                # region Clicking MANS button
-                WebDriverWait(browser, wait_timeout).until(
-                    ec.visibility_of_element_located((By.ID, 'MarkAsNotJunk')))
-                wait_for_page(browser)
-                not_spam_btn = WebDriverWait(browser, wait_timeout).until(
-                    lambda driver: browser.find_element_by_id('MarkAsNotJunk'))
-                wait_for_page(browser)
-                not_spam_btn.click()
-                print("[!] 'Not Spam' Button Clicked !")
-                try:
-                    WebDriverWait(browser, wait_timeout).until(
-                        ec.visibility_of_element_located((By.CSS_SELECTOR, 'div.c_h_flyingDots')))
-                    WebDriverWait(browser, wait_timeout).until(
-                        ec.invisibility_of_element_located((By.CSS_SELECTOR, 'div.c_h_flyingDots')))
-                except TimeoutException:
-                    pass
-                # region Checking if it was the last page
-                try:
-                    browser.find_element_by_id("NoMsgs")
-                    still_results = False
-                    print("[!] Last page !")
-                except NoSuchElementException:
-                    still_results = True
-                    # endregion
-                    # endregion
-            except Exception as ex:
-                print("/!\ (Error) Mark SPAM as safe!")
-                print(type(ex))
-                break
-        # endregion
-
-        print("[!] Done marking SPAM as safe\n")
-    # endregion
-
-    # endregion
-
-    # region Inbox Actions
-
-    # region Mark inbox as Read
-    if ('RI' in actions) and ('CL' not in actions) and ('AC' not in actions):
-
-        # region Controllers Settings
-        print("[+] Mark INBOX as read Actions")
-        print("[-] Getting unread messages for Subject: %s" % keyword)
-        wait_for_page(browser)
-
-        keyword_link = str(browser.current_url)[:str(browser.current_url).index(
-            '.com')] + '.com/?fid=flsearch&srch=1&skws=' + keyword + '&scat=1&sdr=4&satt=0'
-        browser.get(keyword_link)
-        wait_for_page(browser)
-
-        try:
-            browser.find_element_by_id("NoMsgs")
-            still_results = False
-        except NoSuchElementException:
-            still_results = True
-        # endregion
-
-        # region Looping through messages
-        while still_results:
-            try:
-
-                # region Selecting alls messages
-                print("[-] Marking INBOX as read for this page")
-                wait_for_page(browser)
-                WebDriverWait(browser, wait_timeout).until(
-                    ec.visibility_of_element_located((By.CSS_SELECTOR, 'li.FilterSelector')))
-                print("Getting All Msgs checkbox")
-                wait_for_page(browser)
-                chk_bx_bttn = WebDriverWait(browser, wait_timeout).until(
-                    lambda driver: browser.find_element_by_id('msgChkAll'))
-                wait_for_page(browser)
-                print("Select all Msgs")
-                chk_bx_bttn.click()
-                wait_for_page(browser)
-                print("CheckBox is clicked !")
-                # endregion
-
-                # region Clicking menu
-                try:
-                    if email_language == "English":
-                        menu_btn = WebDriverWait(browser, wait_timeout).until(
-                            lambda driver: browser.find_element_by_xpath('//*[@title="More commands"]'))
-                        wait_for_page(browser)
-                        print("Click Menu")
-                        WebDriverWait(browser, wait_timeout).until(
-                            ec.visibility_of_element_located((By.XPATH, '//*[@title="More commands"]')))
-                        wait_for_page(browser)
-                    else:
-                        menu_btn = WebDriverWait(browser, wait_timeout).until(
-                            lambda driver: browser.find_element_by_xpath('//*[@title=" Autres commandes"]'))
-                        wait_for_page(browser)
-                        print("Click Menu")
-                        WebDriverWait(browser, wait_timeout).until(
-                            ec.visibility_of_element_located((By.XPATH, '//*[@title=" Autres commandes"]')))
-                        wait_for_page(browser)
-                except TimeoutException:
-                    menu_btn = WebDriverWait(browser, wait_timeout).until(
-                        lambda driver: browser.find_element_by_xpath('//*[@title="更多命令"]'))
-                    wait_for_page(browser)
-                    print("Click Menu")
-                    WebDriverWait(browser, wait_timeout).until(
-                        ec.visibility_of_element_located((By.XPATH, '//*[@title="更多命令"]')))
-                    wait_for_page(browser)
-                menu_btn.click()
-                # endregion
-
-                # region Clicking MAR button
-                print("[-] Clicking Mark as Read Button")  # TODO-CVC
-                mar_btn = WebDriverWait(browser, wait_timeout).until(
-                    lambda driver: browser.find_element_by_id('MarkAsRead'))
-                wait_for_page(browser)
-                WebDriverWait(browser, wait_timeout).until(
-                    ec.visibility_of_element_located((By.ID, 'MarkAsRead')))
-                mar_btn.click()
-                try:
-                    WebDriverWait(browser, wait_timeout).until(
-                        ec.visibility_of_element_located((By.CSS_SELECTOR, 'div.c_h_flyingDots')))
-                    WebDriverWait(browser, wait_timeout).until(
-                        ec.invisibility_of_element_located((By.CSS_SELECTOR, 'div.c_h_flyingDots')))
-                except TimeoutException:
-                    pass
-                print("Done !")
-                # endregion
-
-                # region Checking if it was the last page
-                try:
-                    browser.find_element_by_id("NoMsgs")
-                    still_results = False
-                    print("[!] Last page !")
-                except NoSuchElementException:
-                    still_results = True
-                    # endregion
-
-            except StaleElementReferenceException:
-                pass
-            except TimeoutException:
-                print("/!\ (Error) Timed Out")
-                continue
-            except Exception as ex:
-                print("/!\ (Error) Mark SPAM as read")
-                print(type(ex))
-                break
-        # endregion
-
-        print("[!] Done marking INBOX as read\n")
-    # endregion
-
-    # region Flag mail
-    if ('FM' in actions) and ('AC' not in actions) and ('CL' not in actions):
-
-        # region Controllers Settings
-        print("[+] Flag INBOX Actions")
-        print("[-] Getting result for Subject: %s" % keyword)
-        wait_for_page(browser)
-
-        keyword_link_flag = str(browser.current_url)[:str(browser.current_url).index(
-            '.com')] + '.com/?fid=flsearch&srch=1&skws=' + keyword + '&sdr=4&satt=0'
-        browser.get(keyword_link_flag)
-        wait_for_page(browser)
-
-        try:
-            browser.find_element_by_id("NoMsgs")
-            last_page_checked_flag = True
-        except NoSuchElementException:
-            wait_for_page(browser)
-            next_page_disabled_flag = WebDriverWait(browser, wait_timeout).until(
-                lambda driver: browser.find_element_by_css_selector('div.NextPageDisabled'))
-            last_page_flag = next_page_disabled_flag.is_displayed()
-            last_page_checked_flag = False
-        # endregion
-
-        # region Looping through pages
-        while not last_page_checked_flag:
-            try:
-
-                # region Selecting alls messages
-                print("[-] Flaging Mails for this Page !")
-                wait_for_page(browser)
-                messages_ul = WebDriverWait(browser, wait_timeout).until(
-                    lambda driver: browser.find_element_by_css_selector('ul.mailList'))
-                wait_for_page(browser)
-                messages = messages_ul.find_elements_by_tag_name('li')
-                # endregion
-
-                # region Clicking through messages
-                for i in range(len(messages)):
-                    try:
-                        flag = messages[i].find_element_by_css_selector('img.ia_i_p_1')
-                        wait_for_page(browser)
-                        flag.click()  # TODO-CVC Count this
-                        wait_for_page(browser)
-                        time.sleep(1)
-                        print("[-] E-mail flagged")
-                    except NoSuchElementException:
-                        pass
-                # endregion
-
-                # region Checking if it was the last page
-                last_page_checked_flag = last_page_flag if last_page_flag else False
-                next_page_link = WebDriverWait(browser, wait_timeout).until(
-                    lambda driver: browser.find_element_by_id('nextPageLink'))
-                if next_page_link.is_displayed():
-                    wait_for_page(browser)
-                    next_page_link.click()
-                    wait_for_page(browser)
-                    print("[!] Accessing Next Page")
-                    try:
-                        WebDriverWait(browser, wait_timeout).until(
-                            ec.visibility_of_element_located((By.CSS_SELECTOR, 'div.c_h_flyingDots')))
-                        WebDriverWait(browser, wait_timeout).until(
-                            ec.invisibility_of_element_located((By.CSS_SELECTOR, 'div.c_h_flyingDots')))
-                    except TimeoutException:
-                        pass
-                next_page_disabled_flag = browser.find_element_by_css_selector('div.NextPageDisabled')
-                last_page_flag = next_page_disabled_flag.is_displayed()
-                print("Last page : %s" % last_page_flag)
-                # endregion
-
-            except StaleElementReferenceException:
-                pass
-            except TimeoutException:
-                print("/!\ (Error) Timed Out")
-                break
-            except Exception as ex:
-                print("/!\ (Error) Flag INBOX  Error")
-                print(type(ex))
-                break
-        # endregion
-
-        print("[!] Done Flaging Mails\n")
-    # endregion
-
-    # region Add Contact  / Click Links / Flag Mail
-    if ('AC' in actions) or ('CL' in actions):
-
-        # region Controllers Settings
-        print("[+] Add Contact / Click Links / Flag Mail Actions: ")
-        print("[-] Open Mail per Mil for Actions !")
-        print("[-] Getting result for Subject : %s" % keyword)
-        wait_for_page(browser)
-
-        keyword_link_ac = WebDriverWait(browser, wait_timeout).until(lambda driver: str(browser.current_url)[
-                                                                                    :str(
-                                                                                        browser.current_url).index(
-                                                                                        '.com')] + '.com/?fid=flsearch&srch=1&skws=' + keyword + '&sdr=4&satt=0')
-        browser.get(keyword_link_ac)
-
-        try:
-            wait_for_page(browser)
-            browser.find_element_by_id("NoMsgs")
-            last_page_checked_ac = True
-            print("[!] INBOX folder is empty")
-            print("[!] Skipping Add Contact / Click Links / Flag Mail actions")
-        except NoSuchElementException:
-            wait_for_page(browser)
-            next_page_disabled_ac = WebDriverWait(browser, wait_timeout).until(
-                lambda driver: browser.find_element_by_css_selector('div.NextPageDisabled'))
-            last_page_ac = next_page_disabled_ac.is_displayed()
-            last_page_checked_ac = False
-        # endregion
-
-        # region Accessing first mail!
-        if not last_page_checked_ac:
-            wait_for_page(browser)
-            print("Getting Email List Group !")
-            WebDriverWait(browser, wait_timeout).until(
-                ec.visibility_of_element_located((By.CSS_SELECTOR, 'ul.mailList')))
-            email_list = WebDriverWait(browser, wait_timeout).until(
-                lambda driver: browser.find_element_by_css_selector('ul.mailList'))
-            print("Getting All Emails from Group")
-            wait_for_page(browser)
-            emails = email_list.find_elements_by_tag_name('li')
-            print("Clicking the First Email")
-            wait_for_page(browser)
-            time.sleep(1)
-            emails[0].click()
-            WebDriverWait(browser, wait_timeout).until(
-                ec.presence_of_element_located((By.CSS_SELECTOR, 'div.ReadMsgContainer')))
-            wait_for_page(browser)
-        # endregion
-
-        # region Looping through mails
-        while not last_page_checked_ac:
-            try:
-
-                # region Flag Mail
-                if 'FM' in actions:
-                    try:
-                        print("Flag Mail Action :")
-                        print("Getting Flag Mail")
-                        wait_for_page(browser)
-                        message_header = WebDriverWait(browser, wait_timeout).until(
-                            lambda driver: browser.find_elements_by_css_selector('div.MessageHeaderItem'))
-                        wait_for_page(browser)
-                        flag = message_header[3].find_element_by_css_selector('img.ia_i_p_1')
-                        print("Clicking Flag !")
-                        flag.click()
-                        time.sleep(1)
-                        wait_for_page(browser)
-                        print("[-] E-mail Flagged !")  # TODO-CVC To count
-                    except NoSuchElementException:
-                        print("[!] Email already Flagged !")
-                        pass
-                    except Exception as ex:
-                        print("/!\ (Error) Flag mail !")
-                        print(type(ex))
-                # endregion
-
-                # region Trust email Content
-                try:
-                    print("Trust Email Content")
-                    safe_btn = browser.find_element_by_css_selector('a.sfMarkAsSafe')
-                    wait_for_page(browser)
-                    safe_btn.click()
-                    print("[-] E-mail content trusted !")
-                    wait_for_page(browser)
-                    WebDriverWait(browser, wait_timeout).until(
-                        ec.invisibility_of_element_located((By.CSS_SELECTOR, 'a.sfMarkAsSafe')))
-                except NoSuchElementException:
-                    print("Email Content is Safe")
-                    pass
-                except Exception as ex:
-                    print("/!\ (Error) Trust Email Error !")
-                    print(type(ex))
-                # endregion
-
-                # region Add Contact
-                if 'AC' in actions:
-                    print("Add to Contact Action :")
-                    try:
-                        wait_for_page(browser)
-                        print("Getting 'Add to Contact' Link")
-                        add_contact_link = browser.find_element_by_css_selector('a.AddContact')
-                        print("Clicking 'Add to Contact' Link")
-                        wait_for_page(browser)
-
-                        if (str(add_contact_link.text) == "Add to contacts") or (
-                                    str(add_contact_link.text) == "Ajouter aux contacts") or (
-                                    str(add_contact_link.text) == "添加至联系人"):
-                            add_contact_link.click()
-                            print("[-] From-Email added to contacts")
-                            wait_for_page(browser)
-                            try:
-                                WebDriverWait(browser, wait_timeout).until(
-                                    ec.visibility_of_element_located((By.CSS_SELECTOR, 'div.c_h_flyingDots')))
-                                WebDriverWait(browser, wait_timeout).until(
-                                    ec.invisibility_of_element_located((By.CSS_SELECTOR, 'div.c_h_flyingDots')))
-                            except TimeoutException:
-                                pass
-                    except NoSuchElementException:
-                        print("Link Not Found !")
-                        print('[!] Contact Already Exist')
-                        pass
-                    except Exception as ex:
-                        print("/!\ (Error) Add Contact")
-                        print(type(ex))
-                # endregion
-
-                # region Click Links
-                if 'CL' in actions:
-                    wait_for_page(browser)
-                    print("Clicking the Link Action :")
-                    print("Getting the Mail 'Body'")
-                    body1 = WebDriverWait(browser, wait_timeout).until(
-                        lambda driver: browser.find_element_by_css_selector('div.readMsgBody'))
-                    body = body1.find_elements_by_tag_name('div')
-                    try:
-                        print("Getting the Link in the Mail !")
-                        lnk = body[0].find_elements_by_tag_name('a')[1]
-                    except Exception as ex:
-                        print("[!] Link Not Found")
-                        lnk = None
-                        print(type(ex))
-                    wait_for_page(browser)
-                    if lnk is not None:
-                        try:
-                            print("link is Found : %s" % lnk.get_attribute('href'))
-                            wait_for_page(browser)
-                            print("Clicking the Link")
-                            lnk.click()
-                            print("[-] Link clicked ! ==> (%s)" % lnk.get_attribute('href'))
-                            WebDriverWait(browser, wait_timeout).until(
-                                lambda driver: len(browser.window_handles) > 1)
-                            print("New Tab Opened !")
-                            wait_for_page(browser)
-                            print("Switching to the new Tab !")
-                            browser.switch_to.window(browser.window_handles[1])
-                            wait_for_page(browser)
-                            print("Link Loaded")
-                            print("Closing !")
-                            browser.close()
-                            wait_for_page(browser)
-                            print("Going Back to Hotmail !")
-                            browser.switch_to.window(browser.window_handles[0])
-                            wait_for_page(browser)
-                        except NoSuchWindowException:
-                            pass
-                        except Exception as ex:
-                            print("/!\ (Error) Switching to new Tab")
-                            print(type(ex))
-                # endregion
-
-                # region Checking if it was the last page
-                last_page_checked_ac = last_page_ac if last_page_ac else False
-                next_btn = WebDriverWait(browser, wait_timeout).until(
-                    lambda driver: browser.find_element_by_css_selector('a.rmNext'))
-                wait_for_page(browser)
-                next_btn_img = next_btn.find_element_by_tag_name('img')
-                wait_for_page(browser)
-                next_btn_attributes = next_btn_img.get_attribute('class')
-                wait_for_page(browser)
-                if str(next_btn_attributes).endswith('_d'):
-                    last_page_ac = True
-                    print("[!] Last page")
-                else:
-                    last_page_ac = False
-                wait_for_page(browser)
-                if not last_page_ac:
-                    print("[!] Getting next e-mail ...")
-                    bod = WebDriverWait(browser, wait_timeout).until(
-                        lambda driver: browser.find_elements_by_tag_name('body'))
-                    wait_for_page(browser)
-                    bod[0].send_keys(Keys.CONTROL + ".")
-                    wait_for_page(browser)
-                time.sleep(1)
-                # endregion
-
-            except StaleElementReferenceException:
-                pass
-            except TimeoutException:
-                print("/!\ -(Error) Add Contact / Click Links / Flag Mail Timed Out")
-                break
-            except Exception as ex:
-                print("/!\ (Error) Add Contact and/or Click Links Error !")
-                print(type(ex))
-                break
-        # endregion
-
-        print("[!] Done Add Contact / Click Links / Flag Mail\n")
-    # endregion
-    # endregion
-
-    pass
-
-
-# endregion
-
-
-# region New Version
 def report_new_version(browser, actions, subject):
     spam_link = str(browser.current_url)[:str(browser.current_url).index('.com')] + '.com/owa/#path=/mail/junkemail'
     inbox_link = spam_link.replace("/junkemail", "/inbox")
@@ -1706,15 +1673,17 @@ def report_new_version(browser, actions, subject):
     # endregion
     pass
 
-
 # endregion
 
 
-@app.task(name='report_hotmail', bind=True)
+@app.task(name='report_hotmail', bind=True, max_retries=3, default_retry_delay=1)
 def report_hotmail(self, **kwargs):
     # region Settings
     actions = str(kwargs.get('actions', None)).split(',')
-    keyword = kwargs.get('subject', None)
+    subject = kwargs.get('subject', None)
+    global wait_timeout
+    wait_timeout = kwargs.get('wait_timeout', 15)
+    hide_browser = kwargs.get('hide_browser', False)
     mail_args = kwargs.get('email', None)
     mail = mail_args['login']
     pswd = mail_args['password']
@@ -1736,12 +1705,13 @@ def report_hotmail(self, **kwargs):
         chrome_options.add_argument('--no-startup-window')
         browser = webdriver.Chrome(executable_path="chromedriver")
     browser.maximize_window()
-    # browser.set_window_position(-2000, 0)
+    if hide_browser:
+        browser.set_window_position(-2000, 0)
     global link
     # endregion
 
     print("\n******\nStarting JOB for :\n*-Actions: %s\n*-Subject: %s\n*-Email: %s\n*-Password: %s\n*-Proxy: %s\n*-"
-          "Port: %s\n******\n" % (kwargs.get('actions', None), keyword, mail, pswd, proxy, port))
+          "Port: %s\n******\n" % (kwargs.get('actions', None), subject, mail, pswd, proxy, port))
 
     # try:
     print('[+] Opening Hotmail')
@@ -1767,9 +1737,9 @@ def report_hotmail(self, **kwargs):
     check_email_language(browser)
     print("[!] End checking email language")
 
-    if email_language == "old":
+    if version == "old":
         print("(###) Starting actions for OLD e-mail version\n")
-        report_old_version(browser, actions)
+        report_old_version(browser, actions, subject)
     else:
         print("(###) Starting actions for NEW e-mail version\n")
 
@@ -1778,17 +1748,9 @@ def report_hotmail(self, **kwargs):
         print("[+] End setting mailbox display")
 
         print("[+] Starting Actions")
-        report_new_version(browser, actions, keyword)
+        report_new_version(browser, actions, subject)
         print("[+] End Actions")
-    # except Exception as exc:
-    #     # region Exceptions
-    #     print("#*#*#*#*#*#*#*#*#*#*#*#*#*#*#*#*#*#*#*#*#*#*#*#*#*#*#*#*#*#*#*#*#*#*#*#*")
-    #     print("#*#*#*#*#*#*#*#*#*#*#*#*#*#*#*# !! OUPS !! #*#*#*#*#*#*#*#*#*#*#*#*#*#*#*#*")
-    #     print("#*#*#*#*#*#*#*#*#*#*#*#*#*#*#*#*#*#*#*#*#*#*#*#*#*#*#*#*#*#*#*#*#*#*#*#*")
-    #     print(type(exc))
-    #     browser.quit()
-    #     raise self.retry(exc=exc)
-    #     # endregion
+
     print("###************************************************************************###")
     print('        [!] [-] Finished Actions for %s [-] (!)' % mail)
     print("###************************************************************************###")
