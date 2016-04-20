@@ -24,3 +24,19 @@ io.sockets.on('connection', function(socket) {
    console.log(data);
   });
 });
+
+
+rabbitmqctl stop_app
+rabbitmqctl reset
+rabbitmqctl start_app
+
+sudo rabbitmqctl add_user cvcadmin ****
+
+sudo rabbitmqctl add_vhost cvcHost
+
+sudo rabbitmqctl set_user_tags cvcadmin administrator
+
+sudo rabbitmqctl set_permissions -p cvcHost cvcadmin ".*" ".*" ".*"
+
+sudo rabbitmq-plugins enable rabbitmq_management
+

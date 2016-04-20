@@ -127,9 +127,12 @@ def check_email_language(browser):
             elif folders_h1.text == "Dossiers":
                 email_language = "French"
                 print("[-] Language is 'French'")
+    except StaleElementReferenceException:
+        check_email_language(browser)
     except Exception as e:
-        print(type(e))
         print("/!\ (Error) Getting Mailbox Language !")
+        print(type(e))
+        raise
 
 
 def configure_mailbox(browser):
@@ -420,15 +423,15 @@ def report_old_version(browser, actions, keyword):
 
                 # region Accessing first mail
                 wait_for_page(browser)
-                print("Getting Email List Group !")
+                logger.debug("[-] Getting Email List Group !")
                 WebDriverWait(browser, wait_timeout).until(
                     ec.visibility_of_element_located((By.CSS_SELECTOR, 'ul.mailList')))
                 email_list = WebDriverWait(browser, wait_timeout).until(
                     lambda driver: browser.find_element_by_css_selector('ul.mailList'))
-                print("Getting All Emails from Group")
+                logger.debug("[-] Getting All Emails from Group")
                 wait_for_page(browser)
                 emails = email_list.find_elements_by_tag_name('li')
-                print("[-] Clicking the first e-mail")
+                logger.debug("[#] Clicking the first e-mail")
                 wait_for_page(browser)
                 emails[0].click()
                 WebDriverWait(browser, wait_timeout).until(
@@ -444,7 +447,7 @@ def report_old_version(browser, actions, keyword):
                     lambda driver: browser.find_element_by_css_selector('a.sfUnjunkItems'))
                 wait_for_page(browser)
                 safe_link.click()
-                logger.debug("[-] E-mail marked as Safe")
+                logger.debug("[!] E-mail marked as Safe")
                 try:
                     WebDriverWait(browser, wait_timeout).until(
                         ec.invisibility_of_element_located((By.CSS_SELECTOR, 'a.sfUnjunkItems')))
@@ -458,7 +461,7 @@ def report_old_version(browser, actions, keyword):
                 try:
                     browser.find_element_by_id("NoMsgs")
                     still_results = False
-                    print("[!] Last page !")
+                    logger.debug("[!] Last page !")
                 except NoSuchElementException:
                     still_results = True
                 # endregion
@@ -467,16 +470,14 @@ def report_old_version(browser, actions, keyword):
             except StaleElementReferenceException:
                 pass
             except TimeoutException:
-                print("/!\ (Error) Timed Out")
                 # region Clicking MANS button
-                WebDriverWait(browser, wait_timeout).until(
-                    ec.visibility_of_element_located((By.ID, 'MarkAsNotJunk')))
+                WebDriverWait(browser, wait_timeout).until(ec.visibility_of_element_located((By.ID, 'MarkAsNotJunk')))
                 wait_for_page(browser)
                 not_spam_btn = WebDriverWait(browser, wait_timeout).until(
                     lambda driver: browser.find_element_by_id('MarkAsNotJunk'))
                 wait_for_page(browser)
                 not_spam_btn.click()
-                print("[!] 'Not Spam' Button Clicked !")
+                logger.debug("[!] 'Not Spam' Button Clicked !")
                 try:
                     WebDriverWait(browser, wait_timeout).until(
                         ec.visibility_of_element_located((By.CSS_SELECTOR, 'div.c_h_flyingDots')))
@@ -508,16 +509,15 @@ def report_old_version(browser, actions, keyword):
     # endregion
 
     # region Inbox Actions
+    if ('RI' in actions) or ('FM' in actions) or ('AC' in actions) or ('CL' in actions):
+        wait_for_page(browser)
+        access_spam_folder_old(browser, keyword_link)
 
     # region Mark inbox as Read
     if ('RI' in actions) and ('CL' not in actions) and ('AC' not in actions):
+        print("[+] Mark INBOX as read Actions")
 
         # region Controllers Settings
-        print("[+] Mark INBOX as read Actions")
-        print("[-] Getting unread messages for Subject: %s" % keyword)
-        wait_for_page(browser)
-
-        browser.get(keyword_link)
         wait_for_page(browser)
 
         try:
@@ -530,59 +530,16 @@ def report_old_version(browser, actions, keyword):
         # region Looping through messages
         while still_results:
             try:
+                select_all_msgs_old(browser)
 
-                # region Selecting alls messages
-                print("[-] Marking INBOX as read for this page")
-                wait_for_page(browser)
-                WebDriverWait(browser, wait_timeout).until(
-                    ec.visibility_of_element_located((By.CSS_SELECTOR, 'li.FilterSelector')))
-                print("Getting All Msgs checkbox")
-                wait_for_page(browser)
-                chk_bx_bttn = WebDriverWait(browser, wait_timeout).until(
-                    lambda driver: browser.find_element_by_id('msgChkAll'))
-                wait_for_page(browser)
-                print("Select all Msgs")
-                chk_bx_bttn.click()
-                wait_for_page(browser)
-                print("CheckBox is clicked !")
-                # endregion
-
-                # region Clicking menu
-                try:
-                    if email_language == "English":
-                        menu_btn = WebDriverWait(browser, wait_timeout).until(
-                            lambda driver: browser.find_element_by_xpath('//*[@title="More commands"]'))
-                        wait_for_page(browser)
-                        print("Click Menu")
-                        WebDriverWait(browser, wait_timeout).until(
-                            ec.visibility_of_element_located((By.XPATH, '//*[@title="More commands"]')))
-                        wait_for_page(browser)
-                    else:
-                        menu_btn = WebDriverWait(browser, wait_timeout).until(
-                            lambda driver: browser.find_element_by_xpath('//*[@title=" Autres commandes"]'))
-                        wait_for_page(browser)
-                        print("Click Menu")
-                        WebDriverWait(browser, wait_timeout).until(
-                            ec.visibility_of_element_located((By.XPATH, '//*[@title=" Autres commandes"]')))
-                        wait_for_page(browser)
-                except TimeoutException:
-                    menu_btn = WebDriverWait(browser, wait_timeout).until(
-                        lambda driver: browser.find_element_by_xpath('//*[@title="更多命令"]'))
-                    wait_for_page(browser)
-                    print("Click Menu")
-                    WebDriverWait(browser, wait_timeout).until(
-                        ec.visibility_of_element_located((By.XPATH, '//*[@title="更多命令"]')))
-                    wait_for_page(browser)
-                menu_btn.click()
-                # endregion
+                open_menu_old(browser)
 
                 # region Clicking MAR button
-                print("[-] Clicking Mark as Read Button")  # TODO-CVC
+                logger.debug("[#] Clicking Mark as Read Button")
                 mar_btn = WebDriverWait(browser, wait_timeout).until(
                     lambda driver: browser.find_element_by_id('MarkAsRead'))
                 wait_for_page(browser)
-                WebDriverWait(browser, wait_timeout).until(
-                    ec.visibility_of_element_located((By.ID, 'MarkAsRead')))
+                WebDriverWait(browser, wait_timeout).until(ec.visibility_of_element_located((By.ID, 'MarkAsRead')))
                 mar_btn.click()
                 try:
                     WebDriverWait(browser, wait_timeout).until(
@@ -591,27 +548,25 @@ def report_old_version(browser, actions, keyword):
                         ec.invisibility_of_element_located((By.CSS_SELECTOR, 'div.c_h_flyingDots')))
                 except TimeoutException:
                     pass
-                print("Done !")
                 # endregion
 
                 # region Checking if it was the last page
                 try:
                     browser.find_element_by_id("NoMsgs")
                     still_results = False
-                    print("[!] Last page !")
+                    logger.debug("[!] Last page !")
                 except NoSuchElementException:
                     still_results = True
-                    # endregion
-
+                # endregion
+                pass
             except StaleElementReferenceException:
                 pass
             except TimeoutException:
-                print("/!\ (Error) Timed Out")
-                continue
+                pass
             except Exception as ex:
-                print("/!\ (Error) Mark SPAM as read")
+                print("/!\ (Error) Mark INBOX as read")
                 print(type(ex))
-                break
+                raise
         # endregion
 
         print("[!] Done marking INBOX as read\n")
@@ -619,17 +574,13 @@ def report_old_version(browser, actions, keyword):
 
     # region Flag mail
     if ('FM' in actions) and ('AC' not in actions) and ('CL' not in actions):
+        print("[+] Flag INBOX Actions")
+
+        if 'RI' in actions:
+            wait_for_page(browser)
+            access_spam_folder_old(browser, keyword_link)
 
         # region Controllers Settings
-        print("[+] Flag INBOX Actions")
-        print("[-] Getting result for Subject: %s" % keyword)
-        wait_for_page(browser)
-
-        keyword_link_flag = str(browser.current_url)[:str(browser.current_url).index(
-            '.com')] + '.com/?fid=flsearch&srch=1&skws=' + keyword + '&sdr=4&satt=0'
-        browser.get(keyword_link_flag)
-        wait_for_page(browser)
-
         try:
             browser.find_element_by_id("NoMsgs")
             last_page_checked_flag = True
@@ -646,7 +597,7 @@ def report_old_version(browser, actions, keyword):
             try:
 
                 # region Selecting alls messages
-                print("[-] Flaging Mails for this Page !")
+                logger.debug("[-] Flaging Mails for this Page !")
                 wait_for_page(browser)
                 messages_ul = WebDriverWait(browser, wait_timeout).until(
                     lambda driver: browser.find_element_by_css_selector('ul.mailList'))
@@ -659,10 +610,10 @@ def report_old_version(browser, actions, keyword):
                     try:
                         flag = messages[i].find_element_by_css_selector('img.ia_i_p_1')
                         wait_for_page(browser)
-                        flag.click()  # TODO-CVC Count this
+                        flag.click()
                         wait_for_page(browser)
                         time.sleep(1)
-                        print("[-] E-mail flagged")
+                        logger.debug("[!] E-mail flagged")
                     except NoSuchElementException:
                         pass
                 # endregion
@@ -675,7 +626,7 @@ def report_old_version(browser, actions, keyword):
                     wait_for_page(browser)
                     next_page_link.click()
                     wait_for_page(browser)
-                    print("[!] Accessing Next Page")
+                    logger.debug("[-] Accessing Next Page")
                     try:
                         WebDriverWait(browser, wait_timeout).until(
                             ec.visibility_of_element_located((By.CSS_SELECTOR, 'div.c_h_flyingDots')))
@@ -685,18 +636,17 @@ def report_old_version(browser, actions, keyword):
                         pass
                 next_page_disabled_flag = browser.find_element_by_css_selector('div.NextPageDisabled')
                 last_page_flag = next_page_disabled_flag.is_displayed()
-                print("Last page : %s" % last_page_flag)
+                logger.debug("Last page : %s" % last_page_flag)
                 # endregion
 
             except StaleElementReferenceException:
                 pass
             except TimeoutException:
-                print("/!\ (Error) Timed Out")
-                break
+                pass
             except Exception as ex:
                 print("/!\ (Error) Flag INBOX  Error")
                 print(type(ex))
-                break
+                raise
         # endregion
 
         print("[!] Done Flaging Mails\n")
