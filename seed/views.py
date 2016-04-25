@@ -37,18 +37,17 @@ class SeedViewSet(viewsets.ModelViewSet):
             if proxy and email['proxy']:
                 if (email['proxy']['ip'] is not '') and (email['proxy']['port'] is not ''):
                     try:
-                        ip = IP.objects.create(ip_address=email['proxy']['ip'], ip_port=email['proxy']['ip'],
-                                               ip_login=email['proxy']['login'], ip_password=email['proxy']['pass'])
-                        ip.save()
-                        proxy.ip_list.add(ip)
-                        proxy.save()
-                        em.proxy.add(proxy)
+                        ip = IP.objects.create(
+                            ip_address=email['proxy']['ip'],
+                            ip_port=int(email['proxy']['port']),
+                            ip_login=email['proxy']['login'],
+                            ip_password=email['proxy']['pass'])
                     except KeyError:
                         ip = IP.objects.create(ip_address=email['proxy']['ip'], ip_port=email['proxy']['port'])
-                        ip.save()
-                        proxy.ip_list.add(ip)
-                        proxy.save()
-                        em.proxy.add(proxy)
+                    ip.save()
+                    proxy.ip_list.add(ip)
+                    proxy.save()
+                    em.proxy.add(proxy)
             em.save()
             seed.emails.add(em.id)
             seed.save()

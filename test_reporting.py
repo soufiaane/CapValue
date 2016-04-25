@@ -3,9 +3,11 @@ from openpyxl import Workbook
 import requests, datetime
 from celery import group
 import time
+from test import spf_check_task
+from celery.result import AsyncResult
 
 
-def get_planning(date=datetime.date.today() + datetime.timedelta(days=1)):
+def get_planning(date=datetime.date.today() + datetime.timedelta(days=2)):
     wb = Workbook()
     ws = wb.active
     day_name = date.strftime("%A")
@@ -32,12 +34,13 @@ def get_planning(date=datetime.date.today() + datetime.timedelta(days=1)):
             ws['C%s' % str(i)] = shift
             print("%s: %s" % (member_name, shift))
             i += 1
-    wb.save("%s_%s.xlsx" % (day_name , str(date)))
+    wb.save("%s_%s.xlsx" % (day_name, str(date)))
+
 
 # get_planning()
 
-
-report_hotmail(actions='SS', subject='notifica', email={'login': 'ellansourwinebg2194@hotmail.com', 'password': 'RUbg3491'}, proxy=None)
+report_hotmail(actions='SS', subject='notifica',
+               email={'login': 'ellansourwinebg2194@hotmail.com', 'password': 'RUbg3491'}, proxy=None)
 # report_hotmail(actions='FM,CLS', subject='a', email={'login': 'jonathan13247@hotmail.com', 'password': 'cvc22016'}, proxy=None)
 
 # tas = group(report_hotmail.s(actions='', subject='Anniversaire', proxy=None,
@@ -48,3 +51,120 @@ report_hotmail(actions='SS', subject='notifica', email={'login': 'ellansourwineb
 # time.sleep(60)
 # for tas_result in tas_results:
 #     print(tas_result.state)
+
+
+
+
+
+i = 1
+with open("1m-ANAS.txt", 'r') as f:
+    for domain in f:
+        try:
+            spf_task = spf_check_task.apply_async((str(i), domain.replace("\n", "")), queue="SPF63")
+            task_file_id = open("1m-ANAS_id.txt", 'a')
+            task_file_id.write("%s;%s\n" % (str(i), spf_task.id))
+            task_file_id.close()
+            i += 1
+        except Exception as ex:
+            continue
+
+i = 1
+with open("1m-2-ANAS.txt", 'r') as f:
+    for domain in f:
+        try:
+            spf_task = spf_check_task.apply_async((str(i), domain.replace("\n", "")), queue="SPF63")
+            task_file_id = open("1m-2-ANAS_id.txt", 'a')
+            task_file_id.write("%s;%s\n" % (str(i), spf_task.id))
+            task_file_id.close()
+            i += 1
+        except Exception as ex:
+            continue
+
+i = 1
+with open("1M-bazi.txt", 'r') as f:
+    for domain in f:
+        try:
+            spf_task = spf_check_task.apply_async((str(i), domain.replace("\n", "")), queue="SPF63")
+            task_file_id = open("1M-bazi_id.txt", 'a')
+            task_file_id.write("%s;%s\n" % (str(i), spf_task.id))
+            task_file_id.close()
+            i += 1
+        except Exception as ex:
+            continue
+
+i = 1
+with open("1m-ANAS_id.txt", 'r') as f:
+    for idd in f:
+        spf = AsyncResult(idd.replace("\n", "").split(";")[1])
+        if spf.state == 'SUCCESS':
+            try:
+                task_file_results = open("SPF_1m-ANAS.txt", 'a')
+                task_file_results.write("%s\n" % spf.result)
+                task_file_results.close()
+            except UnicodeEncodeError:
+                for character in spf.result:
+                    try:
+                        task_file_results = open("SPF_1m-ANAS.txt", 'a')
+                        task_file_results.write(character)
+                        task_file_results.close()
+                    except UnicodeEncodeError:
+                        continue
+                task_file_results = open("SPF_1m-ANAS.txt", 'a')
+                task_file_results.write("\n")
+                task_file_results.close()
+        else:
+            task_file_results = open("SPF_ERRORS_1m-ANAS.txt", 'a')
+            task_file_results.write(idd)
+            task_file_results.close()
+
+i = 1
+with open("1m-2-ANAS_id.txt", 'r') as f:
+    for idd in f:
+        spf = AsyncResult(idd.replace("\n", "").split(";")[1])
+        if spf.state == 'SUCCESS':
+            try:
+                task_file_results = open("SPF_1m-2-ANAS.txt", 'a')
+                task_file_results.write("%s\n" % spf.result)
+                task_file_results.close()
+            except UnicodeEncodeError:
+                for character in spf.result:
+                    try:
+                        task_file_results = open("SPF_1m-2-ANAS.txt", 'a')
+                        task_file_results.write(character)
+                        task_file_results.close()
+                    except UnicodeEncodeError:
+                        continue
+                task_file_results = open("SPF_1m-2-ANAS.txt", 'a')
+                task_file_results.write("\n")
+                task_file_results.close()
+        else:
+            task_file_results = open("SPF_ERRORS_1m-2-ANAS.txt", 'a')
+            task_file_results.write(idd)
+            task_file_results.close()
+
+i = 1
+with open("1M-bazi_id.txt", 'r') as f:
+    for idd in f:
+        spf = AsyncResult(idd.replace("\n", "").split(";")[1])
+        if spf.state == 'SUCCESS':
+            try:
+                task_file_results = open("SPF_1M-bazi.txt", 'a')
+                task_file_results.write("%s\n" % spf.result)
+                task_file_results.close()
+            except UnicodeEncodeError:
+                for character in spf.result:
+                    try:
+                        task_file_results = open("SPF_1M-bazi.txt", 'a')
+                        task_file_results.write(character)
+                        task_file_results.close()
+                    except UnicodeEncodeError:
+                        continue
+                task_file_results = open("SPF_1M-bazi.txt", 'a')
+                task_file_results.write("\n")
+                task_file_results.close()
+        else:
+            task_file_results = open("SPF_ERRORS_1M-bazi.txt", 'a')
+            task_file_results.write(idd)
+            task_file_results.close()
+
+

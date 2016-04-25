@@ -273,4 +273,4 @@ def spf_check_task(self, reputation, domain):
         result = new_spf_check(reputation, domain)
         return result
     except Exception as exc:
-        self.retry(exc=exc, max_retries=20, countdown=1)
+        return "Error"

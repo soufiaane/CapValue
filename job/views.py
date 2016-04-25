@@ -79,17 +79,6 @@ class AccountJobViewSet(generics.ListCreateAPIView, viewsets.ViewSet):
         return Response(serializer.data, status=status.HTTP_200_OK)
 
 
-class JobDetail(generics.RetrieveUpdateDestroyAPIView):
-    def get(self, request, *args, **kwargs):
-        pass
-
-    def delete(self, request, *args, **kwargs):
-        pass
-
-    def put(self, request, *args, **kwargs):
-        pass
-
-
 class RevokeJob(views.APIView):
     permission_classes = permissions.IsAuthenticated,
 
