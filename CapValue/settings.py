@@ -15,7 +15,7 @@ INSTALLED_APPS = (
     'authentication',
     'django.core',
     'layout',
-    'job',
+    # 'job',
     'seed',
     'proxy',
     'mail',

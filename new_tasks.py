@@ -52,7 +52,8 @@ def wait_for_page(browser):
         look_for_pub(browser)
         while browser.execute_script('return document.readyState;') != 'complete':
             look_for_pub(browser)
-    except:
+    except Exception as ex:
+        print(ex)
         pass
 
 
@@ -132,6 +133,7 @@ def check_email_language(browser):
     except Exception as e:
         print("/!\ (Error) Getting Mailbox Language !")
         print(type(e))
+        browser.quit()
         raise
 
 
@@ -201,6 +203,8 @@ def configure_mailbox(browser):
     except Exception as exc:
         print(type(exc))
         print("/!\ (Error) Check Display Settings")
+
+
 # endregion
 
 
@@ -215,6 +219,7 @@ def access_spam_folder_old(browser, spam_link):
     except Exception as ex:
         print("/!\ (Error) Accessink SPAM folder ")
         print(type(ex))
+        browser.quit()
         raise
 
 
@@ -259,13 +264,15 @@ def select_all_msgs_old(browser):
     chk_bx_bttn.click()
     wait_for_page(browser)
     logger.debug("CheckBox is clicked !")
+
+
 # endregion
 
 
 def report_old_version(browser, actions, keyword):
     spam_link = str(browser.current_url)[:str(browser.current_url).index('.com')] + '.com/?fid=fljunk'
     keyword_link = str(browser.current_url)[:str(browser.current_url).index(
-            '.com')] + '.com/?fid=flsearch&srch=1&skws=' + keyword + '&scat=1&sdr=4&satt=0'
+        '.com')] + '.com/?fid=flsearch&srch=1&skws=' + keyword + '&scat=1&sdr=4&satt=0'
 
     # region Spam Actions
     if ('RS' in actions) or ('NS' in actions) or ('SS' in actions):
@@ -334,6 +341,7 @@ def report_old_version(browser, actions, keyword):
             except Exception as ex:
                 print("/!\ (Error) Mark SPAM as read")
                 print(type(ex))
+                browser.quit()
                 raise
         # endregion
 
@@ -397,6 +405,7 @@ def report_old_version(browser, actions, keyword):
             except Exception as ex:
                 print("/!\ (Error) Mark as not SPAM")
                 print(type(ex))
+                browser.quit()
                 raise
         # endregion
 
@@ -500,6 +509,7 @@ def report_old_version(browser, actions, keyword):
             except Exception as ex:
                 print("/!\ (Error) Mark SPAM as safe!")
                 print(type(ex))
+                browser.quit()
                 raise
         # endregion
 
@@ -566,6 +576,7 @@ def report_old_version(browser, actions, keyword):
             except Exception as ex:
                 print("/!\ (Error) Mark INBOX as read")
                 print(type(ex))
+                browser.quit()
                 raise
         # endregion
 
@@ -646,6 +657,7 @@ def report_old_version(browser, actions, keyword):
             except Exception as ex:
                 print("/!\ (Error) Flag INBOX  Error")
                 print(type(ex))
+                browser.quit()
                 raise
         # endregion
 
@@ -662,9 +674,9 @@ def report_old_version(browser, actions, keyword):
         wait_for_page(browser)
 
         keyword_link_ac = WebDriverWait(browser, wait_timeout).until(lambda driver: str(browser.current_url)[
-                                                                                    :str(
-                                                                                        browser.current_url).index(
-                                                                                        '.com')] + '.com/?fid=flsearch&srch=1&skws=' + keyword + '&sdr=4&satt=0')
+                                                                                    :str(browser.current_url).index(
+                                                                                        '.com')] + '.com/?fid=flsearch&srch=1&skws=' +
+                                                                                    keyword + '&sdr=4&satt=0')
         browser.get(keyword_link_ac)
 
         try:
@@ -719,7 +731,7 @@ def report_old_version(browser, actions, keyword):
                         flag.click()
                         time.sleep(1)
                         wait_for_page(browser)
-                        print("[-] E-mail Flagged !")  # TODO-CVC To count
+                        print("[-] E-mail Flagged !")
                     except NoSuchElementException:
                         print("[!] Email already Flagged !")
                         pass
@@ -862,6 +874,7 @@ def report_old_version(browser, actions, keyword):
     # endregion
     pass
 
+
 # endregion
 
 
@@ -916,12 +929,14 @@ def get_inbox_count_new(browser):
 def select_all_msgs_new(browser):
     logger.debug("[+] Select all messages")
     wait_for_page(browser)
-    WebDriverWait(browser, wait_timeout).until(ec.presence_of_all_elements_located((By.XPATH,
-                                                                                    '//*[@id="primaryContainer"]/div[4]/div/div[1]/div[2]/div[5]/div[2]/div[1]/div/div/div[3]/button')))
+    WebDriverWait(browser, wait_timeout). \
+        until(ec.presence_of_all_elements_located((By.XPATH, '//*[@id="primaryContainer"]/div[4]/div/div[1]/div[2]'
+                                                             '/div[5]/div[2]/div[1]/div/div/div[3]/button')))
     logger.debug("[-] Getting All Msgs checkbox")
     wait_for_page(browser)
-    chk_bx_bttn = WebDriverWait(browser, wait_timeout).until(lambda driver: browser.find_element_by_xpath(
-        '//*[@id="primaryContainer"]/div[4]/div/div[1]/div[2]/div[5]/div[2]/div[1]/div/div/div[3]'))
+    chk_bx_bttn = WebDriverWait(browser, wait_timeout). \
+        until(lambda driver: browser.find_element_by_xpath('//*[@id="primaryContainer"]/div[4]/div/div[1]/div[2]/div[5]'
+                                                           '/div[2]/div[1]/div/div/div[3]'))
     wait_for_page(browser)
     logger.debug("[-] Select all Msgs")
     logger.debug("[-] Defining hover action")
@@ -929,8 +944,9 @@ def select_all_msgs_new(browser):
     logger.debug("[#] Hover over the checkbox")
     hover.perform()
     logger.debug("[#] Waiting for visibility")
-    WebDriverWait(browser, wait_timeout).until(ec.visibility_of_element_located((By.XPATH,
-                                                                                 '//*[@id="primaryContainer"]/div[4]/div/div[1]/div[2]/div[5]/div[2]/div[1]/div/div/div[3]/button')))
+    WebDriverWait(browser, wait_timeout). \
+        until(ec.visibility_of_element_located((By.XPATH, '//*[@id="primaryContainer"]/div[4]/div/div[1]/div[2]/div[5]'
+                                                          '/div[2]/div[1]/div/div/div[3]/button')))
     logger.debug("[#] Clicking Checkbox")
     chk_bx_bttn.find_element_by_tag_name("button").click()
     wait_for_page(browser)
@@ -999,6 +1015,7 @@ def search_for_keyword_new(browser, subject):
     except Exception as ex:
         print("/!\ (Error) Getting INBOX results for Subject: %s" % subject)
         print(type(ex))
+        browser.quit()
         raise
 
 
@@ -1046,7 +1063,7 @@ def flag_mail_new(browser, actions):
             WebDriverWait(browser, wait_timeout).until(ec.invisibility_of_element_located(
                 (By.XPATH, '//span[@title="Indicateur de suivi (Inser)"]')))
 
-        logger.debug("[!] E-mail flagged !")  # TODO-CVC to Count
+        logger.debug("[!] E-mail flagged !")
         if 'AC' not in actions:
             time.sleep(1)
     except StaleElementReferenceException:
@@ -1056,6 +1073,7 @@ def flag_mail_new(browser, actions):
     except Exception as ex:
         print("/!\ (Error) Flag Mail Error !")
         print(type(ex))
+        browser.quit()
         raise
 
 
@@ -1097,7 +1115,7 @@ def add_contact_new(browser, actions):
                     logger.debug('waiting for Popup to fade away')
                     WebDriverWait(browser, wait_timeout).until(ec.invisibility_of_element_located(
                         (By.XPATH, '//button[@title="Save edit contact"]')))
-                    logger.debug("[-] From-Email added to contacts")  # TODO-CVC to count
+                    logger.debug("[-] From-Email added to contacts")
                 else:
                     WebDriverWait(browser, wait_timeout).until(ec.visibility_of_element_located(
                         (By.XPATH, '//button[@title="Enregistrer la modification du contact"]')))
@@ -1110,7 +1128,7 @@ def add_contact_new(browser, actions):
                     logger.debug('waiting for Popup to fade away')
                     WebDriverWait(browser, wait_timeout).until(ec.invisibility_of_element_located(
                         (By.XPATH, '//button[@title="Enregistrer la modification du contact"]')))
-                    logger.debug("[-] From-Email added to contacts")  # TODO-CVC to count
+                    logger.debug("[-] From-Email added to contacts")
                 if 'CL' not in actions:
                     time.sleep(1)
         except ElementNotVisibleException:
@@ -1126,15 +1144,16 @@ def add_contact_new(browser, actions):
     except Exception as ex:
         print("/!\ (Error) Add Contact !")
         print(type(ex))
+        browser.quit()
         raise
 
 
-def click_link_new(browser, actions):
+def click_link_new(browser):
     try:
         wait_for_page(browser)
         logger.debug("[-] Getting the Mail 'Body'")
-        body = WebDriverWait(browser, wait_timeout).until(lambda driver:
-                                                          browser.find_element_by_id('Item.MessageUniqueBody'))
+        body = WebDriverWait(browser, wait_timeout). \
+            until(lambda driver: browser.find_element_by_id('Item.MessageUniqueBody'))
         try:
             logger.debug("[-] Getting the Link in the Mail !")
             body_link = body.find_elements_by_tag_name('a')[1]
@@ -1174,6 +1193,7 @@ def click_link_new(browser, actions):
     except Exception as ex:
         print("/!\ (Error) Click Links !")
         print(type(ex))
+        browser.quit()
         raise
 
 
@@ -1231,7 +1251,7 @@ def get_spam_count_new(browser):
         return spam_count
 
 
-def safe_spam_new(browser, spam_link, inbox_link):
+def safe_spam_new(browser):
     while get_spam_count_new(browser) > 0:
         try:
             # region Accessing 1st messages
@@ -1283,7 +1303,6 @@ def safe_spam_new(browser, spam_link, inbox_link):
                             lambda driver: browser.find_element_by_xpath(
                                 '//button[@title="Déplacer un message légitime dans la boîte de réception"]'))
                     logger.debug("Clicking MANS button")
-                    # WebDriverWait(browser, wait_timeout).until(ec.visibility_of_element_located((By.XPATH, '//button[@title="Move a message that isn\'t Junk to the Inbox"]')))
                     if mans_btn.is_displayed():
                         mans_btn.click()
                         logger.debug("[-] 'Not SPAM' button clicked")
@@ -1331,7 +1350,9 @@ def safe_spam_new(browser, spam_link, inbox_link):
         except Exception as ex:
             logger.debug("/!\ (Error) Mark SPAM as Safe")
             print(type(ex))
+            browser.quit()
             raise
+
 
 # endregion
 
@@ -1393,6 +1414,7 @@ def report_new_version(browser, actions, subject):
             except Exception as ex:
                 print("/!\ (Error) Mark SPAM as read")
                 print(type(ex))
+                browser.quit()
                 raise
         # endregion
         print("[!] Done marking SPAM as Read!\n")
@@ -1426,8 +1448,11 @@ def report_new_version(browser, actions, subject):
                         print("Clicking MANS button")
                         mans_btn.click()
                         print("Waiting for action to be performed")
-                        WebDriverWait(browser, wait_timeout).until(lambda driver: browser.find_element_by_xpath(
-                            '//*[@id="primaryContainer"]/div[4]/div/div[1]/div[2]/div[5]/div[2]/div[1]/div/div/div[3]/div/div[2]/div[1]/span').text == "Junk Email")
+                        WebDriverWait(browser, wait_timeout). \
+                            until(lambda driver: browser.find_element_by_xpath('//*[@id="primaryContainer"]/div[4]'
+                                                                               '/div/div[1]/div[2]/div[5]/div[2]/div[1]'
+                                                                               '/div/div/div[3]/div/div[2]/div[1]/span')
+                                  .text == "Junk Email")
                         print("Sending ESC key")
                         ActionChains(browser).send_keys(Keys.ESCAPE).perform()
                         print("Waiting for invisibility of element !")
@@ -1448,8 +1473,11 @@ def report_new_version(browser, actions, subject):
                         print("Clicking MANS button")
                         mans_btn.click()
                         print("Waiting for action to be performed")
-                        WebDriverWait(browser, wait_timeout).until(lambda driver: browser.find_element_by_xpath(
-                            '//*[@id="primaryContainer"]/div[4]/div/div[1]/div[2]/div[5]/div[2]/div[1]/div/div/div[3]/div/div[2]/div[1]/span').text == "Junk Email")
+                        WebDriverWait(browser, wait_timeout). \
+                            until(lambda driver: browser.find_element_by_xpath('//*[@id="primaryContainer"]/div[4]'
+                                                                               '/div/div[1]/div[2]/div[5]/div[2]/div[1]'
+                                                                               '/div/div/div[3]/div/div[2]/div[1]/span')
+                                  .text == "Junk Email")
                         print("Sending ESC key")
                         ActionChains(browser).send_keys(Keys.ESCAPE).perform()
                         print("Waiting for invisibility of element !")
@@ -1484,6 +1512,7 @@ def report_new_version(browser, actions, subject):
             except Exception as ex:
                 print("/!\ (Error) Mark SPAM as Read")
                 print(type(ex))
+                browser.quit()
                 raise
         # endregion
 
@@ -1493,7 +1522,7 @@ def report_new_version(browser, actions, subject):
     # region Mark SPAM as Safe
     if 'SS' in actions:
         print("[+] Mark SPAM as Safe Actions")
-        safe_spam_new(browser, spam_link, inbox_link)
+        safe_spam_new(browser)
         print("[!] Done marking SPAM as Safe !\n")
     # endregion
 
@@ -1552,6 +1581,7 @@ def report_new_version(browser, actions, subject):
             except Exception as ex:
                 print("/!\ (Error) Mark INBOX as read")
                 print(type(ex))
+                browser.quit()
                 raise
         # endregion
 
@@ -1569,7 +1599,7 @@ def report_new_version(browser, actions, subject):
 
         # region Controller Settings
         search_for_keyword_new(browser, subject)
-        no_results = True
+        # no_results = True
         time.sleep(2)
         try:
             noresults_span = browser.find_element_by_class_name("_lvv_c1")
@@ -1578,6 +1608,7 @@ def report_new_version(browser, actions, subject):
             no_results = False
         except Exception as e:
             print(type(e))
+            browser.quit()
             raise
         # endregion
 
@@ -1606,7 +1637,7 @@ def report_new_version(browser, actions, subject):
                 if 'AC' in actions:
                     add_contact_new(browser, actions)
                 if 'CL' in actions:
-                    click_link_new(browser, actions)
+                    click_link_new(browser)
 
                 # region Checking if it was the last page
                 last_page_checked = last_page if last_page else False
@@ -1623,11 +1654,12 @@ def report_new_version(browser, actions, subject):
     # endregion
     pass
 
+
 # endregion
 
 
 @app.task(name='report_hotmail', bind=True, max_retries=3, default_retry_delay=1)
-def report_hotmail(self, **kwargs):
+def report_hotmail(**kwargs):
     # region Settings
     actions = str(kwargs.get('actions', None)).split(',')
     subject = kwargs.get('subject', None)
