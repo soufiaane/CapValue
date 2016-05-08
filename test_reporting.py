@@ -7,7 +7,7 @@ from test import spf_check_task
 from celery.result import AsyncResult
 
 
-def get_planning(date=datetime.date.today() + datetime.timedelta(days=0)):
+def get_planning(date=datetime.date.today() + datetime.timedelta(days=3)):
     wb = Workbook()
     ws = wb.active
     day_name = date.strftime("%A")

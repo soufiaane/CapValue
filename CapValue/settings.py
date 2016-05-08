@@ -15,7 +15,7 @@ INSTALLED_APPS = (
     'authentication',
     'django.core',
     'layout',
-    # 'job',
+    'job',
     'seed',
     'proxy',
     'mail',
@@ -31,7 +31,7 @@ INSTALLED_APPS = (
     'domain',
     'spf',
     'findSubject',
-    'mod_wsgi.server',
+    # 'mod_wsgi.server',
 )
 # endregion
 
