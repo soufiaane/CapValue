@@ -1,5 +1,5 @@
-from test import spf_check_task
 from celery.result import AsyncResult
+from test import spf_check_task
 
 i = 1
 with open("domains.txt", 'r') as f:

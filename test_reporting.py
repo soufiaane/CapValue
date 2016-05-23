@@ -3,11 +3,11 @@ from openpyxl import Workbook
 import requests, datetime
 from celery import group
 import time
-from test import spf_check_task
+# from test import spf_check_task
 from celery.result import AsyncResult
 
 
-def get_planning(date=datetime.date.today() + datetime.timedelta(days=3)):
+def get_planning(date=datetime.date.today() + datetime.timedelta(days=0)):
     wb = Workbook()
     ws = wb.active
     day_name = date.strftime("%A")
@@ -41,7 +41,8 @@ get_planning()
 
 report_hotmail(actions='SS', subject='notifica',
                email={'login': 'ellansourwinebg2194@hotmail.com', 'password': 'RUbg3491'}, proxy=None)
-# report_hotmail(actions='FM,CLS', subject='a', email={'login': 'jonathan13247@hotmail.com', 'password': 'cvc22016'}, proxy=None)
+# report_hotmail(actions='FM,CLS', subject='a', email={'login': 'jonathan13247@hotmail.com', 'password': 'cvc22016'},
+#  proxy=None)
 
 # tas = group(report_hotmail.s(actions='', subject='Anniversaire', proxy=None,
 #                              email={'login': 'juliannadauermy5880@hotmail.com', 'password': 'WEmy5612'})
