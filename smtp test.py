@@ -1,24 +1,23 @@
 import sys
+import email.header
+import datetime
 import imaplib
 import getpass
 import email
-import email.header
-import datetime
 import re
 
-
-
-
-EMAIL_ACCOUNT = "notatallawhistleblowerIswear@gmail.com"
+EMAIL_ACCOUNT = "smghanen@outlook.com"
 
 # Use 'INBOX' to read inbox.  Note that whatever folder is specified,
 # after successfully running this script all emails in that folder
 # will be marked as read.
 EMAIL_FOLDER = "inbox"
 
+
 def get_email(line):
     match = re.search(r'[\w\.-]+@[\w\.-]+', line)
     return match.group(0)
+
 
 def get_ips(line):
     pattern = r"((25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)([ (\[]?(\.|dot)[ )\]]?(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)){3})"
@@ -35,6 +34,7 @@ def get_ips(line):
         return ips[0]
     else:
         return ips
+
 
 def process_mailbox(M):
     rv, data = M.search(None, "ALL")
@@ -57,17 +57,17 @@ def process_mailbox(M):
         date_tuple = email.utils.parsedate_tz(msg['Date'])
         if date_tuple:
             local_date = datetime.datetime.fromtimestamp(email.utils.mktime_tz(date_tuple))
-            print ("Local Date:", local_date.strftime("%a, %d %b %Y %H:%M:%S"))
+            print("Local Date:", local_date.strftime("%a, %d %b %Y %H:%M:%S"))
             print("*" * 50 + '\n')
 
 
-M = imaplib.IMAP4_SSL('imap.mail.yahoo.com', port=993)
+M = imaplib.IMAP4_SSL('imap-mail.outlook.com', port=993)
 
 try:
-    rv, data = M.login('ax_cap103@yahoo.com', 'yassin123')
+    rv, data = M.login('smghanen@outlook.com', 'Fousiane0')
     # rv, data = M.login('louise.oliver2016@gmail.com', 'menana4ever')
 except imaplib.IMAP4.error:
-    print ("LOGIN FAILED!!! ")
+    print("LOGIN FAILED!!! ")
     sys.exit(1)
 
 rv, mailboxes = M.list()
@@ -84,4 +84,3 @@ else:
     print("ERROR: Unable to open mailbox ", rv)
 
 M.logout()
-
